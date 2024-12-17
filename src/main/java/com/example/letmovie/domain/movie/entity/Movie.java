@@ -1,12 +1,14 @@
 package com.example.letmovie.domain.movie.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Movie {
 
     @Id
@@ -20,9 +22,9 @@ public class Movie {
     @Column(nullable = false)
     private String directorName;
     @Column(nullable = false)
-    private String auditNumber;
+    private String rating;
     @Column(nullable = false)
-    private String showTime;
+    private String runtime;
     @Column(nullable = false)
     private String openDate;
     @Column(nullable = false)
@@ -33,5 +35,12 @@ public class Movie {
     @Column(nullable = false)
     private Status status;
     @Column(nullable = false)
-    private String imagename;
+    private String posterImageUrl;
+    @Column(nullable = false)
+    private String stillImageUrl;
+    @Column(nullable = false)
+    private String plot;
+    @Column(nullable = false)
+    private String salesAcc;
+
 }
