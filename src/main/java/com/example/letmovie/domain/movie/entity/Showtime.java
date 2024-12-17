@@ -3,11 +3,12 @@ package com.example.letmovie.domain.movie.entity;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
-@Getter
+@NoArgsConstructor
 public class Showtime {
 
     @Id
