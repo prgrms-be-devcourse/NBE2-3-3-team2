@@ -36,6 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 *#
 *.jar
 *.sw?
@@ -146,3 +147,13 @@ fabric.properties
 
 #jinsite
 nodeenv-20
+=======
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+### .env ###
+.env*
+>>>>>>> a209d219878a8adc5d4720d42d0dbaf6397d01d7

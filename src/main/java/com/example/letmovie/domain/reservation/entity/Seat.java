@@ -22,11 +22,16 @@ public class Seat {
     @Enumerated(EnumType.STRING) //enum
     private SeatType seatType;
 
+    @Column(nullable = false)
     private int seatLow;
+
+    @Column(nullable = false)
     private int seatCol;
 
+    @Column(nullable = false)
     private boolean isAble;
-    private int price;
 
+    @Column(nullable = false)
+    private int price;
 
 }

@@ -17,9 +17,13 @@ public class Screen {
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
+    @Column(nullable = false)
     private String screenName;
-    private int totalSeats;
-    private int remainingSeats;
 
+    @Column(nullable = false)
+    private int totalSeats;
+
+    @Column(nullable = false)
+    private int remainingSeats;
 
 }
