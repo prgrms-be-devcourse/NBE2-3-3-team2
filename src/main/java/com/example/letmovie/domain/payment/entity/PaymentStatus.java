@@ -1,4 +1,4 @@
-package com.example.nbe232team2.domain.payment.entity;
+package com.example.letmovie.domain.payment.entity;
 
 public enum PaymentStatus {
 
