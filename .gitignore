@@ -150,6 +150,7 @@ fabric.properties
 .AppleDouble
 .LSOverride
 
+# config local DB
 ### .env ###
 .env*
 
