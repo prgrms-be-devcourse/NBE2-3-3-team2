@@ -35,8 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
-
-<<<<<<< HEAD
 *#
 *.jar
 *.sw?
@@ -145,9 +143,6 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-#jinsite
-nodeenv-20
-=======
 ### macOS ###
 # General
 .DS_Store
@@ -156,4 +151,3 @@ nodeenv-20
 
 ### .env ###
 .env*
->>>>>>> a209d219878a8adc5d4720d42d0dbaf6397d01d7
