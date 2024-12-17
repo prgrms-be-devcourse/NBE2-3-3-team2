@@ -1,10 +1,10 @@
-package com.example.nbe232team2;
+package com.example.letmovie;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Nbe232Team2ApplicationTests {
+class LetMovieApplicationTests {
 
     @Test
     void contextLoads() {

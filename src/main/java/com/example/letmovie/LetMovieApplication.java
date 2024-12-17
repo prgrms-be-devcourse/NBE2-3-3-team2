@@ -1,13 +1,13 @@
-package com.example.nbe232team2;
+package com.example.letmovie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Nbe232Team2Application {
+public class LetMovieApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Nbe232Team2Application.class, args);
+        SpringApplication.run(LetMovieApplication.class, args);
     }
 
 }

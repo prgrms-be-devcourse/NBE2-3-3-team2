@@ -1,4 +1,4 @@
-package com.example.nbe232team2.domain.reservation.entity;
+package com.example.letmovie.domain.reservation.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

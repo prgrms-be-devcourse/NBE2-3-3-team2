@@ -1,4 +1,4 @@
-package com.example.nbe232team2.global.config;
+package com.example.letmovie.global.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
