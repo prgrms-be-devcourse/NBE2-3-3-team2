@@ -1,7 +1,7 @@
-package com.example.letmovie.domain.payment.entity;
+package com.example.nbe232team2.domain.payment.entity;
 
-import com.example.letmovie.domain.member.entity.Member;
-import com.example.letmovie.domain.reservation.entity.Reservation;
+import com.example.nbe232team2.domain.member.entity.Member;
+import com.example.nbe232team2.domain.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
