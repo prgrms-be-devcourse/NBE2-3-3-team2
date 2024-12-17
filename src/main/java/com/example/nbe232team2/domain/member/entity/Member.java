@@ -16,17 +16,22 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 20)
     private String nickname;
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true, length = 20)
     private String email;
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 64)
     private String password;
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 5)
     private String zipCode;
+
     @Column(nullable = false)
-    private boolean isAdmin;
+    private boolean isAdmin = false;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Grade grade;
+    private Grade grade = Grade.GENERAL;
 }
