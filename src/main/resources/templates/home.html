@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LetMovie</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        /* 캐러셀 버튼 스타일 */
+        .carousel-btn {
+            font-size: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .carousel-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #prev-btn-show, #prev-btn-prev {
+            left: 0; /* 왼쪽 끝에 배치 */
+        }
+
+        #next-btn-show, #next-btn-prev {
+            right: 0; /* 오른쪽 끝에 배치 */
+        }
+
+        /* 왼쪽 버튼 */
+        #prev-btn-feature, #prev-btn-show, #prev-btn-prev {
+            left: -25px; /* 부모 컨테이너의 왼쪽 끝으로 밀기 */
+        }
+
+        /* 오른쪽 버튼 */
+        #next-btn-feature, #next-btn-show, #next-btn-prev {
+            right: -25px; /* 부모 컨테이너의 오른쪽 끝으로 밀기 */
+        }
+
+        /* 추천 영화 카드의 부모 요소에 상대적 위치 지정 */
+        #featured-movie-container,
+        #show-movie-container,
+        #prev-movie-container {
+            position: relative; /* 버튼이 이 요소를 기준으로 위치 설정됨 */
+        }
+
+        /* 헤더 스타일 */
+        .navbar {
+            margin-bottom: 30px;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+<!-- 공통 헤더 추가 -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container mt-5">
+
+    <!-- 추천 영화 섹션 -->
+    <div class="position-relative mb-5">
+        <!-- 제목 -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>추천 영화</h1>
+        </div>
+        <!-- 캐러셀 버튼 -->
+        <button id="prev-btn-feature" class="carousel-btn">&lt;</button>
+
+        <!-- 추천 영화 카드 -->
+        <div class="position-relative" id="featured-movie-container">
+            <div class="card w-100"
+                 th:each="movie : ${movies}"
+                 th:if="${movie.status.name() == 'RECOMMEND'}">
+                <div class="position-relative">
+                    <!-- 스틸 이미지 -->
+                    <img th:src="@{${movie.stillImageUrl}}" class="card-img-top" alt="스틸 이미지">
+                    <!-- 버튼 배치 -->
+                    <div class="position-absolute bottom-0 start-0 p-3">
+                        <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
+                        <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="next-btn-feature" class="carousel-btn">&gt;</button>
+    </div>
+
+    <!-- 박스오피스 섹션 -->
+    <div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>박스오피스</h1>
+            <a th:href="@{/movie/total_movie}" class="btn btn-link">더 많은 영화보기 +</a>
+        </div>
+        <!-- 캐러셀 -->
+        <div class="position-relative">
+            <button id="prev-btn-show" class="carousel-btn">&lt;</button>
+            <div class="row mx-0" id="show-movie-container">
+                <!-- 영화 카드 반복 (Status.SHOW) -->
+                <div class="col-md-3 mb-4"
+                     th:each="movie : ${movies}"
+                     th:if="${movie.status.name() == 'SHOW'}">
+                    <div class="card h-100">
+                        <a th:href="@{/movie/{id}(id=${movie.id})}">
+                            <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>
+                            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="next-btn-show" class="carousel-btn">&gt;</button>
+        </div>
+    </div>
+
+    <!-- 상영 예정 영화 섹션 -->
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>상영 예정 영화</h1>
+        </div>
+        <!-- 캐러셀 -->
+        <div class="position-relative">
+            <button id="prev-btn-prev" class="carousel-btn">&lt;</button>
+            <div class="row mx-0" id="prev-movie-container">
+                <!-- 영화 카드 반복 (Status.PREV) -->
+                <div class="col-md-3 mb-4"
+                     th:each="movie : ${movies}"
+                     th:if="${movie.status.name() == 'PREV'}">
+                    <div class="card h-100">
+                        <a th:href="@{/movie/{id}(id=${movie.id})}">
+                            <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>
+                            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="next-btn-prev" class="carousel-btn">&gt;</button>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+<!-- JavaScript for Carousel -->
+<script>
+    function initCarousel(containerId, prevBtnId, nextBtnId) {
+        const container = document.getElementById(containerId);
+        const prevBtn = document.getElementById(prevBtnId);
+        const nextBtn = document.getElementById(nextBtnId);
+
+        let currentStartIndex = 0;
+        const cards = container.children;
+        const moviesPerPage = 4;
+
+        function updateCarousel() {
+            for (let i = 0; i < cards.length; i++) {
+                cards[i].style.display = 'none';
+            }
+            for (let i = currentStartIndex; i < currentStartIndex + moviesPerPage && i < cards.length; i++) {
+                cards[i].style.display = 'block';
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStartIndex > 0) {
+                currentStartIndex -= moviesPerPage;
+                updateCarousel();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStartIndex + moviesPerPage < cards.length) {
+                currentStartIndex += moviesPerPage;
+                updateCarousel();
+            }
+        });
+
+        updateCarousel();
+    }
+
+    // 각 캐러셀 초기화
+    initCarousel('show-movie-container', 'prev-btn-show', 'next-btn-show');
+    initCarousel('prev-movie-container', 'prev-btn-prev', 'next-btn-prev');
+</script>
+
+<script>
+    function initFeaturedCarousel() {
+        const featuredContainer = document.getElementById('featured-movie-container');
+        const prevBtn = document.getElementById('prev-btn-feature');
+        const nextBtn = document.getElementById('next-btn-feature');
+
+        let currentIndex = 0;
+        const cards = featuredContainer.children;
+
+        function updateCarousel() {
+            for (let i = 0; i < cards.length; i++) {
+                cards[i].style.display = 'none';
+            }
+            cards[currentIndex].style.display = 'block';
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : cards.length - 1;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex < cards.length - 1) ? currentIndex + 1 : 0;
+            updateCarousel();
+        });
+
+        updateCarousel();
+    }
+
+    // 캐러셀 초기화
+    initFeaturedCarousel();
+</script>
+</body>
+</html>

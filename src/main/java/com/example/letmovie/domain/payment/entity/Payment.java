@@ -37,6 +37,4 @@ public class Payment {
     @JoinColumn(name = "reservation_id",nullable = false)
     private Reservation reservation;
 
-
-
 }
