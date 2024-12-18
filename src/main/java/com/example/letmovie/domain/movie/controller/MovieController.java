@@ -50,4 +50,26 @@ public class MovieController {
         }
         return "total_movie";
     }
+
+    // 카테고리별 영화 페이지
+    @GetMapping("/movies")
+    public String moviesByCategory(@RequestParam(defaultValue = "ALL") String category, Model model) {
+        List<Movie> movies;
+
+        // 카테고리별 영화 필터링
+        switch (category.toUpperCase()) {
+            case "RECOMMEND":
+                movies = movieService.getMoviesByStatus("RECOMMEND");
+                break;
+            case "PREV":
+                movies = movieService.getMoviesByStatus("PREV");
+                break;
+            default: // "ALL"
+                movies = movieService.getAllMovies();
+        }
+
+        model.addAttribute("movies", movies);
+        model.addAttribute("category", category.toUpperCase()); // 현재 카테고리
+        return "total_movie";
+    }
 }

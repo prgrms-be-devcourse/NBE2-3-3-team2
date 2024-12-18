@@ -5,39 +5,58 @@
     <title>LetMovie</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCard.css}">
 </head>
 <body>
 <!-- 공통 헤더 추가 -->
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="container">
-    <h1 class="my-4 text-center">전체영화</h1>
-    <div class="row">
-        <!-- 영화 카드 반복 -->
-        <div class="col-md-3 mb-4" th:each="movie : ${movies}">
-            <div class="card h-100">
-                <!-- 포스터 이미지 클릭 시 상세 페이지 이동 -->
-                <a th:href="@{/movie/{id}(id=${movie.id})}">
-                    <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>
-                    <p class="card-text" th:text="'감독: ' + ${movie.directorName}">감독 이름</p>
-                    <!-- 버튼 영역 -->
-                    <div class="d-flex justify-content-between">
-                        <!-- 상세 보기 버튼 -->
-                        <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary">상세 보기</a>
-                        <!-- 예매하기 버튼 -->
-                        <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>
+<div class="container my-4">
+    <!-- 카테고리 탭 -->
+    <ul class="nav nav-tabs" id="movieTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${category == 'ALL'} ? 'active'"
+               th:href="@{/movies(category='ALL')}" role="tab">전체 영화</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${category == 'RECOMMEND'} ? 'active'"
+               th:href="@{/movies(category='RECOMMEND')}" role="tab">LetMovie's Pick</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:classappend="${category == 'PREV'} ? 'active'"
+               th:href="@{/movies(category='PREV')}" role="tab">개봉 예정 영화</a>
+        </li>
+    </ul>
+
+    <!-- 영화 카드 -->
+    <div class="tab-content mt-4">
+        <div class="row">
+            <div class="col-md-3 mb-4" th:each="movie : ${movies}">
+                <div class="card h-100">
+                    <a th:href="@{/movie/{id}(id=${movie.id})}">
+                        <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>
+                        <p class="card-text" th:text="'장르: ' + ${movie.genreName}">영화 장르</p>
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary">상세 보기</a>
+                            <a th:if="${movie.status.name() != 'PREV'}"
+                               th:href="@{/reservation(movieId=${movie.id})}"
+                               class="btn btn-success">예매하기</a>
+                            <button th:if="${movie.status.name() == 'PREV'}"
+                                    class="btn btn-secondary" disabled>개봉 예정</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div th:if="${#lists.isEmpty(movies)}" class="text-center my-4">
+            <h5>해당 카테고리에 영화가 없습니다.</h5>
+        </div>
     </div>
 </div>
-<div th:if="${#lists.isEmpty(movies)}" class="text-center my-4">
-    <h5>검색 결과가 없습니다.</h5>
-</div>
+
 <!-- Bootstrap JS -->
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

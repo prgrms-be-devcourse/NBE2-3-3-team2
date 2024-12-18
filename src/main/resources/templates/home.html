@@ -5,86 +5,9 @@
     <title>LetMovie</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardStyle.css}">
     <style>
-        /* 캐러셀 버튼 스타일 */
-        .carousel-btn {
-            font-size: 2rem;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
 
-        .carousel-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        #prev-btn-show, #prev-btn-prev {
-            left: 0; /* 왼쪽 끝에 배치 */
-        }
-
-        #next-btn-show, #next-btn-prev {
-            right: 0; /* 오른쪽 끝에 배치 */
-        }
-
-        /* 왼쪽 버튼 */
-        #prev-btn-feature, #prev-btn-show, #prev-btn-prev {
-            left: -25px; /* 부모 컨테이너의 왼쪽 끝으로 밀기 */
-        }
-
-        /* 오른쪽 버튼 */
-        #next-btn-feature, #next-btn-show, #next-btn-prev {
-            right: -25px; /* 부모 컨테이너의 오른쪽 끝으로 밀기 */
-        }
-
-        /* 추천 영화 카드의 부모 요소에 상대적 위치 지정 */
-        #featured-movie-container,
-        #show-movie-container,
-        #prev-movie-container {
-            position: relative; /* 버튼이 이 요소를 기준으로 위치 설정됨 */
-        }
-
-        /* 헤더 스타일 */
-        .navbar {
-            margin-bottom: 30px;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
-
-        /* 애니메이션 관련 css */
-        .carousel-container {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .carousel-wrapper {
-            display: flex;
-            transition: transform 0.5s ease-in-out; /* 부드러운 슬라이드 효과 */
-        }
-
-        .col-md-3 {
-            flex: 0 0 25%; /* 한 번에 4개씩 보이도록 설정 */
-        }
-
-        /* 애니메이션 관련 css - 영화 추천 섹션 */
-        #featured-movie-wrapper {
-            overflow: hidden; /* 컨테이너 바깥 요소 숨김 */
-            position: relative;
-            width: 100%;
-        }
-
-        #featured-movie-container {
-            display: flex;
-            transition: transform 0.5s ease-in-out; /* 부드러운 슬라이드 효과 */
-        }
     </style>
 </head>
 <body>
@@ -122,7 +45,6 @@
 <!--        <button id="next-btn-feature" class="carousel-btn">&gt;</button>-->
 <!--    </div>-->
 
-    <!-- 추천 영화 섹션 -->
     <div class="position-relative mb-5">
         <!-- 제목 -->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -140,6 +62,12 @@
                     <div class="position-relative">
                         <!-- 스틸 이미지 -->
                         <img th:src="@{${movie.stillImageUrl}}" class="card-img-top" alt="스틸 이미지">
+
+                        <!-- 영화 이름 배경 및 텍스트 -->
+                        <div class="position-absolute top-0 start-0 p-3 bg-dark bg-opacity-50 text-white">
+                            <h5 class="mb-0" th:text="${movie.movieName}">영화 이름</h5>
+                        </div>
+
                         <!-- 버튼 배치 -->
                         <div class="position-absolute bottom-0 start-0 p-3">
                             <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
