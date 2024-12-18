@@ -44,6 +44,7 @@ public class Payment {
         this.reservation = reservation;
         this.amount = amount;
         this.paidAt = LocalDateTime.now();
+        updateStatus(paymentStatus);
     }
 
     public void updateStatus(PaymentStatus paymentStatus) {
