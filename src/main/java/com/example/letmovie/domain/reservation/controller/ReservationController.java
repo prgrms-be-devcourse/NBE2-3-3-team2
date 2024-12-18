@@ -2,6 +2,7 @@ package com.example.letmovie.domain.reservation.controller;
 
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationController {
 
     private final ShowtimeService showtimeService;
@@ -34,13 +36,6 @@ public class ReservationController {
      * 더미데이터 넣고 확인
      */
 
-    // 더미 데이터: 영화 ID에 따른 상영관 목록
-    private static final Map<String, List<String>> SCREEN_DATA = Map.of(
-            "1", List.of("상영관 A1", "상영관 A2", "상영관 A3"),
-            "2", List.of("상영관 B1", "상영관 B2"),
-            "movie3", List.of("상영관 C1", "상영관 C2", "상영관 C3")
-    );
-
 
 
     //예약 홈화면
@@ -53,7 +48,7 @@ public class ReservationController {
     //날짜에 맞는 영화상영시간 테이블 찾기.
     //쇼타임 테이블을 통해 극장찾기. 극장 id값과 같은 상영관. 상영관 id와 같은 영화 id찾아서 리스트로 내리기.
     @ResponseBody
-    @RequestMapping("/selectDate")
+    @PostMapping("/selectDate")
     public Map<String, Object> selectDate(@RequestBody Map<String, String> payload) {
         String selectedDate = payload.get("date");
 
@@ -69,13 +64,15 @@ public class ReservationController {
     }
 
     @ResponseBody
-    @RequestMapping("/selectMovie")
+    @PostMapping("/selectMovie")
     public Map<String, Object> selectTheater(@RequestBody Map<String, String> payload) {
         String movieName  = payload.get("movieName");
         String date = payload.get("date");
 
-        System.out.println(movieName);
-        System.out.println(date);
+        log.info("====selectMovie========");
+        log.info("moviename = {}",movieName);
+        log.info("date = {}",date);
+        log.info("======================");
 
         // 영화 ID로 극장 리스트 조회
         List<Map<String, String>> theaters = showtimeService.findTheatersByMovieNameAndDate(movieName, date);
@@ -84,7 +81,23 @@ public class ReservationController {
         return Map.of("theaters", theaters );
     }
 
+    @ResponseBody
+    @PostMapping("/selectShowtimes")
+    public Map<String, Object> selectShowtimes(@RequestBody Map<String, String> payload) {
+        String movieName  = payload.get("movieName");
+        String date = payload.get("date");
+        String theaterName = payload.get("theaterName");
 
+        log.info("================");
+        log.info("movieName: " + movieName);
+        log.info("date: " + date);
+        log.info("theaterName: " + theaterName);
+        log.info("===============");
+
+        List<Map<String, String>> showtimes = showtimeService.findShowtimeByDateAndMovieNameAndTheater(movieName, date, theaterName);
+
+        return Map.of("showtimes", showtimes);
+    }
 
 
 

@@ -21,7 +21,7 @@ INSERT INTO movie (movie_name, movie_code, director_name, audit_number, show_tim
 VALUES ('기생충', 'MOV003', '봉준호', '12347', '132분', '2019-05-30', '드라마', 'CJ ENM', 'SHOW', 'parasite.jpg');
 
 -- Showtime 테이블 더미 데이터 삽입 (Movie와 Screen을 참조)
-INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (1, 1, '2024-12-18', '14:00:00');
+INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (1, 1, '2024-12-18', '23:30:00');
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (2, 2, '2024-12-18', '16:00:00');
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (3, 3, '2024-12-19', '18:30:00');
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (4, 1, '2024-12-24', '20:00:00');

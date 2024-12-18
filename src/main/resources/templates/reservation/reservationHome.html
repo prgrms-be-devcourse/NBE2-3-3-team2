@@ -28,13 +28,13 @@
         </select>
     </div>
 
-    <!-- 영화 선택 -->
+    <!-- 극장 선택 -->
     <div class="form-group">
         <label for="theater">극장 선택</label>
         <select id="theater" name="theater" required>
             <option value="">극장을 선택해주세요</option>
-            <option value="1">용산 메가박스</option>
-            <option value="2">평양 cgv</option>
+            <option value="3">용산 메가박스</option>
+            <option value="4">평양 cgv</option>
         </select>
     </div>
 
@@ -122,6 +122,8 @@
 
     document.getElementById("movie").addEventListener("change", function() {
         const selectedMovie = this.value; // 선택한 영화 ID
+        console.log(selectedMovie);
+
         const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
 
         if (selectedMovie && selectedDate) {
@@ -143,7 +145,7 @@
 
                     data.theaters.forEach((theater) => {
                         const option = document.createElement("option");
-                        option.value = theater.id; // 극장 ID
+                        option.value = theater.name; // 극장 ID
                         option.textContent = theater.name; // 극장 이름
                         theaterSelect.appendChild(option);
                     });
@@ -153,20 +155,43 @@
     });
 
 
+    document.getElementById("theater").addEventListener("change", function () {
+        const selectedTheater = this.value; // 선택한 극장 ID
+        console.log(selectedTheater);
+        const selectedMovie = document.getElementById("movie").value; // 선택한 영화 이름
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
 
-    // document.getElementById("theater").addEventListener("change", function () {
-    //     const selectedTheater = this.value;
-    //     const theaterSelect = document.getElementById("theater");
-    //
-    //     //극장 초기화
-    //     theaterSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`;
-    //
-    //     if(selectedTheater){
-    //
-    //     }
-    //
-    //
-    // })
+        if (selectedTheater && selectedMovie && selectedDate) {
+            fetch(`/selectShowtimes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    theaterName: selectedTheater,
+                    movieName: selectedMovie,
+                    date: selectedDate,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const screenSelect = document.getElementById("screen");
+                    if (!screenSelect) {
+                        console.error("screen 요소를 찾을 수 없습니다.");
+                        return;
+                    }
+                    screenSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`; // 초기화
+
+                    data.showtimes.forEach((showtime) => {
+                        const option = document.createElement("option");
+                        option.value = showtime.screenName; // 상영관 이름을 값으로 설정
+                        option.textContent = `${showtime.screenName} - ${showtime.showtime} -남은좌석: ${showtime.screenTotalSeat} -예약가능 좌석:${showtime.screenRemainSeat}`; // 표시 텍스트
+                        screenSelect.appendChild(option);
+                    });
+                })
+                .catch((error) => console.error("Ajax 요청 실패:", error));
+        }
+    });
 
 </script>
 </body>

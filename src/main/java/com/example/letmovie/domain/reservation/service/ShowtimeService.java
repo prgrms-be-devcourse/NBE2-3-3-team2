@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ShowtimeService {
     }
 
     /**
-     * 영화 이름으로 극장 가져오기.
+     * 영화 이름, 날짜로 극장 가져오기.
      */
     public List<Map<String, String>> findTheatersByMovieNameAndDate(String movieName, String date) {
 
@@ -65,4 +66,46 @@ public class ShowtimeService {
                 ))
                 .toList();
     }
+
+    /**
+     * 영화 날짜, 영화, 극장 선택으로 상영관,시간대 찾기.
+     */
+    public List<Map<String, String>> findShowtimeByDateAndMovieNameAndTheater(String movieName, String date, String theaterName) {
+        LocalDate showtimeDate = LocalDate.parse(date);
+        LocalTime currentTime = LocalTime.now(); // 현재 시간
+
+        List<Showtime> showtimes = showtimeRepository.findShowtimesByMovieAndDateAndTheater(theaterName, movieName, showtimeDate, currentTime);
+
+        for (Showtime showtime : showtimes) {
+            System.out.println(showtime.getScreen().getTheater().getTheaterName());
+            System.out.println(showtime.getScreen().getScreenName());
+            System.out.println(String.valueOf(showtime.getScreen().getTotalSeats()));
+            System.out.println(String.valueOf(showtime.getScreen().getRemainingSeats()));
+            System.out.println(showtime.getShowtimeTime().toString());
+        }
+
+
+        // 데이터 가공
+        return showtimes.stream()
+                .map(showtime -> Map.of(
+                        "theaterName", showtime.getScreen().getTheater().getTheaterName(), //극장이름
+                        "screenName", showtime.getScreen().getScreenName(), //상영관 이름
+                        "screenTotalSeat", String.valueOf(showtime.getScreen().getTotalSeats()), //상영관 전체 좌석
+                        "screenRemainSeat", String.valueOf(showtime.getScreen().getRemainingSeats()), //상영관 예약 가능 좌석
+                        "showtime", showtime.getShowtimeTime().toString() //상영 시작 시간
+                ))
+                .toList();
+    }
+
+
+
+//    /**
+//     *  영화 이름, 날짜, 극장으로 상영관 시간대 가져오기.
+//     *  findTheatersByMovieNameAndShowtimeDate() 메서드 재활용 -> 패치조인 사용.
+//     */
+//    public List<Map<String, Object>> findDetailsByMovieNameAndDate(String movieName, String date) {
+//        List<Theater> theaters = showtimeRepository.findTheatersByMovieNameAndShowtimeDate(movieName, LocalDate.parse(date));
+//
+//    }
+
 }
