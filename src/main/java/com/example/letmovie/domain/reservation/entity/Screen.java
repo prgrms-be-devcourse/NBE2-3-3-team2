@@ -2,12 +2,14 @@ package com.example.letmovie.domain.reservation.entity;
 
 import com.example.letmovie.domain.movie.entity.Theater;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Screen {
 
     @Id

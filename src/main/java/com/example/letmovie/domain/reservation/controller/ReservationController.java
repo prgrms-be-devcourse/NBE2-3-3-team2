@@ -65,24 +65,43 @@ public class ReservationController {
         System.out.println(movieNames.size());
 
         // 필요한 데이터 가공 후 클라이언트에 반환
-        return Map.of("selectedDate", selectedDate,"movieNames", movieNames);
+        return Map.of("movieNames", movieNames);
+    }
+
+    @ResponseBody
+    @RequestMapping("/selectMovie")
+    public Map<String, Object> selectTheater(@RequestBody Map<String, String> payload) {
+        String movieName  = payload.get("movieName");
+        String date = payload.get("date");
+
+        System.out.println(movieName);
+        System.out.println(date);
+
+        // 영화 ID로 극장 리스트 조회
+        List<Map<String, String>> theaters = showtimeService.findTheatersByMovieNameAndDate(movieName, date);
+
+        // 극장 리스트 반환
+        return Map.of("theaters", theaters );
     }
 
 
 
-    //아작스통신
-    // 영화에 맞는 극장 응답.
-    @ResponseBody
-    @RequestMapping("/getScreens")
-    public Map<String, List<String>> getTheaters(@RequestParam("movie") String movieId) {
-        // 영화 ID에 맞는 상영관 목록 반환
-        List<String> screens = SCREEN_DATA.getOrDefault(movieId, Collections.emptyList());
 
-        for (String screen : screens) {
-            System.out.println(screen);
-        }
 
-        return Map.of("screens", screens);
-        }
+
+//    //아작스통신
+//    // 영화에 맞는 극장 응답.
+//    @ResponseBody
+//    @RequestMapping("/getScreens")
+//    public Map<String, List<String>> getTheaters(@RequestParam("movie") String movieId) {
+//        // 영화 ID에 맞는 상영관 목록 반환
+//        List<String> screens = SCREEN_DATA.getOrDefault(movieId, Collections.emptyList());
+//
+//        for (String screen : screens) {
+//            System.out.println(screen);
+//        }
+//
+//        return Map.of("screens", screens);
+//        }
 
 }

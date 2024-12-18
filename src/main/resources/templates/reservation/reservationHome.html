@@ -40,7 +40,7 @@
 
     <!-- 상영관 선택 -->
     <div class="form-group">
-        <label for="screen">상영관 선택</label>
+        <label for="screen">상영관, 시간대 선택</label>
         <select id="screen" name="screen" required>
             <option value="">상영관을 선택해주세요</option>
             <option value="A">상영관 A</option>
@@ -84,7 +84,7 @@
             if (event.target.name === "selectedDate") {
                 const selectedDate = event.target.value;
 
-                // Ajax 요청
+                // Ajax 요청 -> 영화이름
                 fetch(`/selectDate`, {
                     method: "POST",
                     headers: {
@@ -99,6 +99,11 @@
                         // 영화 목록 업데이트
                         const movieSelect = document.getElementById("movie");
                         movieSelect.innerHTML = `<option value="">영화를 선택해주세요</option>`; // 초기화
+
+                        // 극장 리스트 동적 업데이트
+                        const theaterSelect = document.getElementById("theater");
+                        theaterSelect.innerHTML = `<option value="">영화를 선택해주세요</option>`; // 초기화
+
 
                         data.movieNames.forEach((movieName) => {
                             const option = document.createElement("option");
@@ -115,32 +120,53 @@
 
 
 
-
-
     document.getElementById("movie").addEventListener("change", function() {
-        const selectedMovie = this.value;
-        const screenSelect = document.getElementById("screen");
+        const selectedMovie = this.value; // 선택한 영화 ID
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
 
-        // 상영관 초기화
-        screenSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`;
+        if (selectedMovie && selectedDate) {
+            // Ajax 요청
+            fetch(`/selectMovie`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ movieName: selectedMovie , date: selectedDate}),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("서버 응답:", data);
 
-        if (selectedMovie) {
-            // 서버로 요청 보내기
-            fetch(`/getScreens?movie=${selectedMovie}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.screens.forEach(screen => {
-                        console.log(screen);
+                    // 극장 리스트 동적 업데이트
+                    const theaterSelect = document.getElementById("theater");
+                    theaterSelect.innerHTML = `<option value="">극장을 선택해주세요</option>`; // 초기화
+
+                    data.theaters.forEach((theater) => {
                         const option = document.createElement("option");
-                        option.textContent = screen;
-                        screenSelect.appendChild(option);
+                        option.value = theater.id; // 극장 ID
+                        option.textContent = theater.name; // 극장 이름
+                        theaterSelect.appendChild(option);
                     });
                 })
-                .catch(error => console.error('Error fetching screens:', error));
+                .catch((error) => console.error("Ajax 요청 실패:", error));
         }
     });
 
 
+
+    // document.getElementById("theater").addEventListener("change", function () {
+    //     const selectedTheater = this.value;
+    //     const theaterSelect = document.getElementById("theater");
+    //
+    //     //극장 초기화
+    //     theaterSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`;
+    //
+    //     if(selectedTheater){
+    //
+    //     }
+    //
+    //
+    // })
 
 </script>
 </body>
