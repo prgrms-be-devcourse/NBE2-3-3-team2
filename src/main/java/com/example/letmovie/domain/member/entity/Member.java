@@ -29,9 +29,13 @@ public class Member {
     private String zipCode;
 
     @Column(nullable = false)
-    private boolean isAdmin = false;
+    private boolean is_admin = false;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Grade grade = Grade.GENERAL;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus = MemberStatus.AVAILABLE;
 }
