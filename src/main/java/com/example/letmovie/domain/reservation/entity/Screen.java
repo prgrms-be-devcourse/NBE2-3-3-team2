@@ -4,6 +4,8 @@ import com.example.letmovie.domain.movie.entity.Theater;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @NoArgsConstructor
 public class Screen {
@@ -25,5 +27,6 @@ public class Screen {
 
     @Column(nullable = false)
     private int remainingSeats;
+
 
 }

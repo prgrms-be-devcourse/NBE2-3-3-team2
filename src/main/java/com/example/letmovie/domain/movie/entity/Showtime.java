@@ -5,13 +5,17 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Showtime {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showtime_id")
     private Long id;
 
@@ -24,7 +28,7 @@ public class Showtime {
     private Movie movie;
 
     @Column(nullable = false)
-    private Date showtimeDate;
+    private LocalDate showtimeDate;
     @Column(nullable = false)
-    private Date showtimeTime;
+    private LocalTime showtimeTime;
 }
