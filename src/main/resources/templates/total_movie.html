@@ -35,6 +35,9 @@
         </div>
     </div>
 </div>
+<div th:if="${#lists.isEmpty(movies)}" class="text-center my-4">
+    <h5>검색 결과가 없습니다.</h5>
+</div>
 <!-- Bootstrap JS -->
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

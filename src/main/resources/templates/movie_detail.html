@@ -2,30 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Movie_Detail</title>
+    <title>Movie Detail</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        .movie-detail-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .poster-image {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            border-radius: 20px;
+        }
+    </style>
 </head>
 <body>
 <!-- 공통 헤더 추가 -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container mt-5">
-    <div class="row">
-        <!-- 영화 포스터 -->
-        <div class="col-md-4">
-            <img th:src="@{${movie.posterImageUrl}}" class="img-fluid" alt="포스터 이미지">
-        </div>
-        <!-- 영화 정보 -->
-        <div class="col-md-8">
-            <h2 th:text="${movie.movieName}">영화 제목</h2>
-            <p><strong>감독:</strong> <span th:text="${movie.directorName}"></span></p>
-            <p><strong>장르:</strong> <span th:text="${movie.genreName}"></span></p>
-            <p><strong>러닝타임:</strong> <span th:text="${movie.runtime}"></span></p>
-            <p><strong>등급:</strong> <span th:text="${movie.rating}"></span></p>
-            <p><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></p>
-            <p><strong>줄거리:</strong> <span th:text="${movie.plot}"></span></p>
-            <a href="/" class="btn btn-secondary mt-3">홈으로 돌아가기</a>
-            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success mt-3">예매하기</a>
+    <div class="row justify-content-center">
+        <!-- 상세보기 카드 -->
+        <div class="col-lg-10">
+            <div class="movie-detail-card">
+                <div class="row">
+                    <!-- 영화 포스터 -->
+                    <div class="col-md-4 text-center">
+                        <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">
+                    </div>
+                    <!-- 영화 정보 -->
+                    <div class="col-md-8">
+                        <h2 class="mb-3" th:text="${movie.movieName}">영화 제목</h2>
+                        <ul class="list-unstyled">
+                            <li><strong>등급:</strong> <span th:text="${movie.rating}"></span></li>
+                            <li><strong>러닝타임:</strong> <span th:text="${movie.runtime}"></span>분</li>
+                            <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>
+                            <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>
+                            <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>
+                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>
+                            <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>
+                            <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>
+                        </ul>
+                        <hr>
+                        <p th:text="${movie.plot}" class="text-muted">줄거리</p>
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>
+                            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-custom px-4">예매하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -25,4 +25,10 @@ public class MovieServiceImpl {
     public Movie getMovieById(int movieId) {
         return movieJpaRepository.findById(movieId).orElse(null);
     }
+
+    // 검색 기능
+    public List<Movie> searchMoviesByName(String query) {
+//        return movieJpaRepository.findByMovieNameStartingWithIgnoreCase(query);
+        return movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
+    }
 }

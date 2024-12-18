@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,13 +37,17 @@ public class MovieController {
         return "movie_detail";
     }
 
-    // 영화 상세 페이지
+
+    // 전체 영화 페이지
     @GetMapping("/movie/total_movie")
-    public String totalMovie(Model model) {
-
-        List<Movie> movies = movieService.getAllMovies();
-        model.addAttribute("movies", movies);
-
+    public String totalMovie(@RequestParam(required = false) String query, Model model) {
+        if (query != null && !query.isEmpty()) {
+            List<Movie> movies = movieService.searchMoviesByName(query);
+            model.addAttribute("movies", movies);
+        } else {
+            List<Movie> movies = movieService.getAllMovies();
+            model.addAttribute("movies", movies);
+        }
         return "total_movie";
     }
 }
