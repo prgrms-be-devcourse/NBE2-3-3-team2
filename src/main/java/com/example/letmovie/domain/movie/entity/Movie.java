@@ -44,4 +44,5 @@ public class Movie {
     private String salesAcc;
     @Column(nullable = false)
     private String audiAcc;
+
 }
