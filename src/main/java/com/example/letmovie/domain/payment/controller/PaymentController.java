@@ -37,4 +37,10 @@ public class PaymentController {
         return ResponseEntity.ok()
                 .body(response);
     }
+
+//    @GetMapping("/fail")
+//    @Operation(summary = "사용자 결제 실패시 대안책")
+//    public Payment fail() {
+//
+//    }
 }
