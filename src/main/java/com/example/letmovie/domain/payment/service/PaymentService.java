@@ -18,10 +18,8 @@ public class PaymentService {
 
     private static final String HOST = "https://open-api.kakaopay.com";
     private final HttpRequestUtil httpRequestUtil;
-    private final PaymentRepository paymentRepository;
-    private final PaymentHistoryRepository paymentHistoryRepository;
-//    private final MemberRepository memberRepository;
-//    private final ReservationRepository reservationRepository;
+//    private final PaymentRepository paymentRepository;
+//    private final PaymentHistoryRepository paymentHistoryRepository;
     @Value("${kakao.pay.secret.key}")
     private String secretKey;
     @Value("${kakao.pay.cid}")

@@ -33,6 +33,8 @@ public class Movie {
     private String companys;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private Status status;
+    @Column(nullable = false)
     private String posterImageUrl;
     @Column(nullable = false)
     private String stillImageUrl;
@@ -40,5 +42,6 @@ public class Movie {
     private String plot;
     @Column(nullable = false)
     private String salesAcc;
-
+    @Column(nullable = false)
+    private String audiAcc;
 }
