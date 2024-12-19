@@ -24,7 +24,7 @@ public class Showtime {
     private Movie movie;
 
     @Column(nullable = false)
-    private Date showtimeDate;
+    private String showtimeDate;
     @Column(nullable = false)
-    private Date showtimeTime;
+    private String showtimeTime;
 }
