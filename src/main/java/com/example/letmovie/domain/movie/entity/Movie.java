@@ -42,5 +42,6 @@ public class Movie {
     private String plot;
     @Column(nullable = false)
     private String salesAcc;
-
+    @Column(nullable = false)
+    private String audiAcc;
 }
