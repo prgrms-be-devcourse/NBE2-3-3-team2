@@ -51,7 +51,13 @@
                         <p th:text="${movie.plot}" class="text-muted">줄거리</p>
                         <div class="d-flex gap-3 mt-4">
                             <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>
-                            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-custom px-4">예매하기</a>
+                            <!-- 버튼 상태 조건부 렌더링 -->
+                            <a th:if="${movie.status.name() != 'PREV'}"
+                               th:href="@{/reservation(movieId=${movie.id})}"
+                               class="btn btn-success btn-custom px-4">예매하기</a>
+                            <button th:if="${movie.status.name() == 'PREV'}"
+                                    class="btn btn-secondary btn-custom px-4"
+                                    disabled>개봉 예정</button>
                         </div>
                     </div>
                 </div>

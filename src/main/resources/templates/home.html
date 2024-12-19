@@ -164,7 +164,13 @@
                             </a>
                             <div class="card-body text-center">
                                 <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>
-                                <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>
+<!--                                <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>-->
+                                <a th:if="${movie.status.name() != 'PREV'}"
+                                   th:href="@{/reservation(movieId=${movie.id})}"
+                                   class="btn btn-success btn-sm">예매하기</a>
+                                <button th:if="${movie.status.name() == 'PREV'}"
+                                        class="btn btn-secondary btn-sm"
+                                        disabled>개봉 예정</button>
                             </div>
                         </div>
                     </div>
