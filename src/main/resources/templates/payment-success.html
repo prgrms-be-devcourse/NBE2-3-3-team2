@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 완료</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+        .success-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #1ec800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .success-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: white;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 32px;
+            font-weight: 700;
+        }
+        .payment-info {
+            text-align: left;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            color: #666;
+            font-size: 14px;
+        }
+        .value {
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .total-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1ec800;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .button {
+            background-color: #ffeb00;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #fee500;
+        }
+        .button.secondary {
+            background-color: #f8f9fa;
+            color: #666;
+        }
+        .button.secondary:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+<div class="success-container">
+    <div class="success-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+        </svg>
+    </div>
+    <h1>결제가 완료되었습니다</h1>
+
+    <div class="payment-info">
+        <div class="info-row">
+            <span class="label">상품명</span>
+            <span class="value" id="itemName">-</span>
+        </div>
+        <div class="info-row">
+            <span class="label">주문번호</span>
+            <span class="value" id="orderId">-</span>
+        </div>
+        <div class="info-row">
+            <span class="label">결제수단</span>
+            <span class="value" id="paymentMethod">-</span>
+        </div>
+        <div class="info-row">
+            <span class="label">결제시간</span>
+            <span class="value" id="approvedAt">-</span>
+        </div>
+        <div class="info-row">
+            <span class="label">결제 금액</span>
+            <span class="value total-amount" id="totalAmount">-</span>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <a href="/" class="button">홈으로</a>
+        <a href="/orders" class="button secondary">주문내역</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const pgToken = urlParams.get('pg_token');
+        const tid = sessionStorage.getItem('tid');
+
+
+        if (pgToken && tid) {
+            try {
+                const response = await fetch(`/api/v1/payment/success?pg_token=${pgToken}&tid=${tid}&cid=TC0ONETIME&partner_user_id=1&partner_order_id=heojeonghyeon`);
+                if (!response.ok) {
+                    throw new Error('서버 응답 오류');
+                }
+                const data = await response.json();
+
+                // 응답 데이터 확인을 위한 로그
+                console.log('Payment Response:', data);
+
+                // null 체크를 포함한 데이터 매핑
+                if (data) {
+                    // 상품명
+                    const itemNameElement = document.getElementById('itemName');
+                    if (itemNameElement) {
+                        itemNameElement.textContent = data.item_name || '-';
+                    }
+
+                    // 주문번호
+                    const orderIdElement = document.getElementById('orderId');
+                    if (orderIdElement) {
+                        orderIdElement.textContent = data.partner_order_id || '-';
+                    }
+
+                    // 결제수단
+                    const paymentMethodElement = document.getElementById('paymentMethod');
+                    if (paymentMethodElement) {
+                        paymentMethodElement.textContent =
+                            data.payment_method_type === 'MONEY' ? '카카오페이머니' : '카드결제';
+                    }
+
+                    // 결제시간
+                    const approvedAtElement = document.getElementById('approvedAt');
+                    if (approvedAtElement && data.approved_at) {
+                        approvedAtElement.textContent = new Date(data.approved_at).toLocaleString();
+                    }
+
+                    // 결제금액
+                    const totalAmountElement = document.getElementById('totalAmount');
+                    if (totalAmountElement && data.amount && data.amount.total) {
+                        totalAmountElement.textContent = `${data.amount.total.toLocaleString()}원`;
+                    }
+                }
+
+            } catch (error) {
+                console.error('Payment Error:', error);
+                alert('결제 정보를 불러오는 중 오류가 발생했습니다.');
+            }
+        }
+    });
+    // document.addEventListener('DOMContentLoaded', async () => {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const pgToken = urlParams.get('pg_token');
+    //     const tid = sessionStorage.getItem('tid');
+    //
+    //     if (pgToken && tid) {
+    //         try {
+    //             const response = await fetch(`/api/v1/payment/success?pg_token=${pgToken}&tid=${tid}`);
+    //             if (!response.ok) {
+    //                 throw new Error('서버 응답 오류');
+    //             }
+    //             const data = await response.json();
+    //
+    //             // 결제 정보 표시
+    //             document.getElementById('itemName').textContent = data.item_name || '-';
+    //             document.getElementById('orderId').textContent = data.partner_order_id || '-';
+    //             document.getElementById('paymentMethod').textContent =
+    //                 data.payment_method_type === 'MONEY' ? '카카오페이머니' : '카드결제';
+    //             document.getElementById('approvedAt').textContent =
+    //                 data.approved_at ? new Date(data.approved_at).toLocaleString() : '-';
+    //             document.getElementById('totalAmount').textContent =
+    //                 data.amount ? `${data.amount.total.toLocaleString()}원` : '-';
+    //
+    //             // 세션 스토리지 클리어
+    //             sessionStorage.removeItem('tid');
+    //
+    //         } catch (error) {
+    //             console.error('결제 승인 중 오류 발생:', error);
+    //             alert('결제 정보를 불러오는 중 오류가 발생했습니다.');
+    //         }
+    //     } else {
+    //         console.error('필요한 결제 정보가 없습니다.');
+    //         // 홈으로 리다이렉트 또는 에러 메시지 표시
+    //     }
+    // });
+</script>
+</body>
+</html>
