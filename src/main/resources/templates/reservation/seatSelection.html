@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>좌석 선택</title>
+  <link rel="stylesheet" href="/css/seatSelection.css">
+</head>
+<body>
+<div class="container">
+  <h1>좌석 선택</h1>
+  <h3 th:text="'상영관: ' + ${screen.getScreenName()}"></h3>
+  <h3 th:text="'상영시간: ' + ${showtime.getShowtimeDate()} + ' ' + ${showtime.getShowtimeTime()}"></h3>
+  <h3 th:text="'영화: ' + ${showtime.movie.getMovieName()}"></h3>
+
+  <div class="seat-container">
+    <!-- 행 반복 -->
+    <div th:each="row : ${rows}" class="seat-row">
+      <!-- 열 반복 -->
+      <div th:each="seat : ${seats}"
+           th:if="${seat.seatLow} == ${row}"
+           class="seat"
+           th:classappend="${seat.isAble ? 'available' : 'unavailable'}"
+           th:attr="data-row=${seat.seatLow}, data-col=${seat.seatCol}"
+           th:title="'Row: ' + ${seat.seatLow} + ', Col: ' + ${seat.seatCol}"
+           th:text="'R' + ${seat.seatLow} + 'C' + ${seat.seatCol}"
+           onclick="selectSeat(this)"></div>
+    </div>
+
+  <div class="legend">
+    <span class="seat available"></span> 예약 가능
+    <span class="seat unavailable"></span> 예약 불가
+  </div>
+
+  <button class="submit-btn" onclick="submitSelection()">선택 완료</button>
+</div>
+
+<script>
+  const selectedSeats = [];
+
+  function selectSeat(seatElement) {
+    if (seatElement.classList.contains('available')) {
+      if (seatElement.classList.contains('selected')) {
+        seatElement.classList.remove('selected');
+        const row = seatElement.getAttribute('data-row');
+        const col = seatElement.getAttribute('data-col');
+        selectedSeats.splice(selectedSeats.indexOf(`${row}-${col}`), 1);
+      } else {
+        seatElement.classList.add('selected');
+        const row = seatElement.getAttribute('data-row');
+        const col = seatElement.getAttribute('data-col');
+        selectedSeats.push(`${row}-${col}`);
+      }
+    }
+  }
+
+  function submitSelection() {
+    if (selectedSeats.length === 0) {
+      alert("좌석을 선택하세요!");
+      return;
+    }
+    alert("선택한 좌석: " + selectedSeats.join(", "));
+    // 여기서 서버로 선택한 좌석 정보를 POST 요청으로 전송할 수 있음
+  }
+</script>
+</body>
+</html>

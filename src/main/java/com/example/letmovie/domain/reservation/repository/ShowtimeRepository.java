@@ -2,8 +2,6 @@ package com.example.letmovie.domain.reservation.repository;
 
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Theater;
-import com.example.letmovie.domain.reservation.entity.Reservation;
-import com.example.letmovie.domain.reservation.entity.Screen;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

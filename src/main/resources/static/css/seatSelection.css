@@ -1,0 +1,99 @@
+.container {
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin: 5px 0;
+}
+
+.seat-container {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seat-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(10, 50px); /* 한 행에 10개 좌석 */
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.seat {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.seat.available {
+    background-color: #76c893;
+    color: #fff;
+}
+
+.seat.available:hover {
+    background-color: #4caf50;
+}
+
+.seat.unavailable {
+    background-color: #d3d3d3;
+    color: #666;
+    pointer-events: none;
+}
+
+.seat.selected {
+    background-color: #ffcc00;
+    color: #000;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.legend .seat {
+    width: 20px;
+    height: 20px;
+    border: none;
+    margin: 0;
+}
+
+.submit-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +22,9 @@ public class Screen {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
+
+    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL) //양방향 세팅
+    private List<Seat> seats = new ArrayList<>();
 
     @Column(nullable = false)
     private String screenName;

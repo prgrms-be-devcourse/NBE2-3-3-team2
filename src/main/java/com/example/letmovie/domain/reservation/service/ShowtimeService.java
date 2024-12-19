@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,14 +77,6 @@ public class ShowtimeService {
 
         List<Showtime> showtimes = showtimeRepository.findShowtimesByMovieAndDateAndTheater(theaterName, movieName, showtimeDate, currentTime);
 
-        for (Showtime showtime : showtimes) {
-            System.out.println(showtime.getScreen().getTheater().getTheaterName());
-            System.out.println(showtime.getScreen().getScreenName());
-            System.out.println(String.valueOf(showtime.getScreen().getTotalSeats()));
-            System.out.println(String.valueOf(showtime.getScreen().getRemainingSeats()));
-            System.out.println(showtime.getShowtimeTime().toString());
-        }
-
 
         // 데이터 가공
         return showtimes.stream()
@@ -92,20 +85,13 @@ public class ShowtimeService {
                         "screenName", showtime.getScreen().getScreenName(), //상영관 이름
                         "screenTotalSeat", String.valueOf(showtime.getScreen().getTotalSeats()), //상영관 전체 좌석
                         "screenRemainSeat", String.valueOf(showtime.getScreen().getRemainingSeats()), //상영관 예약 가능 좌석
-                        "showtime", showtime.getShowtimeTime().toString() //상영 시작 시간
+                        "showtime", showtime.getShowtimeTime().toString(), //상영 시작 시간
+                        "showtimeId", String.valueOf(showtime.getId())
                 ))
                 .toList();
     }
 
-
-
-//    /**
-//     *  영화 이름, 날짜, 극장으로 상영관 시간대 가져오기.
-//     *  findTheatersByMovieNameAndShowtimeDate() 메서드 재활용 -> 패치조인 사용.
-//     */
-//    public List<Map<String, Object>> findDetailsByMovieNameAndDate(String movieName, String date) {
-//        List<Theater> theaters = showtimeRepository.findTheatersByMovieNameAndShowtimeDate(movieName, LocalDate.parse(date));
-//
-//    }
-
+    public Optional<Showtime> findById(Long id) {
+        return showtimeRepository.findById(id);
+    }
 }

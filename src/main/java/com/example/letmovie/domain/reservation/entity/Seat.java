@@ -4,9 +4,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Seat {
 
@@ -18,6 +23,9 @@ public class Seat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id")
     private Screen screen;
+
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL) //casecade
+    private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
     @Enumerated(EnumType.STRING) //enum
     private SeatType seatType;
@@ -33,5 +41,25 @@ public class Seat {
 
     @Column(nullable = false)
     private int price;
+
+    /**
+     * 연관관계 메서드
+     */
+    public void setScreen(Screen screen) {
+        this.screen = screen;
+        screen.getSeats().add(this);
+    }
+
+    public void addReservationSeat(ReservationSeat reservationSeat) {
+        reservationSeats.add(reservationSeat);
+        reservationSeat.setSeat(this);
+    }
+
+    /**
+     * 생성 메서드
+     */
+
+
+
 
 }

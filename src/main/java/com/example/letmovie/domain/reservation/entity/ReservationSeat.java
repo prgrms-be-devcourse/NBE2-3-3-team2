@@ -1,9 +1,13 @@
 package com.example.letmovie.domain.reservation.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 public class ReservationSeat {
 

@@ -42,7 +42,7 @@
     <div class="form-group">
         <label for="screen">상영관, 시간대 선택</label>
         <select id="screen" name="screen" required>
-            <option value="">상영관을 선택해주세요</option>
+            <option value="">상영관, 시간대를 선택해주세요</option>
             <option value="A">상영관 A</option>
             <option value="B">상영관 B</option>
         </select>
@@ -185,6 +185,7 @@
                     data.showtimes.forEach((showtime) => {
                         const option = document.createElement("option");
                         option.value = showtime.screenName; // 상영관 이름을 값으로 설정
+                        option.value = JSON.stringify({ id: showtime.showtimeId, screenName: showtime.screenName }); // id도 같이 보내줘야함 필수
                         option.textContent = `${showtime.screenName} - ${showtime.showtime} -남은좌석: ${showtime.screenTotalSeat} -예약가능 좌석:${showtime.screenRemainSeat}`; // 표시 텍스트
                         screenSelect.appendChild(option);
                     });
@@ -192,6 +193,36 @@
                 .catch((error) => console.error("Ajax 요청 실패:", error));
         }
     });
+
+
+    document.querySelector("button[type='submit']").addEventListener("click", function () {
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value;
+        const selectedMovie = document.getElementById("movie").value;
+        const selectedTheater = document.getElementById("theater").value;
+
+        const selectedScreen = document.getElementById("screen").value;
+        const { id, screenName } = JSON.parse(selectedScreen);  // showtime id랑 상영관 이름 가져오기.
+
+
+        fetch("/saveSelection/seat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                date: selectedDate,
+                movie: selectedMovie,
+                theater: selectedTheater,
+                screen: screenName,
+                showtimeId: id
+            }),
+        })
+            .then(() => {
+                window.location.href = "/seatSelection?showtimeId=" + id;
+            })
+            .catch((error) => console.error("저장 실패:", error));
+    });
+
 
 </script>
 </body>
