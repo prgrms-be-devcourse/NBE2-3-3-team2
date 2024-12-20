@@ -143,7 +143,7 @@
                     const theaterSelect = document.getElementById("theater");
                     theaterSelect.innerHTML = `<option value="">극장을 선택해주세요</option>`; // 초기화
 
-                    data.theaters.forEach((theater) => {
+                    data.forEach((theater) => {
                         const option = document.createElement("option");
                         option.value = theater.name; // 극장 ID
                         option.textContent = theater.name; // 극장 이름
@@ -182,7 +182,7 @@
                     }
                     screenSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`; // 초기화
 
-                    data.showtimes.forEach((showtime) => {
+                    data.forEach((showtime) => {
                         const option = document.createElement("option");
                         option.value = showtime.screenName; // 상영관 이름을 값으로 설정
                         option.value = JSON.stringify({ id: showtime.showtimeId, screenName: showtime.screenName }); // id도 같이 보내줘야함 필수
