@@ -11,16 +11,17 @@ INSERT INTO screen (theater_id, screen_name, total_seats, remaining_seats) VALUE
 INSERT INTO screen (theater_id, screen_name, total_seats, remaining_seats) VALUES (3, '아이맥스관', 300, 300);
 
 -- Movie 테이블 더미 데이터 삽입
-INSERT INTO movie (movie_name, movie_code, director_name, audit_number, show_time, open_date, genre_name, companys, status, imagename)
-VALUES ('인터스텔라', 'MOV001', '크리스토퍼 놀란', '12345', '169분', '2014-11-06', 'SF', '워너 브라더스', 'SHOW', 'interstellar.jpg');
+-- Movie 테이블 더미 데이터 삽입
+INSERT INTO movie (movie_name, movie_code, director_name, rating, runtime, open_date, genre_name, companys, status, poster_image_url, still_image_url, plot, sales_acc, audi_acc)
+VALUES
+    ('인터스텔라', 'MOV001', '크리스토퍼 놀란', '12세 관람가', '169분', '2014-11-06', 'SF', '워너 브라더스', 'SHOW', 'interstellar.jpg', 'interstellar_still.jpg', '인류의 미래를 위한 위대한 항해', '20000000', '15000000'),
 
-INSERT INTO movie (movie_name, movie_code, director_name, audit_number, show_time, open_date, genre_name, companys, status, imagename)
-VALUES ('어벤져스: 엔드게임', 'MOV002', '안소니 루소', '12346', '181분', '2019-04-24', '액션', '마블 스튜디오', 'END', 'endgame.jpg');
+    ('어벤져스: 엔드게임', 'MOV002', '안소니 루소', '15세 관람가', '181분', '2019-04-24', '액션', '마블 스튜디오', 'END', 'endgame.jpg', 'endgame_still.jpg', '어벤져스의 마지막 전투', '35000000', '25000000'),
 
-INSERT INTO movie (movie_name, movie_code, director_name, audit_number, show_time, open_date, genre_name, companys, status, imagename)
-VALUES ('기생충', 'MOV003', '봉준호', '12347', '132분', '2019-05-30', '드라마', 'CJ ENM', 'SHOW', 'parasite.jpg');
+    ('기생충', 'MOV003', '봉준호', '15세 관람가', '132분', '2019-05-30', '드라마', 'CJ ENM', 'SHOW', 'parasite.jpg', 'parasite_still.jpg', '반지하 가족과 부유층의 만남', '12000000', '10000000');
 
--- Showtime 테이블 더미 데이터 삽입 (Movie와 Screen을 참조)
+
+-- -- Showtime 테이블 더미 데이터 삽입 (Movie와 Screen을 참조) LocalDate.now(), LocalTime.now()
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (1, 1, '2024-12-23', '23:30:00');
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (2, 2, '2024-12-23', '16:00:00');
 INSERT INTO showtime (screen_id, movie_id, showtime_date, showtime_time) VALUES (3, 3, '2024-12-23', '18:30:00');

@@ -1,14 +1,13 @@
 package com.example.letmovie.domain.member.entity;
 
-
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)   // Builder 를 위해 필요
 public class Member {
 
     @Id
@@ -25,13 +24,17 @@ public class Member {
     @Column(nullable = false, length = 64)
     private String password;
 
-    @Column(nullable = false, length = 5)
-    private String zipCode;
+    @Column(nullable = false, length = 8)
+    private String birthDate; // 생년월일 (YYYYMMDD)
 
     @Column(nullable = false)
-    private boolean isAdmin = false;
+    private Authority authority = Authority.ROLE_USER;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Grade grade = Grade.GENERAL;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus = MemberStatus.AVAILABLE;
 }

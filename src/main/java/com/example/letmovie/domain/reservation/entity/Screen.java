@@ -2,6 +2,7 @@ package com.example.letmovie.domain.reservation.entity;
 
 import com.example.letmovie.domain.movie.entity.Theater;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Screen {
 

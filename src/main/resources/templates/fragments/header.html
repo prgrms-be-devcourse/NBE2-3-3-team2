@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="header">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/search.css}">
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <!-- 로고 -->
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
+            </a>
+            <!-- 토글 버튼 (반응형) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- 메뉴 -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/movie/total_movie}">영화</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/reservation}">예매</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/movie/showtime}">상영시간</a>
+                    </li>
+                    <!-- 검색 아이콘 -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="search-icon">
+                            <i class="bi bi-search"></i>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">로그인</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/signup}">회원가입</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/mypage}">마이페이지</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+<!--    &lt;!&ndash; 검색창 팝업 &ndash;&gt;-->
+<!--    <div id="search-popup" class="d-none">-->
+<!--        <div class="container py-3">-->
+<!--            <div class="bg-light shadow rounded p-4">-->
+<!--                <button id="close-search" class="btn btn-close float-end"></button>-->
+<!--                <h5 class="mb-3">영화 검색</h5>-->
+<!--                <input type="text" id="search-input" class="form-control" placeholder="검색어를 입력하세요">-->
+<!--                <ul id="search-suggestions" class="list-group mt-3"></ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 검색 팝업 &ndash;&gt;-->
+<!--    <div id="search-popup" class="d-none">-->
+<!--        <div class="container py-3">-->
+<!--            <div class="bg-light shadow rounded p-4">-->
+<!--                <button id="close-search" class="btn btn-close float-end"></button>-->
+<!--                <h5 class="mb-3">영화 검색</h5>-->
+<!--                <form action="/movies" method="get" id="search-form">-->
+<!--                    <input type="text" name="query" id="search-input" class="form-control mb-3"-->
+<!--                           placeholder="검색어를 입력하세요" required>-->
+<!--                    <button type="submit" class="btn btn-primary w-100">검색</button>-->
+<!--                </form>-->
+<!--                <ul id="search-suggestions" class="list-group mt-3"></ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!-- 검색 팝업 -->
+    <div id="search-popup" class="d-none">
+        <div class="container py-3">
+            <div class="bg-light shadow rounded p-4">
+                <button id="close-search" class="btn btn-close float-end"></button>
+                <h5 class="mb-3">영화 검색</h5>
+                <form action="/movies" method="get" id="search-form">
+                    <!-- Input group으로 검색창과 버튼을 묶음 -->
+                    <div class="input-group">
+                        <input type="text" name="query" id="search-input" class="form-control"
+                               placeholder="검색어를 입력하세요" required>
+                        &nbsp;
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+                <ul id="search-suggestions" class="list-group mt-3"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for search popup -->
+    <script th:src="@{/js/searchPopUp.js}"></script>
+</div>
+</body>
+</html>
