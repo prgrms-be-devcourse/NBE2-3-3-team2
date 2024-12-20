@@ -1,7 +1,9 @@
 package com.example.letmovie.domain.movie.controller;
 
+import com.example.letmovie.domain.movie.dto.ReviewDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.service.MovieServiceImpl;
+import com.example.letmovie.domain.movie.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import java.util.List;
 public class MovieController {
 
     private final MovieServiceImpl movieService;
+    private final ReviewServiceImpl reviewService;
 
     // home page
     @GetMapping("/")
@@ -32,7 +35,9 @@ public class MovieController {
     public String movieDetail(@PathVariable int movieId, Model model) {
 
         Movie movie = movieService.getMovieById(movieId);
+        List<ReviewDTO> reviews = reviewService.getReviewsByMovieId(movieId); // 해당 영화의 리뷰 목록 가져오기
         model.addAttribute("movie", movie);
+        model.addAttribute("reviews", reviews);
 
         return "movie_detail";
     }
