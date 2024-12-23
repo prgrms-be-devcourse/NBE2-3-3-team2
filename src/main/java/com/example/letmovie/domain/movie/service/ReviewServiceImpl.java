@@ -29,7 +29,7 @@ public class ReviewServiceImpl {
     }
 
     // 리뷰 추가
-    public void addReview(int movieId, String nickname, String password, int rating, String content) {
+    public void addReview(Long movieId, String nickname, String password, int rating, String content) {
         Review review = new Review(new Movie(movieId, null, null, null, null, null, null, null, null, null, null, null, null, null, null), nickname, password, rating, content);
         reviewJpaRepository.save(review);
     }

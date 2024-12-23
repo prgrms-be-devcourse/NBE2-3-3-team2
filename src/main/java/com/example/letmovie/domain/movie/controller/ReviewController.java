@@ -18,7 +18,7 @@ public class ReviewController {
     private final ReviewServiceImpl reviewService;
 
     @PostMapping("/add")
-    public String addReview(@RequestParam int movieId,
+    public String addReview(@RequestParam Long movieId,
                             @RequestParam String nickname,
                             @RequestParam String password,
                             @RequestParam int rating,
