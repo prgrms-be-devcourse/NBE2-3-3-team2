@@ -142,7 +142,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "2024-12-23", "코미디", "제작사 4",
                 Status.RECOMMEND, "https://www.themoviedb.org/t/p/w1280/mwguqSMRCA3NgpPoRsXdFhid25m.jpg", "https://image.tmdb.org/t/p/original/4cp40IyTpFfsT2IKpl0YlUkMBIR.jpg", "줄거리 4", "300,000", "12340"));
 
-
         // Showtime 데이터 추가
         //12 23
         showtimeRepository.save(new Showtime(null, screen1, movie1, LocalDate.of(2024, 12, 23), LocalTime.of(23, 30)));
@@ -165,10 +164,10 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
 
         // Seat 데이터 추가
-        addSeatsForScreen(screen1, 10, 3);
-        addSeatsForScreen(screen2, 5, 3);
-        addSeatsForScreen(screen3, 5, 3);
-        addSeatsForScreen(screen4, 5, 3);
+        addSeatsForScreen(screen1, 10, 10);
+        addSeatsForScreen(screen2, 8, 4);
+        addSeatsForScreen(screen3, 5, 4);
+        addSeatsForScreen(screen4, 5, 5);
     }
 
     private void addSeatsForScreen(Screen screen, int rows, int cols) {
@@ -177,10 +176,9 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 boolean isAble = !(row == 6 && col == 2); // 특정 좌석 비활성화
                 int price = (row > 5) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 5) ? SeatType.VIP : SeatType.REGULAR;
-                Seat seat = new Seat(null, screen, new ArrayList<>(), seatType, row, col, isAble, price);
+                Seat seat = new Seat(null, screen, new ArrayList<>(), seatType, row, col, true, price);
                 seatRepository.save(seat);
             }
         }
     }
-
 }

@@ -5,12 +5,15 @@ import com.example.letmovie.domain.movie.entity.Showtime;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 public class Reservation {
 
     @Id
@@ -31,4 +34,10 @@ public class Reservation {
 
     private LocalDateTime reservationDate;
 
+
+    public static Reservation createReservation(Member member, List<ReservationSeat> reservationSeats){
+
+        Reservation reservation = new Reservation();
+        return reservation;
+    }
 }

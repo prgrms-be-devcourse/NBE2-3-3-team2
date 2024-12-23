@@ -9,6 +9,7 @@ import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
+import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import java.util.stream.IntStream;
 public class ReservationController {
 
     private final ShowtimeService showtimeService;
+    private final ReservationService reservationService;
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -86,11 +88,9 @@ public class ReservationController {
 
 //        Screen screen = screenService.findById(showtime.getScreen().getId()).orElseThrow(() -> new RuntimeException("스크린 정보를 찾을 수 없습니다:" + showtime.getScreen().getId()));
 
-        Screen screen = showtime.getScreen();
-
-        //
-        List<Seat> seats = showtime.getScreen().getSeats();
-        List<Seat> sortedSeats = seats.stream()
+        Screen screen = showtime.getScreen(); //스크린 가져오기
+        List<Seat> seats = showtime.getScreen().getSeats(); //Seat 리스트 가져오기.
+        List<Seat> sortedSeats = seats.stream() //가져온 좌석들 정렬하기
                 .sorted(Comparator.comparingInt(Seat::getSeatLow)
                         .thenComparingInt(Seat::getSeatCol))
                 .collect(Collectors.toList());
@@ -101,10 +101,19 @@ public class ReservationController {
                 .max() // 가장 큰 값 찾기
                 .orElse(0);
 
-        //rows는 [1, 2, 3, ..., maxRow] 형태의 리스트
-        List<Integer> rows = IntStream.rangeClosed(1, maxRow) //숫자 1부터 maxRow까지의 연속된 정수 스트림을 생성
-                .boxed() // int 타입의 스트림을 Integer 객체 스트림으로 변환
-                .collect(Collectors.toList()); //스트림의 모든 요소를 리스트
+        // rows를 알파벳 리스트로 변환 ["A", "B", "C", ...]
+        List<String> rowLabels  = IntStream.rangeClosed(0, maxRow - 1)
+                .mapToObj(i -> String.valueOf((char) ('A' + i))) // 0부터 시작하는 숫자를 A, B, C로 변환
+                .collect(Collectors.toList());
+
+        // Map<String, List<Seat>> 구조로 변환
+        Map<String, List<Seat>> seatMap = rowLabels .stream() //rowLabels(A, B, C, ...) 리스트를 스트림 형태로 순회합니다.
+                .collect(Collectors.toMap(
+                        row -> row, //키는 각 행 이름(A, B, C..
+                        row -> seats.stream()
+                                .filter(seat -> seat.getSeatLow() == row.charAt(0) - 'A' + 1)  ////예: seatLow = 1인 좌석은 row = "A"와 매칭됩니다.
+                                .collect(Collectors.toList())
+                ));
 
         log.info("-----------> screen = {}", screen.getScreenName());
         log.info("Showtime: {}", showtime);
@@ -115,10 +124,29 @@ public class ReservationController {
         model.addAttribute("seats", sortedSeats);
         model.addAttribute("screen", screen);
         model.addAttribute("showtime", showtime);
-        model.addAttribute("rows", rows);
+        model.addAttribute("seatMap", seatMap);
 
         return "reservation/seatSelection";
     }
 
-    //필드 예약번호가 예매아이디, 사용자 아이디
+    @ResponseBody
+    @PostMapping("/reserve-seats")
+    public void reserveSeats(@RequestBody  Map<String, List<String>> payload){
+        List<String> seats = payload.get("seats"); // "seats" 키에 저장된 값 가져오기
+        log.info("reserve-seats: {}", seats);
+
+        for (String seat : seats) {
+            String[] split = seat.split("-");
+            log.info("seat: {}, {}", split[0], split[1]);
+        }
+        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자. 
+
+        int memberId = 1;
+
+        //예약시 필요한 거
+//        reservationService.reservation(seats);
+
+
+
+    }
 }

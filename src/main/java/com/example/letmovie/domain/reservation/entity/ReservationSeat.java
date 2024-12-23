@@ -23,4 +23,16 @@ public class ReservationSeat {
     @JoinColumn(name = "seat_id")
     private Seat seat;
 
+
+    public static ReservationSeat createReservationSeat(Seat seat) {
+        ReservationSeat reservationSeat = new ReservationSeat();
+        reservationSeat.setSeat(seat);
+
+        return reservationSeat;
+    }
+
+
+
+
+
 }
