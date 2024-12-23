@@ -36,7 +36,7 @@
         <a th:href="@{/reservation(movieId=${showtime.movieId})}"
            th:classappend="${showtime.remainingSeats == 0} ? 'disabled' : ''"
            class="btn btn-success btn-sm"
-           th:text="${showtime.remainingSeats == 0} ? '예매 불가' : '예매하기'"
+           th:text="${showtime.remainingSeats == 0} ? '예매불가' : '예매하기'"
            th:attr="disabled=${showtime.remainingSeats == 0}"></a>
       </td>
     </tr>
