@@ -63,6 +63,7 @@
 <script>
   let selectedSeats = []; // 선택된 좌석 배열
   let maxPerson = 1; // 초기 최대 인원 수는 1명
+  const showtimeId = [[${showtime.id}]];
 
   // 인원 수 제한 업데이트
   function updatePersonLimit() {
@@ -128,27 +129,58 @@
       return;
     }
     alert(`선택한 좌석: ${selectedSeats.join(", ")}`);
-
-    // 서버로 데이터 전송
+// 서버로 데이터 전송
     fetch('/reserve-seats', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ seats: selectedSeats })
-    }).then(response => {
-      if (response.ok) {
-        alert('좌석 예약이 완료되었습니다!');
-      } else {
-        alert('예약 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    }).catch(error => {
-      console.error('Error:', error);
-      alert('네트워크 오류가 발생했습니다.');
-    });
+      body: JSON.stringify({ seats: selectedSeats, showtimeId: showtimeId }),
+    })
+
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json(); // JSON 변환
+            })
+            .then((reservation) => {
+              console.log("Reservation Response:", reservation);
+              console.log("reservation.reservationId:", reservation.reservationId);
+              console.log("reservation.memberId:", reservation.memberId);
+              console.log("reservation.memberName:", reservation.memberName);
+              console.log("reservation.totalPrice:", reservation.totalPrice);
+
+              // 결제 준비 API 호출
+              return fetch('/api/v1/payment/ready', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  reservation_id: reservation.reservationId,
+                  member_id: reservation.memberId,
+                  name: reservation.memberName,
+                  totalPrice: reservation.totalPrice,
+                }),
+              });
+            })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((paymentReadyResponse) => {
+              console.log("Payment Ready Response:", paymentReadyResponse);
+              alert('결제 준비 완료');
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              alert('오류가 발생했습니다. 다시 시도해주세요.');
+            });
+
   }
-
-
 
 </script>
 </body>

@@ -23,16 +23,26 @@ public class ReservationSeat {
     @JoinColumn(name = "seat_id")
     private Seat seat;
 
+    private int seatPrice; //좌석가격 추가
+
+    /**
+     *  연관관계 메서드
+     */
+    public void setSeat(Seat seat) {
+        this.seat = seat;
+        seat.getReservationSeats().add(this);
+        seat.setAble(false);
+    }
 
     public static ReservationSeat createReservationSeat(Seat seat) {
         ReservationSeat reservationSeat = new ReservationSeat();
-        reservationSeat.setSeat(seat);
+        reservationSeat.setSeatPrice(seat.getPrice());
+        reservationSeat.setSeat(seat); //seat에 대한 처리 ? -> seat 왜 양방향?
+
+        //seat 감소 로직
+        Screen screen = seat.getScreen();
+        screen.removeSeats(1);
 
         return reservationSeat;
     }
-
-
-
-
-
 }

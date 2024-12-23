@@ -2,9 +2,11 @@ package com.example.letmovie.domain.reservation.controller;
 
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.reservation.dto.request.DateRequestDTO;
+import com.example.letmovie.domain.reservation.dto.request.ReserveSeatsRequestDTO;
 import com.example.letmovie.domain.reservation.dto.request.ShowTimeRequestDTO;
 import com.example.letmovie.domain.reservation.dto.request.TheaterRequestDTO;
 import com.example.letmovie.domain.reservation.dto.response.MovieNamesResponseDTO;
+import com.example.letmovie.domain.reservation.dto.response.ReservationResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
@@ -13,6 +15,7 @@ import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -115,11 +118,6 @@ public class ReservationController {
                                 .collect(Collectors.toList())
                 ));
 
-        log.info("-----------> screen = {}", screen.getScreenName());
-        log.info("Showtime: {}", showtime);
-        log.info("Screen: {}", screen);
-        log.info("Seats: {}", seats);
-        log.info("-----------> screen = {}", screen);
 
         model.addAttribute("seats", sortedSeats);
         model.addAttribute("screen", screen);
@@ -131,22 +129,27 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reserve-seats")
-    public void reserveSeats(@RequestBody  Map<String, List<String>> payload){
-        List<String> seats = payload.get("seats"); // "seats" 키에 저장된 값 가져오기
+    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO){
+        List<String> seats = requestDTO.getSeats(); // "seats" 키에 저장된 값 가져오기
+        Long showtimeId = requestDTO.getShowtimeId();
+
         log.info("reserve-seats: {}", seats);
+        log.info("showtimeId: {}", showtimeId);
 
         for (String seat : seats) {
             String[] split = seat.split("-");
             log.info("seat: {}, {}", split[0], split[1]);
         }
-        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자. 
 
-        int memberId = 1;
+        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자.
+        Long memberId = 1L;
+        ReservationResponseDTO responseDTO = reservationService.reservation(seats, memberId, showtimeId);
 
-        //예약시 필요한 거
-//        reservationService.reservation(seats);
+        log.info("MemberName = {}" , responseDTO.getMemberName());
+        log.info("ReservationId = {}" , responseDTO.getReservationId());
+        log.info("TotalPrice = {}" , responseDTO.getTotalPrice());
+        log.info("MemberId = {}" , responseDTO.getMemberId());
 
-
-
+        return ResponseEntity.ok(responseDTO);
     }
 }

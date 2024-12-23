@@ -47,17 +47,4 @@ public class Seat {
         this.screen = screen;
         screen.getSeats().add(this);
     }
-
-    public void addReservationSeat(ReservationSeat reservationSeat) {
-        reservationSeats.add(reservationSeat);
-        reservationSeat.setSeat(this);
-    }
-
-    /**
-     * 생성 메서드
-     */
-
-
-
-
 }

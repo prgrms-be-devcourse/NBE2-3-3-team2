@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,12 +33,37 @@ public class Reservation {
     @Enumerated(EnumType.STRING) //enum
     private ReservationStatus status;
 
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true) //양방향 매핑
+    private List<ReservationSeat> reservationSeats = new ArrayList<>();
+
     private LocalDateTime reservationDate;
+    private int totalSeats; // 총 좌석 수
+    private int totalPrice; // 총 금액
 
+    /**
+     *  연관관계 메서드 - 양방향 설정
+     */
+    public void addReservationSeat(ReservationSeat reservationSeat){
+        reservationSeats.add(reservationSeat);
+        reservationSeat.setReservation(this);
 
-    public static Reservation createReservation(Member member, List<ReservationSeat> reservationSeats){
+    }
 
+    /**
+     *  생성 메서드
+     */
+    public static Reservation createReservation(Member member, Showtime showtime,List<ReservationSeat> reservationSeats){
         Reservation reservation = new Reservation();
+        reservation.setShowTime(showtime);
+        reservation.setMember(member);
+        reservation.setStatus(ReservationStatus.PENDING);
+        reservation.setReservationDate(LocalDateTime.now());
+        reservation.setTotalSeats(reservationSeats.size());
+        reservation.setTotalPrice(reservationSeats.stream().mapToInt(ReservationSeat::getSeatPrice).sum());
+
+        for (ReservationSeat reservationSeat : reservationSeats) {
+            reservation.addReservationSeat(reservationSeat); //양방향 설정
+        }
         return reservation;
     }
 }
