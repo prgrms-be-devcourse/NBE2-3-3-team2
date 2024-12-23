@@ -2,6 +2,8 @@ package com.example.letmovie.domain.movie.repository;
 
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,4 +18,7 @@ public interface MovieJpaRepository extends JpaRepository<Movie, Integer> {
 
     // 카테고리 별로 출력을 위해 Status 에 따라 가져오기
     List<Movie> findByStatus(Status status);
+
+    // 카테고리 별로 출력을 위해 Status 에 따라 가져오기 + 페이징 추가
+    Page<Movie> findByStatus(Status status, Pageable pageable); // 페이징 지원
 }
