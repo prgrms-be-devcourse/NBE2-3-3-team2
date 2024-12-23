@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영화 예매</title>
+    <link rel="stylesheet" href="css/reservation.css">
+</head>
+<body>
+<div class="container">
+    <h1>영화 예매</h1>
+
+    <!-- 날짜 선택: 일주일 범위 -->
+    <div class="date-container">
+        <h2>날짜 선택</h2>
+        <ul id="date-list">
+            <!-- JavaScript로 일주일 날짜를 여기에 추가 -->
+        </ul>
+    </div>
+
+    <!-- 영화 선택 -->
+    <div class="form-group">
+        <label for="movie">영화 선택</label>
+        <select id="movie" name="movie" required>
+            <option value="">영화를 선택해주세요</option>
+            <option value="1">인터스텔라</option>
+            <option value="2">기생충</option>
+        </select>
+    </div>
+
+    <!-- 극장 선택 -->
+    <div class="form-group">
+        <label for="theater">극장 선택</label>
+        <select id="theater" name="theater" required>
+            <option value="">극장을 선택해주세요</option>
+            <option value="3">용산 메가박스</option>
+            <option value="4">평양 cgv</option>
+        </select>
+    </div>
+
+    <!-- 상영관 선택 -->
+    <div class="form-group">
+        <label for="screen">상영관, 시간대 선택</label>
+        <select id="screen" name="screen" required>
+            <option value="">상영관, 시간대를 선택해주세요</option>
+            <option value="A">상영관 A</option>
+            <option value="B">상영관 B</option>
+        </select>
+    </div>
+
+    <!-- 다음 버튼 -->
+    <div class="form-group">
+        <button type="submit" onclick="alert('다음 페이지로 이동합니다!')">다음</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dateList = document.getElementById("date-list");
+        const today = new Date();
+
+        for (let i = 0; i < 7; i++) {
+            const currentDate = new Date(today);
+            currentDate.setDate(today.getDate() + i);
+
+            const dateString = currentDate.toISOString().split('T')[0];  // YYYY-MM-DD 포맷
+            const id = `date${i}`; // input의 고유 id 설정
+
+            // 리스트 아이템 생성
+            const listItem = document.createElement("li");
+            listItem.className = "date-item";
+            listItem.innerHTML = `
+            <input type="radio" id="${id}" name="selectedDate" value="${dateString}" required>
+            <label for="${id}">${currentDate.toLocaleDateString("ko-KR", {
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric' })}
+            </label>
+        `;
+            dateList.appendChild(listItem);
+        }
+        // 날짜 선택 이벤트 처리
+        dateList.addEventListener("change", function (event) {
+            if (event.target.name === "selectedDate") {
+                const selectedDate = event.target.value;
+
+                // Ajax 요청 -> 영화이름
+                fetch(`/selectDate`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ date: selectedDate }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("서버 응답:", data);
+
+                        // 영화 목록 업데이트
+                        const movieSelect = document.getElementById("movie");
+                        movieSelect.innerHTML = `<option value="">영화를 선택해주세요</option>`; // 초기화
+
+                        // 극장 리스트 동적 업데이트
+                        const theaterSelect = document.getElementById("theater");
+                        theaterSelect.innerHTML = `<option value="">영화를 선택해주세요</option>`; // 초기화
+
+
+                        data.movieNames.forEach((movieName) => {
+                            const option = document.createElement("option");
+                            option.value = movieName; // 영화 이름을 값으로 설정
+                            option.textContent = movieName; // 사용자에게 보이는 텍스트
+                            movieSelect.appendChild(option);
+                        });
+
+                    })
+                    .catch((error) => console.error("Ajax 요청 실패:", error));
+            }
+        });
+    });
+
+
+
+    document.getElementById("movie").addEventListener("change", function() {
+        const selectedMovie = this.value; // 선택한 영화 ID
+        console.log(selectedMovie);
+
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
+
+        if (selectedMovie && selectedDate) {
+            // Ajax 요청
+            fetch(`/selectMovie`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ movieName: selectedMovie , date: selectedDate}),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("서버 응답:", data);
+
+                    // 극장 리스트 동적 업데이트
+                    const theaterSelect = document.getElementById("theater");
+                    theaterSelect.innerHTML = `<option value="">극장을 선택해주세요</option>`; // 초기화
+
+                    data.forEach((theater) => {
+                        const option = document.createElement("option");
+                        option.value = theater.name; // 극장 ID
+                        option.textContent = theater.name; // 극장 이름
+                        theaterSelect.appendChild(option);
+                    });
+                })
+                .catch((error) => console.error("Ajax 요청 실패:", error));
+        }
+    });
+
+
+    document.getElementById("theater").addEventListener("change", function () {
+        const selectedTheater = this.value; // 선택한 극장 ID
+        console.log(selectedTheater);
+        const selectedMovie = document.getElementById("movie").value; // 선택한 영화 이름
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
+
+        if (selectedTheater && selectedMovie && selectedDate) {
+            fetch(`/selectShowtimes`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    theaterName: selectedTheater,
+                    movieName: selectedMovie,
+                    date: selectedDate,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const screenSelect = document.getElementById("screen");
+                    if (!screenSelect) {
+                        console.error("screen 요소를 찾을 수 없습니다.");
+                        return;
+                    }
+                    screenSelect.innerHTML = `<option value="">상영관을 선택해주세요</option>`; // 초기화
+
+                    data.forEach((showtime) => {
+                        const option = document.createElement("option");
+                        option.value = showtime.screenName; // 상영관 이름을 값으로 설정
+                        option.value = JSON.stringify({ id: showtime.showtimeId, screenName: showtime.screenName }); // id도 같이 보내줘야함 필수
+                        option.textContent = `${showtime.screenName} - ${showtime.showtime} -남은좌석: ${showtime.screenTotalSeat} -예약가능 좌석:${showtime.screenRemainSeat}`; // 표시 텍스트
+                        screenSelect.appendChild(option);
+                    });
+                })
+                .catch((error) => console.error("Ajax 요청 실패:", error));
+        }
+    });
+
+
+    document.querySelector("button[type='submit']").addEventListener("click", function () {
+        const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value;
+        const selectedMovie = document.getElementById("movie").value;
+        const selectedTheater = document.getElementById("theater").value;
+
+        const selectedScreen = document.getElementById("screen").value;
+        const { id, screenName } = JSON.parse(selectedScreen);  // showtime id랑 상영관 이름 가져오기.
+
+
+        fetch("/saveSelection/seat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                date: selectedDate,
+                movie: selectedMovie,
+                theater: selectedTheater,
+                screen: screenName,
+                showtimeId: id
+            }),
+        })
+            .then(() => {
+                window.location.href = "/seatSelection?showtimeId=" + id;
+            })
+            .catch((error) => console.error("저장 실패:", error));
+    });
+
+
+</script>
+</body>
+</html>

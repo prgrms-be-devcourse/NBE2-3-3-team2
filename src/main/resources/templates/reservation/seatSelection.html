@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>좌석 선택</title>
+  <link rel="stylesheet" href="/css/seatSelection.css">
+</head>
+<body>
+<div class="container">
+  <h1>좌석 선택</h1>
+  <h3 th:text="'상영관: ' + ${screen.getScreenName()}"></h3>
+  <h3 th:text="'상영시간: ' + ${showtime.getShowtimeDate()} + ' ' + ${showtime.getShowtimeTime()}"></h3>
+  <h3 th:text="'영화: ' + ${showtime.movie.getMovieName()}"></h3>
+
+  <!-- 인원 수 선택 -->
+  <div class="form-group">
+    <label for="person-count">인원 수 선택 (최대 6명):</label>
+    <select id="person-count" name="personCount" onchange="updatePersonLimit()">
+      <option value="1">1명</option>
+      <option value="2">2명</option>
+      <option value="3">3명</option>
+      <option value="4">4명</option>
+      <option value="5">5명</option>
+      <option value="6">6명</option>
+    </select>
+  </div>
+
+  <div class="screen">스크린</div>
+
+
+  <div class="seat-container">
+    <!-- 행 반복 -->
+    <div th:each="entry : ${seatMap}" class="seat-row">
+      <!-- 행 이름 -->
+      <div class="row-label" th:text="${entry.key}"></div>
+      <!-- 열 반복 -->
+      <div th:each="seat : ${entry.value}"
+           class="seat"
+           th:classappend="${seat.isAble ? 'available' : 'unavailable'}"
+           th:attr="data-row=${seat.seatLow}, data-col=${seat.seatCol}"
+           th:title="'Row: ' + ${seat.seatLow} + ', Col: ' + ${seat.seatCol}"
+           th:text="${seat.seatCol}"
+           onclick="selectSeat(this)"></div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="legend">
+    <span class="seat available"></span> 예약 가능
+    <span class="seat unavailable"></span> 예약 불가
+    <span class="seat selected1"></span> 선택된 좌석
+  </div>
+
+  <div class="summary">
+    <p>선택된 좌석 수: <span id="selected-count">0</span></p>
+  </div>
+
+  <button class="submit-btn" onclick="submitSelection()">선택 완료</button>
+</div>
+
+<script>
+  let selectedSeats = []; // 선택된 좌석 배열
+  let maxPerson = 1; // 초기 최대 인원 수는 1명
+
+  // 인원 수 제한 업데이트
+  function updatePersonLimit() {
+    maxPerson = parseInt(document.getElementById("person-count").value, 10);
+    resetSelection(); // 기존 선택 좌석 초기화
+  }
+
+  // 좌석 선택시 예약 불가인지 판단.
+  function selectSeat(seatElement) {
+    if (!seatElement.classList.contains('available')) {
+      alert("예약 불가한 좌석입니다!");
+      return;
+    }
+    //좌석의 행과 열 정보를 가져옴
+    const row = seatElement.getAttribute('data-row');
+    const col = seatElement.getAttribute('data-col');
+    const seatKey = `${row}-${col}`; //선택시 알람 표시에 나오기 하기 위한 변수
+
+    //좌석이 이미 선택된 상태인지 확인
+    if (seatElement.classList.contains('selected')) { //선택된 좌석
+      // 좌석 선택 취소 선택된 상태를 나타내는 selected 클래스를 제거
+      seatElement.classList.remove('selected');
+      selectedSeats = selectedSeats.filter(seat => seat !== seatKey); //현재 좌석을 제외한 나머지 좌석들만 배열에 남김
+    } else { //새 좌석 선택 처리
+      // 좌석 선택
+      if (selectedSeats.length >= maxPerson) {
+        alert(`최대 ${maxPerson}명까지만 선택 가능합니다.`);
+        return;
+      }
+      seatElement.classList.add('selected');
+      selectedSeats.push(seatKey);
+    }
+
+    updateSelectedCount();
+  }
+
+  // 선택된 좌석 수 업데이트
+  function updateSelectedCount() {
+    const selectedCountElement = document.getElementById("selected-count");
+
+    if (selectedCountElement) {
+      // 요소가 존재하면 선택된 좌석 수를 업데이트
+      selectedCountElement.textContent = selectedSeats.length;
+    } else {
+      console.warn("선택된 좌석 수를 표시할 요소가 없습니다. ID: 'selected-count'");
+    }
+  }
+
+  // 선택 초기화
+  function resetSelection() {
+    // 선택된 좌석 초기화 (UI 초기화)
+    document.querySelectorAll('.seat.selected').forEach(seat => seat.classList.remove('selected'));
+    // 선택된 좌석 배열 초기화
+    selectedSeats = [];
+    // 선택된 좌석 수 업데이트
+    updateSelectedCount();
+  }
+
+  // 선택 완료 버튼 동작
+  function submitSelection() {
+    if (selectedSeats.length === 0) {
+      alert("좌석을 선택하세요!");
+      return;
+    }
+    alert(`선택한 좌석: ${selectedSeats.join(", ")}`);
+
+    // 서버로 데이터 전송
+    fetch('/reserve-seats', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ seats: selectedSeats })
+    }).then(response => {
+      if (response.ok) {
+        alert('좌석 예약이 완료되었습니다!');
+      } else {
+        alert('예약 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+      alert('네트워크 오류가 발생했습니다.');
+    });
+  }
+
+
+
+</script>
+</body>
+</html>
