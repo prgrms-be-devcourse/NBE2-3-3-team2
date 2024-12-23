@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <title>LetMovie</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/movieCard.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardTotalMovie.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardGradeIcon.css}">
+    <style>
+
+    </style>
 </head>
 <body>
 <!-- 공통 헤더 -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="container my-4">
-<!--    &lt;!&ndash; 검색창 &ndash;&gt;-->
-<!--    <form action="/movies" method="get" class="d-flex mb-3">-->
-<!--        <input type="text" name="query" class="form-control me-2" placeholder="영화 이름을 입력하세요"-->
-<!--               th:value="${query}" />-->
-<!--        <button type="submit" class="btn btn-primary">검색</button>-->
-<!--    </form>-->
-
     <!-- 카테고리 탭 -->
     <ul class="nav nav-tabs" id="movieTabs" role="tablist">
         <li class="nav-item">
@@ -38,7 +35,16 @@
     <div class="tab-content mt-4">
         <div class="row">
             <div class="col-md-3 mb-4" th:each="movie : ${movies}">
-                <div class="card h-100">
+                <div class="card h-100 position-relative">
+                    <!-- 등급 아이콘 -->
+                    <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"
+                         th:switch="${movie.rating}">
+                        <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
+                        <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
+                        <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                        <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
+                    </div>
+
                     <a th:href="@{/movie/{id}(id=${movie.id})}">
                         <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
                     </a>
@@ -67,67 +73,3 @@
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
-
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>LetMovie</title>-->
-<!--    &lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
-<!--    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">-->
-<!--    <link rel="stylesheet" th:href="@{/css/movieCard.css}">-->
-<!--</head>-->
-<!--<body>-->
-<!--&lt;!&ndash; 공통 헤더 추가 &ndash;&gt;-->
-<!--<div th:replace="~{fragments/header :: header}"></div>-->
-
-<!--<div class="container my-4">-->
-<!--    &lt;!&ndash; 카테고리 탭 &ndash;&gt;-->
-<!--    <ul class="nav nav-tabs" id="movieTabs" role="tablist">-->
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link" th:classappend="${category == 'ALL'} ? 'active'"-->
-<!--               th:href="@{/movies(category='ALL')}" role="tab">전체 영화</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link" th:classappend="${category == 'RECOMMEND'} ? 'active'"-->
-<!--               th:href="@{/movies(category='RECOMMEND')}" role="tab">LetMovie's Pick</a>-->
-<!--        </li>-->
-<!--        <li class="nav-item">-->
-<!--            <a class="nav-link" th:classappend="${category == 'PREV'} ? 'active'"-->
-<!--               th:href="@{/movies(category='PREV')}" role="tab">개봉 예정 영화</a>-->
-<!--        </li>-->
-<!--    </ul>-->
-
-<!--    &lt;!&ndash; 영화 카드 &ndash;&gt;-->
-<!--    <div class="tab-content mt-4">-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-3 mb-4" th:each="movie : ${movies}">-->
-<!--                <div class="card h-100">-->
-<!--                    <a th:href="@{/movie/{id}(id=${movie.id})}">-->
-<!--                        <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">-->
-<!--                    </a>-->
-<!--                    <div class="card-body">-->
-<!--                        <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>-->
-<!--                        <p class="card-text" th:text="'장르: ' + ${movie.genreName}">영화 장르</p>-->
-<!--                        <div class="d-flex justify-content-between">-->
-<!--                            <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary">상세 보기</a>-->
-<!--                            <a th:if="${movie.status.name() != 'PREV'}"-->
-<!--                               th:href="@{/reservation(movieId=${movie.id})}"-->
-<!--                               class="btn btn-success">예매하기</a>-->
-<!--                            <button th:if="${movie.status.name() == 'PREV'}"-->
-<!--                                    class="btn btn-secondary" disabled>개봉 예정</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div th:if="${#lists.isEmpty(movies)}" class="text-center my-4">-->
-<!--            <h5>해당 카테고리에 영화가 없습니다.</h5>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-<!--&lt;!&ndash; Bootstrap JS &ndash;&gt;-->
-<!--<script th:src="@{/js/bootstrap.bundle.min.js}"></script>-->
-<!--</body>-->
-<!--</html>-->

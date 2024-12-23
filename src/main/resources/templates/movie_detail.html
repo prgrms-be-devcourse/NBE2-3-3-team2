@@ -4,41 +4,10 @@
     <meta charset="UTF-8">
     <title>Movie Detail</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/movieCardGradeIcon.css}">
     <style>
-        .movie-detail-card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .poster-image {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .btn-custom {
-            border-radius: 20px;
-        }
-        .star-rating {
-            display: flex;
-            gap: 5px;
-        }
-        .star {
-            font-size: 24px;
-            color: #ddd;
-            cursor: pointer;
-        }
-        .star.selected {
-            color: #ffc107;
-        }
-        .delete-form {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-        .input-inline {
-            display: flex;
-            gap: 10px;
-        }
+
     </style>
 </head>
 <body>
@@ -82,6 +51,49 @@
             </div>
         </div>
 
+<!--        &lt;!&ndash; 영화 상세보기 카드 + 등급 &ndash;&gt;-->
+<!--        <div class="col-lg-10">-->
+<!--            <div class="movie-detail-card">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-md-4 text-center position-relative">-->
+<!--                        &lt;!&ndash; 등급 아이콘 &ndash;&gt;-->
+<!--                        <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"-->
+<!--                             th:switch="${movie.rating}">-->
+<!--                            <span th:case="'12세'" class="bg-warning">12</span>-->
+<!--                            <span th:case="'15세'" class="bg-orange">15</span>-->
+<!--                            <span th:case="'19세'" class="bg-danger">19</span>-->
+<!--                            <span th:case="*" class="bg-success">ALL</span>-->
+<!--                        </div>-->
+<!--                        <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8">-->
+<!--                        <h2 class="mb-3" th:text="${movie.movieName}">영화 제목</h2>-->
+<!--                        <ul class="list-unstyled">-->
+<!--                            <li><strong>등급:</strong> <span th:text="${movie.rating}"></span></li>-->
+<!--                            <li><strong>러닝타임:</strong> <span th:text="${movie.runtime}"></span>분</li>-->
+<!--                            <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>-->
+<!--                            <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>-->
+<!--                            <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>-->
+<!--                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>-->
+<!--                            <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>-->
+<!--                            <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>-->
+<!--                        </ul>-->
+<!--                        <hr>-->
+<!--                        <p th:text="${movie.plot}" class="text-muted">줄거리</p>-->
+<!--                        <div class="d-flex gap-3 mt-4">-->
+<!--                            <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>-->
+<!--                            <a th:if="${movie.status.name() != 'PREV'}"-->
+<!--                               th:href="@{/reservation(movieId=${movie.id})}"-->
+<!--                               class="btn btn-success btn-custom px-4">예매하기</a>-->
+<!--                            <button th:if="${movie.status.name() == 'PREV'}"-->
+<!--                                    class="btn btn-secondary btn-custom px-4"-->
+<!--                                    disabled>개봉 예정</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
         <!-- 리뷰 목록 카드 -->
         <div class="col-lg-10 mt-5 position-relative">
             <div class="movie-detail-card">
@@ -122,10 +134,6 @@
             </div>
         </div>
 
-
-
-
-
         <!-- 리뷰 작성 카드 -->
         <div class="col-lg-10 mt-5">
             <div class="movie-detail-card">
@@ -165,6 +173,9 @@
 <script>
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
+    const reviewForm = document.querySelector('form[action="/review/add"]');
+
+    // 별점을 선택하면 값이 설정되도록 이벤트 리스너 추가
     stars.forEach(star => {
         star.addEventListener('click', () => {
             const value = parseInt(star.getAttribute('data-value'));
@@ -174,7 +185,28 @@
             ratingInput.value = value;
         });
     });
+
+    // 폼 제출 시 별점이 입력되지 않았을 경우 경고 메시지
+    reviewForm.addEventListener('submit', (e) => {
+        if (!ratingInput.value) {
+            e.preventDefault();
+            alert('별점을 입력해 주세요!');
+        }
+    });
 </script>
+<!--<script>-->
+<!--    const stars = document.querySelectorAll('.star');-->
+<!--    const ratingInput = document.getElementById('rating');-->
+<!--    stars.forEach(star => {-->
+<!--        star.addEventListener('click', () => {-->
+<!--            const value = parseInt(star.getAttribute('data-value'));-->
+<!--            stars.forEach((s, index) => {-->
+<!--                s.classList.toggle('selected', index < value);-->
+<!--            });-->
+<!--            ratingInput.value = value;-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
