@@ -16,54 +16,11 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
 
-        <!-- 영화 상세보기 카드 -->
-        <div class="col-lg-10">
-            <div class="movie-detail-card">
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">
-                    </div>
-                    <div class="col-md-8">
-                        <h2 class="mb-3" th:text="${movie.movieName}">영화 제목</h2>
-                        <ul class="list-unstyled">
-                            <li><strong>등급:</strong> <span th:text="${movie.rating}"></span></li>
-                            <li><strong>러닝타임:</strong> <span th:text="${movie.runtime}"></span>분</li>
-                            <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>
-                            <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>
-                            <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>
-                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>
-                            <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>
-                            <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>
-                        </ul>
-                        <hr>
-                        <p th:text="${movie.plot}" class="text-muted">줄거리</p>
-                        <div class="d-flex gap-3 mt-4">
-                            <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>
-                            <a th:if="${movie.status.name() != 'PREV'}"
-                               th:href="@{/reservation(movieId=${movie.id})}"
-                               class="btn btn-success btn-custom px-4">예매하기</a>
-                            <button th:if="${movie.status.name() == 'PREV'}"
-                                    class="btn btn-secondary btn-custom px-4"
-                                    disabled>개봉 예정</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-<!--        &lt;!&ndash; 영화 상세보기 카드 + 등급 &ndash;&gt;-->
+<!--        &lt;!&ndash; 영화 상세보기 카드 &ndash;&gt;-->
 <!--        <div class="col-lg-10">-->
 <!--            <div class="movie-detail-card">-->
 <!--                <div class="row">-->
-<!--                    <div class="col-md-4 text-center position-relative">-->
-<!--                        &lt;!&ndash; 등급 아이콘 &ndash;&gt;-->
-<!--                        <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"-->
-<!--                             th:switch="${movie.rating}">-->
-<!--                            <span th:case="'12세'" class="bg-warning">12</span>-->
-<!--                            <span th:case="'15세'" class="bg-orange">15</span>-->
-<!--                            <span th:case="'19세'" class="bg-danger">19</span>-->
-<!--                            <span th:case="*" class="bg-success">ALL</span>-->
-<!--                        </div>-->
+<!--                    <div class="col-md-4 text-center">-->
 <!--                        <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">-->
 <!--                    </div>-->
 <!--                    <div class="col-md-8">-->
@@ -93,6 +50,51 @@
 <!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->
+
+        <!-- 영화 상세보기 카드 + 등급 -->
+        <div class="col-lg-10">
+            <div class="movie-detail-card">
+                <div class="row">
+                    <div class="col-md-4 text-center position-relative">
+<!--                        <div class="card h-100 position-relative">-->
+                        <!-- 등급 아이콘 -->
+                        <div class="rating-icon position-absolute top-0 end-0 mt-2 me-3 text-white fw-bold"
+                             th:switch="${movie.rating}">
+                            <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
+                            <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
+                            <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                            <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
+                        </div>
+                        <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">
+<!--                        </div>-->
+                    </div>
+                    <div class="col-md-8">
+                        <h2 class="mb-3" th:text="${movie.movieName}">영화 제목</h2>
+                        <ul class="list-unstyled">
+                            <li><strong>등급:</strong> <span th:text="${movie.rating}"></span></li>
+                            <li><strong>러닝타임:</strong> <span th:text="${movie.runtime}"></span>분</li>
+                            <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>
+                            <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>
+                            <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>
+                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>
+                            <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>
+                            <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>
+                        </ul>
+                        <hr>
+                        <p th:text="${movie.plot}" class="text-muted">줄거리</p>
+                        <div class="d-flex gap-3 mt-4">
+                            <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>
+                            <a th:if="${movie.status.name() != 'PREV'}"
+                               th:href="@{/reservation(movieId=${movie.id})}"
+                               class="btn btn-success btn-custom px-4">예매하기</a>
+                            <button th:if="${movie.status.name() == 'PREV'}"
+                                    class="btn btn-secondary btn-custom px-4"
+                                    disabled>개봉 예정</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- 리뷰 목록 카드 -->
         <div class="col-lg-10 mt-5 position-relative">
