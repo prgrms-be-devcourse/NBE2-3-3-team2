@@ -53,4 +53,10 @@ public class ReservationService {
                 member.getNickname(),
                 reservation.getTotalPrice());
     }
+
+    @Transactional
+    public void reservationCancel(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("예매 번호가 없습니다."));
+        reservation.cancelReservation();
+    }
 }

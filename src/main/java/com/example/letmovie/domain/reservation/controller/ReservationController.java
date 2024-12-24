@@ -152,4 +152,14 @@ public class ReservationController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
+    /**
+     *  결제 취소 test - ok
+     */
+    @ResponseBody
+    @GetMapping("/cancel/{cancelId}")
+    public String cancel(@PathVariable("cancelId") Long cancelId) {
+        reservationService.reservationCancel(cancelId);
+        return "cancel";
+    }
 }

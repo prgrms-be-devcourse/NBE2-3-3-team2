@@ -1,6 +1,7 @@
 package com.example.letmovie.domain.reservation.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,4 +46,10 @@ public class ReservationSeat {
 
         return reservationSeat;
     }
+
+    public void cancel(){
+        seat.setAble(true);//예매 가능 여부 허용
+        seat.getScreen().addSeats(1);
+    }
+
 }

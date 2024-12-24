@@ -37,6 +37,7 @@ public class Reservation {
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
     private LocalDateTime reservationDate;
+
     private int totalSeats; // 총 좌석 수
     private int totalPrice; // 총 금액
 
@@ -65,5 +66,20 @@ public class Reservation {
             reservation.addReservationSeat(reservationSeat); //양방향 설정
         }
         return reservation;
+    }
+
+    /**
+     * 예매 취소 로직.
+     */
+    public void cancelReservation() {
+        if(status.equals(ReservationStatus.VIEWED)){
+            throw new IllegalStateException("상영완료 된 영화는 취소가 불가능합니다.");
+        }
+
+        this.status = ReservationStatus.CANCELLED; //예매 상태 변경
+
+        for (ReservationSeat reservationSeat : reservationSeats) {
+            reservationSeat.cancel(); //예매좌석->좌석에서 가능여부 true, 상영관 총 좌석 수 증가.
+        }
     }
 }
