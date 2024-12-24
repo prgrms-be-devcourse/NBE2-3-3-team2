@@ -41,7 +41,7 @@ public class ReservationService {
             Long screenId = showtime.getScreen().getId();
             Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
 
-            return ReservationSeat.createReservationSeat(seatEntity);
+            return ReservationSeat.createReservationSeat(seatEntity, showtime);
         }).collect(Collectors.toList());
 
         Reservation reservation = Reservation.createReservation(member, showtime, reservationSeats);

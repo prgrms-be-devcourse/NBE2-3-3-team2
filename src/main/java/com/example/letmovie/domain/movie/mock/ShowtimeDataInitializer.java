@@ -66,10 +66,10 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         Theater theater3 = theaterRepository.save(new Theater(null, "용산 아이맥스"));
 
         // Screen 데이터 추가
-        Screen screen1 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "1관", 100, 100));
-        Screen screen2 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "2관", 150, 150));
-        Screen screen3 = screenRepository.save(new Screen(null, theater2, new ArrayList<>(), "3관", 180, 180));
-        Screen screen4 = screenRepository.save(new Screen(null, theater3, new ArrayList<>(), "아이맥스관", 300, 300));
+        Screen screen1 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "1관"));
+        Screen screen2 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "2관"));
+        Screen screen3 = screenRepository.save(new Screen(null, theater2, new ArrayList<>(), "3관"));
+        Screen screen4 = screenRepository.save(new Screen(null, theater3, new ArrayList<>(), "아이맥스관"));
 
         Movie movie1 = movieJpaRepository.save(new Movie(null,
                 "이처럼 사소한 것들", "M0001", "감독 1", "15세", "120분",
@@ -276,22 +276,22 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
         // Showtime 데이터 추가
         //12 23
-        showtimeRepository.save(new Showtime(null, screen1, movie1, LocalDate.of(2024, 12, 23), LocalTime.of(23, 30)));
-        showtimeRepository.save(new Showtime(null, screen1, movie2, LocalDate.of(2024, 12, 23), LocalTime.of(8, 30)));
-        showtimeRepository.save(new Showtime(null, screen1, movie3, LocalDate.of(2024, 12, 23), LocalTime.of(11, 0)));
-        showtimeRepository.save(new Showtime(null, screen1, movie4, LocalDate.of(2024, 12, 23), LocalTime.of(13, 0)));
+        showtimeRepository.save(new Showtime(null, screen1, movie1, LocalDate.of(2024, 12, 23), LocalTime.of(23, 30),100,100));
+        showtimeRepository.save(new Showtime(null, screen1, movie2, LocalDate.of(2024, 12, 23), LocalTime.of(8, 30),100,100));
+        showtimeRepository.save(new Showtime(null, screen1, movie3, LocalDate.of(2024, 12, 23), LocalTime.of(11, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen1, movie4, LocalDate.of(2024, 12, 23), LocalTime.of(13, 0),100,100));
 
         //12 24
-        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
-        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
-        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
+        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0),100,100));
+        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0),100,100));
 
         //12 25
-        showtimeRepository.save(new Showtime(null, screen1, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(12, 30)));
-        showtimeRepository.save(new Showtime(null, screen4, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(14, 50)));
+        showtimeRepository.save(new Showtime(null, screen1, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(12, 30),100,100));
+        showtimeRepository.save(new Showtime(null, screen4, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(14, 50),100,100));
 
 
 

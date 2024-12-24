@@ -61,8 +61,8 @@ public class ShowtimeService {
                 .map(showtime -> new ShowTimeResponseDTO(
                         showtime.getScreen().getTheater().getTheaterName(),       // 극장이름
                         showtime.getScreen().getScreenName(),                    // 상영관 이름
-                        String.valueOf(showtime.getScreen().getTotalSeats()),    // 상영관 전체 좌석
-                        String.valueOf(showtime.getScreen().getRemainingSeats()), // 상영관 예약 가능 좌석
+                        String.valueOf(showtime.getTotalSeats()),    // 상영관 전체 좌석
+                        String.valueOf(showtime.getRemainingSeats()), // 상영관 예약 가능 좌석
                         showtime.getShowtimeTime().toString(),                   // 상영 시작 시간
                         String.valueOf(showtime.getId())                         // 쇼타임 ID
                 ))
