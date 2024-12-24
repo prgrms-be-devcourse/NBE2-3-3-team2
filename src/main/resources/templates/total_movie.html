@@ -69,9 +69,9 @@
                     <!-- 등급 아이콘 -->
                     <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"
                          th:switch="${movie.rating}">
-                        <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
-                        <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
-                        <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                        <span th:case="'12세이상관람가'" class="bg-warning rounded px-2 py-1">12</span>
+                        <span th:case="'15세이상관람가'" class="bg-orange rounded px-2 py-1">15</span>
+                        <span th:case="'19세이상관람가'" class="bg-danger rounded px-2 py-1">19</span>
                         <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
                     </div>
                     <a th:href="@{/movie/{id}(id=${movie.id})}">
