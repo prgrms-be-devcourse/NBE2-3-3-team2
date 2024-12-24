@@ -126,6 +126,10 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
         // 추천 영화
         movieJpaRepository.save(new Movie(null,
+                "듄:프로퍼시", "M0004", "감독 4", "15세", "112분",
+                "2024-12-10", "코미디", "제작사 4",
+                Status.RECOMMEND, "https://www.themoviedb.org/t/p/w1280/syQuoIyMmSrb7OmCub8y6RERhKf.jpg", "https://image.tmdb.org/t/p/original/lBoHzOgft2QfpjkVVvZCqeM4ttT.jpg", "줄거리 4", "300,000", "12340"));
+        movieJpaRepository.save(new Movie(null,
                 "헤러틱", "M0004", "감독 4", "15세", "112분",
                 "2024-12-10", "코미디", "제작사 4",
                 Status.RECOMMEND, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "https://image.tmdb.org/t/p/original/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg", "줄거리 4", "300,000", "12340"));
