@@ -235,7 +235,7 @@
 
                 data.forEach((showtime) => {
                     const li = document.createElement("li");
-                    li.textContent = `상영관 : ${showtime.screenName} | 시간 : ${showtime.showtime} 남은좌석: ${showtime.screenRemainSeat}/${showtime.screenTotalSeat}`;
+                    li.innerHTML = `${showtime.screenName}<br>${showtime.showtime}<br>${showtime.screenRemainSeat}/${showtime.screenTotalSeat}`;
 
                     li.addEventListener("click", () => {
                         // 1) screen-list 안의 모든 li에서 .selected 제거
