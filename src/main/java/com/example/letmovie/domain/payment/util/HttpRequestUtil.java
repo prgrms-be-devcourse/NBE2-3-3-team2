@@ -35,13 +35,13 @@ public class HttpRequestUtil {
     }
 
     // 결제 준비 파라미터 생성
-    public Map<String, String> createReadyParams(PaymentRequest.Info request) {
+    public Map<String, String> createReadyParams(PaymentRequest.Info request,String movieName) {
 
         Map<String, String> params = new HashMap<>();
         params.put("cid", "TC0ONETIME");
         params.put("partner_order_id", String.valueOf(request.reservation_id()));
         params.put("partner_user_id", String.valueOf(request.member_id())); // 주문 멤버id
-        params.put("item_name", request.name()); // 영화 이름
+        params.put("item_name", movieName); // 영화 이름
         params.put("quantity", "1"); // 티켓 수량
         params.put("total_amount", String.valueOf(request.totalPrice())); //전체 가격
         params.put("tax_free_amount", "0");

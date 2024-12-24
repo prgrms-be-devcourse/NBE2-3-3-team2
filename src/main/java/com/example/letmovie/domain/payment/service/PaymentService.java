@@ -46,9 +46,9 @@ public class PaymentService {
 
 
     public PaymentResponse.Ready ready(PaymentRequest.Info request) {
-        initializePayment(request);
+        String movieName = initializePayment(request);
         HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
-        Map<String, String> parameters = httpRequestUtil.createReadyParams(request);
+        Map<String, String> parameters = httpRequestUtil.createReadyParams(request,movieName);
         return httpRequestUtil.post(
                 HOST+"/online/v1/payment/ready",
                 parameters,
@@ -58,7 +58,6 @@ public class PaymentService {
 
     public PaymentResponse.Success success(String pgToken, String tid, String cid, String partnerUserId, String partnerOrderId) {
         Long reservationId = Long.parseLong(partnerOrderId);
-//        .replace("ORDER_", "")
         log.info("변환된 reservationId = {}", reservationId);
 
         try{
@@ -126,7 +125,7 @@ public class PaymentService {
                 .collect(Collectors.toList());
     }
 
-    private void initializePayment(PaymentRequest.Info request) {
+    private String initializePayment(PaymentRequest.Info request) {
         Payment payment = Payment.builder()
                 .member(memberRepository.findById(request.member_id())
                         .orElseThrow(() -> new EntityNotFoundException("회원없음")))
@@ -135,7 +134,9 @@ public class PaymentService {
                 .amount(request.totalPrice())
                 .paymentStatus(PaymentStatus.AWAITING_PAYMENT)
                 .build();
+        String name = payment.getReservation().getShowTime().getMovie().getMovieName();
         paymentRepository.save(payment);
+        return name;
     }
 
     private void initializePaymentAndPaymentHistory(Long reservationId, PaymentResponse.Success response) {

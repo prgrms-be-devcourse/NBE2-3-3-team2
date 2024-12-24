@@ -190,7 +190,7 @@
         const memberId = 1; // 실제로는 로그인된 사용자의 ID를 가져와야 합니다
 
         try {
-            const response = await fetch(`/api/v1/payment/mypayment?member_id=${memberId}`);
+            const response = await fetch(`/api/v1/payment/my-payments?member_id=${memberId}`);
             if (!response.ok) throw new Error('결제 내역을 불러오는데 실패했습니다.');
 
             const data = await response.json();
@@ -238,8 +238,8 @@
                                <span class="detail-value">${payment.reservationId}</span>
                            </div>
                            <div class="detail-row">
-                               <span class="detail-label">회원 번호</span>
-                               <span class="detail-value">${payment.memberId}</span>
+                               <span class="detail-label">영화명</span>
+                               <span class="detail-value">${payment.nickName}</span>
                            </div>
                            <div class="detail-row">
                                <span class="detail-label">결제 시간</span>
