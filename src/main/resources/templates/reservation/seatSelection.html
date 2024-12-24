@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>좌석 선택</title>
   <link rel="stylesheet" href="/css/seatSelection.css">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+
 </head>
 <body>
-<div class="container">
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container-seat">
   <h1>좌석 선택</h1>
   <h3 th:text="'상영관: ' + ${screen.getScreenName()}"></h3>
   <h3 th:text="'상영시간: ' + ${showtime.getShowtimeDate()} + ' ' + ${showtime.getShowtimeTime()}"></h3>
