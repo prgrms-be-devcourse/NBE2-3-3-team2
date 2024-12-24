@@ -64,7 +64,7 @@
                         <!-- 스틸 이미지 -->
                         <img th:src="@{${movie.stillImageUrl}}" class="card-img-top" alt="스틸 이미지">
 
-                        <!-- 영화 이름 배경 및 텍스트 -->
+                        <!-- 영화 이름 -->
                         <div class="position-absolute top-0 start-0 p-3 bg-dark bg-opacity-50 text-white">
                             <h5 class="mb-0" th:text="${movie.movieName}">영화 이름</h5>
                         </div>
@@ -221,13 +221,9 @@
     <!-- Bootstrap JS -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
-    <!-- JavaScript for Carousel -->
     <script th:src="@{/js/initCarousel.js}"></script>
 
-    <!-- JavaScript for FeaturedCarousel -->
     <script th:src="@{/js/initFeaturedCarousel.js}"></script>
 
-    <!--&lt;!&ndash; JavaScript for search popup &ndash;&gt;-->
-    <!--<script th:src="@{/js/searchPopUp.js}"></script>-->
 </body>
 </html>
