@@ -2,9 +2,11 @@ package com.example.letmovie.domain.reservation.controller;
 
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.reservation.dto.request.DateRequestDTO;
+import com.example.letmovie.domain.reservation.dto.request.ReserveSeatsRequestDTO;
 import com.example.letmovie.domain.reservation.dto.request.ShowTimeRequestDTO;
 import com.example.letmovie.domain.reservation.dto.request.TheaterRequestDTO;
 import com.example.letmovie.domain.reservation.dto.response.MovieNamesResponseDTO;
+import com.example.letmovie.domain.reservation.dto.response.ReservationResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
@@ -13,6 +15,7 @@ import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +43,7 @@ public class ReservationController {
      * 날짜 선택 시 영화 리스트 찾기. (쿼리 1번)
      */
     @ResponseBody
-    @PostMapping("/selectDate")
+    @PostMapping("/api/dates")
     public MovieNamesResponseDTO selectDate(@RequestBody DateRequestDTO selectDateDTO) {
         String selectedDate = selectDateDTO.getDate(); //selectedDate = ex)2024-12-18
         return showtimeService.findMovieNameByDate(selectedDate);
@@ -50,7 +53,7 @@ public class ReservationController {
      * 날짜,영화 선택 시 극장 리스트 찾기. (쿼리 2번)
      */
     @ResponseBody
-    @PostMapping("/selectMovie")
+    @PostMapping("/api/movies")
     public List<TheaterResponseDTO> selectTheater(@RequestBody TheaterRequestDTO theaterRequestDTO) {
         return showtimeService.findTheatersByMovieNameAndDate(
                 theaterRequestDTO.getMovieName(),
@@ -62,7 +65,7 @@ public class ReservationController {
      * 날짜,영화, 극장 선택 시 ShowTime 리스트 찾기(상영관, 상영시간, 총좌석, 예약가능 좌석). (쿼리 x)
      */
     @ResponseBody
-    @PostMapping("/selectShowtimes")
+    @PostMapping("/api/showtimes")
     public List<ShowTimeResponseDTO> selectShowTimes(@RequestBody ShowTimeRequestDTO showTimeRequestDTO) {
         return showtimeService.findShowtimeByDateAndMovieNameAndTheater(
                 showTimeRequestDTO.getMovieName(),
@@ -71,7 +74,7 @@ public class ReservationController {
     }
 
     @ResponseBody
-    @PostMapping("/saveSelection/seat")
+    @PostMapping("/api/seats/selection")
     public String saveSeat(@RequestBody Map<String, String> payload, Model model) {
 //        String date = payload.get("date");
 //        String movieName = payload.get("movie");
@@ -81,6 +84,9 @@ public class ReservationController {
         return "ex)예매중";
     }
 
+    /**
+     *  좌석 선택 페이지
+     */
     @GetMapping("/seatSelection")
     public String seatSelection(@RequestParam("showtimeId") Long showtimeId, Model model) {
         Showtime showtime = showtimeService.findById(Long.valueOf(showtimeId))
@@ -115,11 +121,6 @@ public class ReservationController {
                                 .collect(Collectors.toList())
                 ));
 
-        log.info("-----------> screen = {}", screen.getScreenName());
-        log.info("Showtime: {}", showtime);
-        log.info("Screen: {}", screen);
-        log.info("Seats: {}", seats);
-        log.info("-----------> screen = {}", screen);
 
         model.addAttribute("seats", sortedSeats);
         model.addAttribute("screen", screen);
@@ -131,22 +132,37 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reserve-seats")
-    public void reserveSeats(@RequestBody  Map<String, List<String>> payload){
-        List<String> seats = payload.get("seats"); // "seats" 키에 저장된 값 가져오기
+    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO){
+        List<String> seats = requestDTO.getSeats(); // "seats" 키에 저장된 값 가져오기
+        Long showtimeId = requestDTO.getShowtimeId();
+
         log.info("reserve-seats: {}", seats);
+        log.info("showtimeId: {}", showtimeId);
 
         for (String seat : seats) {
             String[] split = seat.split("-");
             log.info("seat: {}, {}", split[0], split[1]);
         }
-        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자. 
 
-        int memberId = 1;
+        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자.
+        Long memberId = 1L;
+        ReservationResponseDTO responseDTO = reservationService.reservation(seats, memberId, showtimeId);
 
-        //예약시 필요한 거
-//        reservationService.reservation(seats);
+        log.info("MemberName = {}" , responseDTO.getMemberName());
+        log.info("ReservationId = {}" , responseDTO.getReservationId());
+        log.info("TotalPrice = {}" , responseDTO.getTotalPrice());
+        log.info("MemberId = {}" , responseDTO.getMemberId());
 
+        return ResponseEntity.ok(responseDTO);
+    }
 
-
+    /**
+     *  결제 취소 test - ok
+     */
+    @ResponseBody
+    @GetMapping("/cancel/{cancelId}")
+    public String cancel(@PathVariable("cancelId") Long cancelId) {
+        reservationService.reservationCancel(cancelId);
+        return "cancel";
     }
 }

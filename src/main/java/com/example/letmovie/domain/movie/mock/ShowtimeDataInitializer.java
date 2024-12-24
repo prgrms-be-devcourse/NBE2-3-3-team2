@@ -1,5 +1,10 @@
 package com.example.letmovie.domain.movie.mock;
 
+import com.example.letmovie.domain.member.entity.Authority;
+import com.example.letmovie.domain.member.entity.Grade;
+import com.example.letmovie.domain.member.entity.Member;
+import com.example.letmovie.domain.member.entity.MemberStatus;
+import com.example.letmovie.domain.member.repository.MemberRepository;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Status;
@@ -27,24 +32,41 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
     private final ShowtimeRepository showtimeRepository;
     private final SeatRepository seatRepository;
     private final MovieJpaRepository movieJpaRepository;
+    private final MemberRepository memberRepository;
 
-    public ShowtimeDataInitializer(TheaterRepository theaterRepository, ScreenRepository screenRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository, MovieJpaRepository movieJpaRepository) {
+    public ShowtimeDataInitializer(TheaterRepository theaterRepository, ScreenRepository screenRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository, MovieJpaRepository movieJpaRepository, MemberRepository memberRepository) {
         this.theaterRepository = theaterRepository;
         this.screenRepository = screenRepository;
         this.showtimeRepository = showtimeRepository;
         this.seatRepository = seatRepository;
         this.movieJpaRepository = movieJpaRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+
+        // Member entity를 생성할 때 Builder 패턴을 사용하여 값을 설정
+        Member member = Member.builder()
+                .nickname("홍길동")
+                .email("jinyoung@gmail.com")
+                .password("1234")
+                .birthDate("881213")
+                .authority(Authority.ROLE_USER) // 기본값이 ROLE_USER라면 생략 가능
+                .grade(Grade.GENERAL)          // 기본값이 GENERAL이라면 생략 가능
+                .memberStatus(MemberStatus.AVAILABLE) // 기본값이 AVAILABLE이라면 생략 가능
+                .build();
+
+        // 생성한 Member를 저장
+        memberRepository.save(member);
 
         Theater theater1 = theaterRepository.save(new Theater(null, "강남 메가박스"));
         Theater theater2 = theaterRepository.save(new Theater(null, "신촌 CGV"));
         Theater theater3 = theaterRepository.save(new Theater(null, "용산 아이맥스"));
 
         // Screen 데이터 추가
-        Screen screen1 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "1관", 200, 200));
+        Screen screen1 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "1관", 100, 100));
         Screen screen2 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "2관", 150, 150));
         Screen screen3 = screenRepository.save(new Screen(null, theater2, new ArrayList<>(), "3관", 180, 180));
         Screen screen4 = screenRepository.save(new Screen(null, theater3, new ArrayList<>(), "아이맥스관", 300, 300));
@@ -288,8 +310,8 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         for (int row = 1; row <= rows; row++) {
             for (int col = 1; col <= cols; col++) {
                 boolean isAble = !(row == 6 && col == 2); // 특정 좌석 비활성화
-                int price = (row > 5) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
-                SeatType seatType = (row > 5) ? SeatType.VIP : SeatType.REGULAR;
+                int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
+                SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = new Seat(null, screen, new ArrayList<>(), seatType, row, col, true, price);
                 seatRepository.save(seat);
             }
