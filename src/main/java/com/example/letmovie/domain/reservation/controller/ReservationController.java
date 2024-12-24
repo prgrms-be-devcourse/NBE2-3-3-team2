@@ -43,7 +43,7 @@ public class ReservationController {
      * 날짜 선택 시 영화 리스트 찾기. (쿼리 1번)
      */
     @ResponseBody
-    @PostMapping("/selectDate")
+    @PostMapping("/api/dates")
     public MovieNamesResponseDTO selectDate(@RequestBody DateRequestDTO selectDateDTO) {
         String selectedDate = selectDateDTO.getDate(); //selectedDate = ex)2024-12-18
         return showtimeService.findMovieNameByDate(selectedDate);
@@ -53,7 +53,7 @@ public class ReservationController {
      * 날짜,영화 선택 시 극장 리스트 찾기. (쿼리 2번)
      */
     @ResponseBody
-    @PostMapping("/selectMovie")
+    @PostMapping("/api/movies")
     public List<TheaterResponseDTO> selectTheater(@RequestBody TheaterRequestDTO theaterRequestDTO) {
         return showtimeService.findTheatersByMovieNameAndDate(
                 theaterRequestDTO.getMovieName(),
@@ -65,7 +65,7 @@ public class ReservationController {
      * 날짜,영화, 극장 선택 시 ShowTime 리스트 찾기(상영관, 상영시간, 총좌석, 예약가능 좌석). (쿼리 x)
      */
     @ResponseBody
-    @PostMapping("/selectShowtimes")
+    @PostMapping("/api/showtimes")
     public List<ShowTimeResponseDTO> selectShowTimes(@RequestBody ShowTimeRequestDTO showTimeRequestDTO) {
         return showtimeService.findShowtimeByDateAndMovieNameAndTheater(
                 showTimeRequestDTO.getMovieName(),
@@ -74,7 +74,7 @@ public class ReservationController {
     }
 
     @ResponseBody
-    @PostMapping("/saveSelection/seat")
+    @PostMapping("/api/seats/selection")
     public String saveSeat(@RequestBody Map<String, String> payload, Model model) {
 //        String date = payload.get("date");
 //        String movieName = payload.get("movie");
@@ -84,6 +84,9 @@ public class ReservationController {
         return "ex)예매중";
     }
 
+    /**
+     *  좌석 선택 페이지
+     */
     @GetMapping("/seatSelection")
     public String seatSelection(@RequestParam("showtimeId") Long showtimeId, Model model) {
         Showtime showtime = showtimeService.findById(Long.valueOf(showtimeId))

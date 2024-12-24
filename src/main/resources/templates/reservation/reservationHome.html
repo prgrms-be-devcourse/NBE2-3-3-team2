@@ -85,7 +85,7 @@
                 const selectedDate = event.target.value;
 
                 // Ajax 요청 -> 영화이름
-                fetch(`/selectDate`, {
+                fetch(`/api/dates`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -128,7 +128,7 @@
 
         if (selectedMovie && selectedDate) {
             // Ajax 요청
-            fetch(`/selectMovie`, {
+            fetch(`/api/movies`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -162,7 +162,7 @@
         const selectedDate = document.querySelector('input[name="selectedDate"]:checked').value; // 선택한 날짜
 
         if (selectedTheater && selectedMovie && selectedDate) {
-            fetch(`/selectShowtimes`, {
+            fetch(`/api/showtimes`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -204,7 +204,7 @@
         const { id, screenName } = JSON.parse(selectedScreen);  // showtime id랑 상영관 이름 가져오기.
 
 
-        fetch("/saveSelection/seat", {
+        fetch("/api/seats/selection", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
