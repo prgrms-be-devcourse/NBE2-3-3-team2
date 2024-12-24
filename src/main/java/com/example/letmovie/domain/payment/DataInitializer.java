@@ -11,7 +11,6 @@
 //import com.example.letmovie.domain.movie.entity.Theater;
 //import com.example.letmovie.domain.movie.repository.MovieJpaRepository;
 //import com.example.letmovie.domain.movie.repository.ShowtimeJpaRepository;
-//import com.example.letmovie.domain.movie.repository.TheaterRepository;
 //import com.example.letmovie.domain.payment.entity.Payment;
 //import com.example.letmovie.domain.payment.entity.PaymentHistory;
 //import com.example.letmovie.domain.payment.entity.PaymentStatus;
@@ -39,7 +38,6 @@
 //    private final ReservationRepository reservationRepository;
 //    private final PaymentRepository paymentRepository;
 //    private final PaymentHistoryRepository paymentHistoryRepository;
-//    private final TheaterRepository theaterRepository;
 //
 //    @PostConstruct
 //    public void init() {

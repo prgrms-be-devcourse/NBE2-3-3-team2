@@ -20,17 +20,17 @@ public class PaymentHistoryService {
 
     private final PaymentHistoryRepository paymentHistoryRepository;
 
-    @Transactional(readOnly = true)
-    public PaymentHistoryResponse.Info getPaymentHistoryDetail(Long paymentId) {
-        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
-                .orElseThrow(()-> new EntityNotFoundException("결제 내역 없음."));
-
-        return PaymentHistoryResponse.Info.from(paymentHistory);
-    }
-
-
-    public void deletePaymentHistory(Long paymentId) {
-        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
-                .orElseThrow(() -> new EntityNotFoundException("결제 내역 없음"));
-    }
+//    @Transactional(readOnly = true)
+//    public PaymentHistoryResponse.Info getPaymentHistoryDetail(Long paymentId) {
+//        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
+//                .orElseThrow(()-> new EntityNotFoundException("결제 내역 없음."));
+//
+//        return PaymentHistoryResponse.Info.from(paymentHistory);
+//    }
+//
+//
+//    public void deletePaymentHistory(Long paymentId) {
+//        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
+//                .orElseThrow(() -> new EntityNotFoundException("결제 내역 없음"));
+//    }
 }

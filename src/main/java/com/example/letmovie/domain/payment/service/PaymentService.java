@@ -84,7 +84,6 @@ public class PaymentService {
     @Transactional
     public PaymentResponse.Cancel cancel(Long paymentId) {
         log.info("결제 취소 시작 - paymentId: {}", paymentId);
-
         PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
                 .orElseThrow(EntityNotFoundException::new);
 //        log.info("결제 취소 검증 시작 - paymentId: {}, 현재 상태: {}",
