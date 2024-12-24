@@ -60,9 +60,9 @@
                         <!-- 등급 아이콘 -->
                         <div class="rating-icon position-absolute top-0 end-0 mt-2 me-4 text-white fw-bold"
                              th:switch="${movie.rating}">
-                            <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
-                            <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
-                            <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                            <span th:case="'12세이상관람가'" class="bg-warning rounded px-2 py-1">12</span>
+                            <span th:case="'15세이상관람가'" class="bg-orange rounded px-2 py-1">15</span>
+                            <span th:case="'19세이상관람가'" class="bg-danger rounded px-2 py-1">19</span>
                             <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
                         </div>
                         <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">
@@ -76,7 +76,11 @@
                             <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>
                             <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>
                             <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>
-                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>
+<!--                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>-->
+                            <!-- 20241224 -> 2024-12-24 로 변환-->
+                            <li><strong>개봉일:</strong>
+                                <span th:text="${#strings.substring(movie.openDate, 0, 4)} + '-' + ${#strings.substring(movie.openDate, 4, 6)} + '-' + ${#strings.substring(movie.openDate, 6)}"></span>
+                            </li>
                             <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>
                             <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>
                         </ul>
