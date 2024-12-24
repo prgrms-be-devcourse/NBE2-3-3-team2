@@ -8,13 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/payment")
 public class PaymentViewController {
 
-    @GetMapping("/test")
-    public String paymentTest() {
-        return "payment-test";
-    }
-
     @GetMapping("/success")
     public String showPaymentSuccess() {
         return "payment-success";
+    }
+
+    @GetMapping("/ready")
+    public String myPayment() {
+        return "payment-ready";
+    }
+
+    @GetMapping("/paymentlist")
+    public String myPaymentPage() {
+        return "paymentlist";
     }
 }
