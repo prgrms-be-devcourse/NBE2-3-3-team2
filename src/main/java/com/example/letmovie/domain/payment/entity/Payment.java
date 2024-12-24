@@ -20,16 +20,6 @@ public class Payment {
     @Column(name = "payment_id")
     private Long id;
 
-    @Column(nullable = false)
-    private LocalDateTime paidAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus paymentStatus;
-
-    @Column(nullable = false)
-    private int amount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -38,13 +28,30 @@ public class Payment {
     @JoinColumn(name = "reservation_id",nullable = false)
     private Reservation reservation;
 
+    @Column(nullable = false)
+    private int amount;
+
+    @Column
+    private String paymentMethodType;  // 결제 수단
+
+    @Column(nullable = false)
+    private LocalDateTime paidAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus paymentStatus;
+
     @Builder
-    public Payment(Member member, Reservation reservation, int amount,PaymentStatus paymentStatus) {
+    public Payment(Member member, Reservation reservation,PaymentStatus paymentStatus, int amount) {
         this.member = member;
         this.reservation = reservation;
         this.amount = amount;
         this.paidAt = LocalDateTime.now();
         updateStatus(paymentStatus);
+    }
+
+    public void updatePaymentMethodType(String paymentMethodType) {
+        this.paymentMethodType = paymentMethodType;
     }
 
     public void updateStatus(PaymentStatus paymentStatus) {
