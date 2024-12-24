@@ -20,10 +20,10 @@ public class Review {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String password;
 
     @Column(nullable = false)
