@@ -19,18 +19,16 @@ public class PaymentHistoryController {
 
     private final PaymentHistoryService paymentHistoryService;
 
-    @GetMapping("/{payment}")
-    @Operation(summary = "결제 상세 조회")
-    public ResponseEntity<PaymentHistoryResponse.Info> getMemberPaymentHistory(@PathVariable("payment_id") Long paymentId) {
-        return ResponseEntity.ok()
-                .body(paymentHistoryService.getPaymentHistoryDetail(paymentId));
-    }
-
-
-//    @DeleteMapping("/{payment_id}")
-//    @Operation(summary = "관리자 결제 내역 삭제")
-//    public PaymentHistory deletePaymentHistory(@PathVariable(name = "payment_id") String paymentId) {
-//
-//
+//    @GetMapping("/{payment_id}")
+//    @Operation(summary = "결제 상세 조회")
+//    public ResponseEntity<PaymentHistoryResponse.Info> getMemberPaymentHistory(@PathVariable("payment_id") Long paymentId) {
+//        return ResponseEntity.ok()
+//                .body(paymentHistoryService.getPaymentHistoryDetail(paymentId));
 //    }
+
+//    @GetMapping("/payment_histories")
+
+
+//    @GetMapping("/search")
+
 }
