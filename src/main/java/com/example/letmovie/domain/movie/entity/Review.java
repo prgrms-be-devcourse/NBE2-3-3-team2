@@ -29,7 +29,7 @@ public class Review {
     @Column(nullable = false)
     private int rating;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 100)
     private String content;
 
     public Review(Movie movie, String nickname, String password, int rating, String content) {
