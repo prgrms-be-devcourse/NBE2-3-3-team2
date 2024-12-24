@@ -9,12 +9,6 @@ import java.util.List;
 
 public interface ShowtimeJpaRepository extends JpaRepository<Showtime, Long> {
 
-    @Query("SELECT new com.example.letmovie.domain.movie.dto.ShowtimeDTO(" +
-            "m.id, m.movieName, s.screenName, s.totalSeats, s.remainingSeats, " +
-            "st.showtimeDate, " +
-            "st.showtimeTime) " +
-            "FROM Showtime st " +
-            "JOIN st.movie m " +
-            "JOIN st.screen s")
+    @Query("SELECT st FROM Showtime st JOIN FETCH st.movie m JOIN FETCH st.screen s")
     List<ShowtimeDTO> findAllShowtime();
 }

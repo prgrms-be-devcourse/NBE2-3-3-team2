@@ -1,13 +1,16 @@
 package com.example.letmovie.domain.reservation.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Seat {
 
     @Id
@@ -18,6 +21,9 @@ public class Seat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_id")
     private Screen screen;
+
+    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL) //casecade
+    private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
     @Enumerated(EnumType.STRING) //enum
     private SeatType seatType;
@@ -34,4 +40,11 @@ public class Seat {
     @Column(nullable = false)
     private int price;
 
+    /**
+     * 연관관계 메서드
+     */
+    public void setScreen(Screen screen) {
+        this.screen = screen;
+        screen.getSeats().add(this);
+    }
 }

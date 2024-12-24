@@ -153,4 +153,3 @@ fabric.properties
 # config local DB
 ### .env ###
 .env*
-
