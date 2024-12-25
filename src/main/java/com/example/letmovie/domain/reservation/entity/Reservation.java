@@ -38,7 +38,7 @@ public class Reservation {
 
     @NotNull
     @Builder.Default // Builder를 사용할 때 기본값 설정
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true) //양방향 매핑
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL) //양방향 매핑
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
     @NotNull
@@ -60,7 +60,7 @@ public class Reservation {
     }
 
     /**
-     *  생성 메서드
+     *  생성 메서드 - 정적 팩토리 메서드
      */
     public static Reservation createReservation(Member member, Showtime showtime,List<ReservationSeat> reservationSeats){
         Reservation reservation = Reservation.builder()
@@ -71,7 +71,6 @@ public class Reservation {
                 .totalSeats(reservationSeats.size())
                 .totalPrice(reservationSeats.stream().mapToInt(ReservationSeat::getSeatPrice).sum())
                 .build();
-
 
         for (ReservationSeat reservationSeat : reservationSeats) {
             reservation.addReservationSeat(reservationSeat); //양방향 설정

@@ -2,32 +2,35 @@ package com.example.letmovie.domain.reservation.entity;
 
 import com.example.letmovie.domain.movie.entity.Theater;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Screen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     @Column(name = "screen_id")
     private Long id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
+    @NotNull
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL) //양방향 세팅
     private List<Seat> seats = new ArrayList<>();
 
-    @Column(nullable = false)
+    @NotNull
     private String screenName;
 }

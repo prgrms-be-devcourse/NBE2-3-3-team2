@@ -3,41 +3,45 @@ package com.example.letmovie.domain.movie.entity;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Showtime {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showtime_id")
     private Long id;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name="screen_id")
     private Screen screen;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    @Column(nullable = false, columnDefinition = "Date")
+    @NotNull
+    @Column(columnDefinition = "Date")
     private LocalDate showtimeDate;
-    @Column(nullable = false)
+
+    @NotNull
     private LocalTime showtimeTime;
 
-    @Column(nullable = false)
+    @NotNull
     private int totalSeats;
 
-    @Column(nullable = false)
+    @NotNull
     private int remainingSeats;
 
     /**
