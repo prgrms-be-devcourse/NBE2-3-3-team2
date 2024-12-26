@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar">
+  <nav style="width: 200px; background-color: #f4f4f4; padding: 15px; box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); height: 100vh; position: fixed;">
+    <h3>LetMovie Admin</h3>
+    <ul style="list-style-type: none; padding: 0;">
+      <li><a th:href="@{/admin/movie}" style="text-decoration: none; color: #333; font-weight: bold;">상영중인 영화</a></li>
+      <li><a th:href="@{/admin/movie/post}" style="text-decoration: none; color: #333; font-weight: bold;">영화 추가</a></li>
+      <li><a th:href="@{/admin/movie/modify}" style="text-decoration: none; color: #333; font-weight: bold;">영화 정보 수정</a></li>
+      <li><a th:href="@{/admin/movie/delete}" style="text-decoration: none; color: #333; font-weight: bold;">영화 삭제</a></li>
+      <li></li>
+      <li><a th:href="@{/admin/member}" style="text-decoration: none; color: #333; font-weight: bold;">회원정보조회</a></li>
+
+      <li><a th:href="@{/admin/movietime}" style="text-decoration: none; color: #333; font-weight: bold;">상영시간대</a></li>
+    </ul>
+  </nav>
+</div>
+</body>
+</html>
