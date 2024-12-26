@@ -1,5 +1,6 @@
 package com.example.letmovie.domain.auth.security;
 
+import com.example.letmovie.domain.auth.service.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

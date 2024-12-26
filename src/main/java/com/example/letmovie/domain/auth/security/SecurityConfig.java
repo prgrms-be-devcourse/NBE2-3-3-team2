@@ -1,5 +1,6 @@
 package com.example.letmovie.domain.auth.security;
 
+import com.example.letmovie.domain.auth.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
