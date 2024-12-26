@@ -53,7 +53,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .email("jinyoung@gmail.com")
                 .password("1234")
                 .birthDate("881213")
-                .authority(Authority.ROLE_USER) // 기본값이 ROLE_USER라면 생략 가능
+                .authority(Authority.USER) // 기본값이 USER라면 생략 가능
                 .grade(Grade.GENERAL)          // 기본값이 GENERAL이라면 생략 가능
                 .memberStatus(MemberStatus.AVAILABLE) // 기본값이 AVAILABLE이라면 생략 가능
                 .build();

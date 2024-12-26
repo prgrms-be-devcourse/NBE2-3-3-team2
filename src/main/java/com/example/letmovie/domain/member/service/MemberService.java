@@ -38,7 +38,7 @@ public class MemberService {
                 .email(request.getEmail())
                 .password(encodedPassword)
                 .birthDate(request.getBirthDate())
-                .authority(Authority.ROLE_USER)
+                .authority(Authority.USER)
                 .grade(Grade.GENERAL)
                 .memberStatus(MemberStatus.AVAILABLE)
                 .build();
