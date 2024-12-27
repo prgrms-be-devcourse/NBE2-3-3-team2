@@ -21,6 +21,14 @@ public class TokenBlacklistService {
     }
 
     /**
+     *  로그아웃 시 리프레시 토큰 블랙리스트에 추가
+     */
+    public void addToBlacklist(String token, LocalDateTime expiryDate) {
+        TokenBlacklist tokenBlacklist = new TokenBlacklist(token, expiryDate);
+        tokenBlacklistRepository.save(tokenBlacklist);
+    }
+
+    /**
      *  매일 새벽 2시에 만료된 토큰 삭제
      */
     @Scheduled(cron = "0 0 2 * * ?")

@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || path.equals("/signup")
                 || path.equals("/login")
                 || path.startsWith("/movie/")
+                || path.startsWith("/movies")
                 || path.equals("/token/refresh");
     }
 
@@ -45,6 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        String requestPath = request.getRequestURI();
+
+        // 인증이 필요하지 않은 경로는 필터를 건너뜀
+        if (shouldNotFilter(request)) {
+            filterChain.doFilter(request, response); // 필터 체인 계속 진행
+            return;
+        }
 
         String token = resolveToken(request);
 
@@ -67,6 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             if (token == null || !jwtTokenProvider.validateToken(token)) {
                 logger.warn("JWT 토큰이 유효하지 않습니다.");
+                handleInvalidToken(request, response);
                 return;
             }
         } catch (ExpiredJwtException e) {
@@ -78,7 +88,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\": \"Access Token Expired\"}");
             } else {
-                response.sendRedirect("/token/refresh");
+                handleExpiredToken(request, response);
             }
             return; // 필터 체인 중단
         } catch (Exception e) {
@@ -91,13 +101,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 response.getWriter().write("{\"error\": \"Unauthorized: Invalid JWT Token\"}");
             } else {
                 // 일반 요청에 대한 처리
-                response.sendRedirect("/login");
+                handleAuthenticationError(request, response);
             }
             return;
         }
 
         filterChain.doFilter(request, response); // 다음 필터로 요청 전달
     }
+
+    private void handleInvalidToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/login"); // 로그인 페이지로 리디렉션
+    }
+
+    private void handleExpiredToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/token/refresh"); // 토큰 갱신 페이지로 리디렉션
+    }
+
+    private void handleAuthenticationError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/login"); // 로그인 페이지로 리디렉션
+    }
+
 
     /**
      * 쿠키에서 JWT 추출하는 메서드

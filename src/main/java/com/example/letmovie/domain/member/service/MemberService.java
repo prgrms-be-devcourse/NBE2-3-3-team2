@@ -1,6 +1,6 @@
 package com.example.letmovie.domain.member.service;
 
-import com.example.letmovie.domain.member.dto.SignupRequestDTO;
+import com.example.letmovie.domain.member.dto.request.SignupRequestDTO;
 import com.example.letmovie.domain.member.entity.Authority;
 import com.example.letmovie.domain.member.entity.Grade;
 import com.example.letmovie.domain.member.entity.Member;
