@@ -85,8 +85,6 @@ public class PaymentService {
         log.info("결제 취소 시작 - paymentId: {}", paymentId);
         PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
                 .orElseThrow(EntityNotFoundException::new);
-//        log.info("결제 취소 검증 시작 - paymentId: {}, 현재 상태: {}",
-//                validateCancellablePayment(paymentHistory);
         try {
             HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
             Map<String, String> parameters = httpRequestUtil.createCancelParams(paymentHistory);
@@ -109,8 +107,6 @@ public class PaymentService {
 
             return response;
         } catch (Exception e) {
-//            Long reservationId = paymentHistory.getPayment().getReservation().getId();
-//            paymentFailureService.handlePaymentFailure(reservationId, e);
             throw e;
         }
     }
@@ -161,6 +157,6 @@ public class PaymentService {
 //                status == PaymentStatus.PAYMENT_FAILED) {
 //            throw new IllegalArgumentException("이미 취소되었거나 실패한 결제입니다.");
 //        }
-
-
+//
+//    }
 }

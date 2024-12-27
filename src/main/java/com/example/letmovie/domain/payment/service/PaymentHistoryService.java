@@ -29,8 +29,8 @@ public class PaymentHistoryService {
 //    }
 //
 //
-//    public void deletePaymentHistory(Long paymentId) {
-//        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
-//                .orElseThrow(() -> new EntityNotFoundException("결제 내역 없음"));
-//    }
+    public void deletePaymentHistory(Long paymentId) {
+        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
+                .orElseThrow(() -> new EntityNotFoundException("결제 내역 없음"));
+    }
 }

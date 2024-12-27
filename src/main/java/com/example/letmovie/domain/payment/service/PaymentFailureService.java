@@ -47,7 +47,7 @@ public class PaymentFailureService {
                     String cleanResponse = errorResponse.replaceAll("^\"|\"$", "");
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode jsonNode = mapper.readTree(cleanResponse);
-                    errorCode = String.valueOf(jsonNode.get("error_code").asInt());  // int를 String으로 변환
+                    errorCode = String.valueOf(jsonNode.get("error_code").asInt());
                     errorMessage = jsonNode.get("error_message").asText();
 
                     log.info("Parsed errorMessage={}", errorMessage);
