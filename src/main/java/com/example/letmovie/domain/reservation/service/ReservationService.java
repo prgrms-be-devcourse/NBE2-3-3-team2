@@ -41,6 +41,10 @@ public class ReservationService {
             Long screenId = showtime.getScreen().getId();
             Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
 
+            if(!seatEntity.isAble()){
+                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
+            }
+
             return ReservationSeat.createReservationSeat(seatEntity, showtime);
         }).collect(Collectors.toList());
 

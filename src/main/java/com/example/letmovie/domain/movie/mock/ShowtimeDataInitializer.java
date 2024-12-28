@@ -18,6 +18,7 @@ import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import com.example.letmovie.domain.reservation.repository.TheaterRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 @Component
+@Profile("!test")
 public class ShowtimeDataInitializer implements CommandLineRunner {
 
     private final TheaterRepository theaterRepository;
@@ -61,9 +63,9 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         // 생성한 Member를 저장
         memberRepository.save(member);
 
-        Theater theater1 = theaterRepository.save(new Theater(null, "강남 메가박스"));
-        Theater theater2 = theaterRepository.save(new Theater(null, "신촌 CGV"));
-        Theater theater3 = theaterRepository.save(new Theater(null, "용산 아이맥스"));
+        Theater theater1 = theaterRepository.save(Theater.builder().id(null).theaterName("강남 메가박스").build());
+        Theater theater2 = theaterRepository.save( Theater.builder().id(null).theaterName("신촌 CGV").build());
+        Theater theater3 = theaterRepository.save(Theater.builder().id(null).theaterName("용산 아이맥스").build());
 
         // Screen 데이터 추가
         Screen screen1 = screenRepository.save(Screen.builder().id(null).theater(theater1).seats(new ArrayList<>()).screenName("1관").build());
