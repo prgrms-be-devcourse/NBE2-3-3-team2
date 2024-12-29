@@ -49,7 +49,7 @@ public class AuthController {
             accessTokenCookie.setHttpOnly(true);
             accessTokenCookie.setSecure(false); // 보안상 쿠키가 HTTPS에서만 전송되도록 보장해야 하나 테스트 환경이므로 해당 속성 false 처리
             accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 60); // 1시간
+            accessTokenCookie.setMaxAge(60 * 15); // 15분
 
             Cookie refreshTokenCookie = new Cookie("refreshToken", loginResponse.getRefreshToken());
             refreshTokenCookie.setHttpOnly(true);
@@ -100,7 +100,7 @@ public class AuthController {
             accessTokenCookie.setHttpOnly(true);
             accessTokenCookie.setSecure(false);
             accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 60); // 1시간
+            accessTokenCookie.setMaxAge(60 * 15); // 15분
 
             response.addCookie(accessTokenCookie);
 

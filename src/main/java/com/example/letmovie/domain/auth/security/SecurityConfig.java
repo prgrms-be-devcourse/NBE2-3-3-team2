@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,13 +33,15 @@ public class SecurityConfig {
         http.csrf().disable()
                 .cors().and()   // CORS 설정 활성화
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용ㅍ
                         .requestMatchers("/js/**", "/css/**", "/images/**")
                         .permitAll()
                         .requestMatchers( "/favicon.ico", "/", "/signup", "/login", "/logout","/status", "/token/refresh", "/movie/**", "/movies")
                         .permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
-                        .requestMatchers("/reservation/**", "/mypage").authenticated() // /reservation 인증 요구
-                        .requestMatchers("/private/**").authenticated()
+                        .requestMatchers("/mypage/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/private/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/reservation/**").hasAuthority("ROLE_USER")
+                        .requestMatchers("/payment/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -47,6 +50,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
+                            System.out.println("Access denied for: " + SecurityContextHolder.getContext().getAuthentication());
                             response.sendRedirect("/login"); // 인증되지 않은 사용자를 로그인 페이지로 리디렉션
                         })
                 )
