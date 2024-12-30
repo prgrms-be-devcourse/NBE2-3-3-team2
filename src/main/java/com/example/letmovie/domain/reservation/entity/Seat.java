@@ -46,6 +46,13 @@ public class Seat {
     private int price;
 
     /**
+     * 낙관적 락 테스트
+     */
+    @Version
+    private int version;
+
+
+    /**
      * 연관관계 메서드
      */
     public void setScreen(Screen screen) {

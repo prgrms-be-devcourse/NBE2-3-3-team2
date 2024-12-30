@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 비관적 락 테스트를 위한 서비스 코드
+ * 낙관적 락 테스트를 위한 서비스 코드
  */
 @Service
 @Transactional(readOnly = true)
@@ -33,7 +33,7 @@ public class OptimisticLockReservationService {
     @Transactional
     public ReservationResponseDTO reservation(List<String> seatList, Long memberId, Long showtimeId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원이 없습니다.")); //전역 오류 핸들링으로 바꿔야 함.
-        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId);
+        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId).orElseThrow(() -> new RuntimeException("영화 상영시간이 없습니다"));
 
         List<ReservationSeat> reservationSeats = seatList.stream().map(seat -> {
             String[] split = seat.split("-");
@@ -41,7 +41,7 @@ public class OptimisticLockReservationService {
             int col = Integer.parseInt(split[1]);
 
             Long screenId = showtime.getScreen().getId();
-            Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
+            Seat seatEntity = seatRepository.findByIdWithOptimisticLock(col, row, screenId).orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
 
 //            if (!seatEntity.isAble()) {
 //                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");

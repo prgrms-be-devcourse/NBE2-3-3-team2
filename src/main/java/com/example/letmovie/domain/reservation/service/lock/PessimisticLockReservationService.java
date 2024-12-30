@@ -35,7 +35,7 @@ public class PessimisticLockReservationService {
     public ReservationResponseDTO reservation(List<String> seatList, Long memberId, Long showtimeId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원이 없습니다.")); //전역 오류 핸들링으로 바꿔야 함.
 //        Showtime showtime = showtimeRepository.findById(showtimeId).orElseThrow(() -> new RuntimeException("쇼타임이 없습니다."));
-        Showtime showtime = showtimeRepository.findByIdWithPessimisticLock(showtimeId);
+        Showtime showtime = showtimeRepository.findByIdWithPessimisticLock(showtimeId).orElseThrow(() -> new RuntimeException("영화 상영시간이 없습니다"));
 
         List<ReservationSeat> reservationSeats = seatList.stream().map(seat -> {
             String[] split = seat.split("-");

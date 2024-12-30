@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
 
@@ -47,12 +48,12 @@ public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Showtime s WHERE s.id = :id")
-    Showtime findByIdWithPessimisticLock(@Param("id") Long id);
+    Optional<Showtime> findByIdWithPessimisticLock(@Param("id") Long id);
 
     /**
      * 낙관적 락 테스트
      */
     @Lock(LockModeType.OPTIMISTIC)
     @Query("SELECT s FROM Showtime s WHERE s.id = :id")
-    Showtime findByIdWithOptimisticLock(@Param("id") Long id);
+    Optional<Showtime> findByIdWithOptimisticLock(@Param("id") Long id);
 }

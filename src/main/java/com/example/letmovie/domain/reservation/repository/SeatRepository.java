@@ -28,4 +28,16 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
     Optional<Seat> findByIdWithPessimisticLock(@Param("seatCol") int seatCol,
                                               @Param("seatLow") int seatLow,
                                               @Param("screenId") Long screenId);
+
+    /**
+     * 낙관적 락 테스트
+     */
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT s " +
+            "FROM Seat s " +
+            "WHERE s.seatCol = :seatCol AND s.seatLow = :seatLow AND s.screen.id = :screenId")
+    Optional<Seat> findByIdWithOptimisticLock(@Param("seatCol") int seatCol,
+                                               @Param("seatLow") int seatLow,
+                                               @Param("screenId") Long screenId);
+
 }

@@ -170,5 +170,5 @@ class OptimisticLockReservationFacadeTest {
 
         //then
         assertEquals(0,findShowTime.getRemainingSeats());
-    }
+    }// -> 데드락이 많이 생김..
 }
