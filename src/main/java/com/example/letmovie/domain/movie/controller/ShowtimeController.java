@@ -15,12 +15,11 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/movie")
 public class ShowtimeController {
 
     private final ShowtimeServiceImpl showtimeService;
 
-    @GetMapping("/showtime")
+    @GetMapping({"/movie/showtime", "/private/movie/showtime"})
     public String getShowtime(Model model) {
         List<ShowtimeDTO> showtime = showtimeService.getAllShowtime();
 

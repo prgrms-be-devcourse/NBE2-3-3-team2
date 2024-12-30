@@ -16,7 +16,7 @@
             <a class="navbar-brand" th:if="${isLoggedIn}" th:href="@{/private}">
             <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
             </a>
-            <a class="navbar-brand" th:if="${isLoggedIn == null or !isLoggedIn}" th:href="@{/}">
+            <a class="navbar-brand" th:unless="${isLoggedIn}" th:href="@{/}">
                 <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
             </a>
             <!-- 토글 버튼 (반응형) -->
@@ -30,14 +30,14 @@
 <!--                        <a class="nav-link" th:href="@{/movie/total_movie}">영화</a>-->
                         <!--<a class="nav-link" th:href="@{/movies(category=ALL)}">영화</a>-->
                         <a class="nav-link" th:if="${isLoggedIn}" th:href="@{/private/movies(category=ALL)}">영화</a>
-                        <a class="nav-link" th:if="${isLoggedIn == null or !isLoggedIn}" th:href="@{/movies(category=ALL)}">영화</a>
+                        <a class="nav-link" th:unless="${isLoggedIn}" th:href="@{/movies(category=ALL)}">영화</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/reservation}">예매</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:if="${isLoggedIn}" th:href="@{/private/movie/showtime}">상영시간</a>
-                        <a class="nav-link" th:if="${isLoggedIn == null or !isLoggedIn}" th:href="@{/movie/showtime}">상영시간</a>
+                        <a class="nav-link" th:unless="${isLoggedIn}" th:href="@{/movie/showtime}">상영시간</a>
                     </li>
                     <!-- 검색 아이콘 -->
                     <li class="nav-item">
@@ -101,6 +101,9 @@
         </div>
     </div>
 
+    <script th:inline="javascript">
+        const isLoggedIn = /*[[${isLoggedIn}]]*/ false; // 로그인 여부를 나타내는 방식
+    </script>
     <script th:src="@{/js/searchPopUp.js}"></script>
     <!--로그아웃 시 동작처리-->
     <script th:inline="javascript">

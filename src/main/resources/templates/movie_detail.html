@@ -87,9 +87,10 @@
                         <hr>
                         <p th:text="${movie.plot}" class="text-muted">줄거리</p>
                         <div class="d-flex gap-3 mt-4">
+<!--                            <a th:href="${isLoggedIn} ? @{/private} : @{/}" class="btn btn-secondary btn-custom px-4">홈으로</a>-->
                             <a th:if="${isLoggedIn}" th:href="@{/private}"
                                class="btn btn-secondary btn-custom px-4">홈으로</a>
-                            <a th:if="${isLoggedIn == null or !isLoggedIn}" th:href="@{/}"
+                            <a th:unless="${isLoggedIn}" th:href="@{/}"
                                class="btn btn-secondary btn-custom px-4">홈으로</a>
                             <a th:if="${movie.status.name() != 'PREV'}"
                                th:href="@{/reservation(movieId=${movie.id})}"
