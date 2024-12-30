@@ -27,7 +27,7 @@ public class Showtime {
     private Screen screen;
 
     @NotNull
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
@@ -43,6 +43,12 @@ public class Showtime {
 
     @NotNull
     private int remainingSeats;
+
+    /**
+     * 낙관적 락 테스트
+     */
+    @Version
+    private int version;
 
     /**
      *  좌석 감소 로직.

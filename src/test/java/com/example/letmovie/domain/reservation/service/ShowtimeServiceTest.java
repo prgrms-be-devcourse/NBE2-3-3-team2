@@ -1,4 +1,4 @@
-package com.example.letmovie.service;
+package com.example.letmovie.domain.reservation.service;
 
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Showtime;

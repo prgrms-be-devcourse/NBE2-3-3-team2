@@ -2,7 +2,9 @@ package com.example.letmovie.domain.reservation.repository;
 
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Theater;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -39,4 +41,18 @@ public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
             @Param("showtimeDate") LocalDate showtimeDate,
             @Param("currentTime") LocalTime currentTime
     );
+
+    /**
+     * 비관적 락 테스트
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT s FROM Showtime s WHERE s.id = :id")
+    Showtime findByIdWithPessimisticLock(@Param("id") Long id);
+
+    /**
+     * 낙관적 락 테스트
+     */
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT s FROM Showtime s WHERE s.id = :id")
+    Showtime findByIdWithOptimisticLock(@Param("id") Long id);
 }

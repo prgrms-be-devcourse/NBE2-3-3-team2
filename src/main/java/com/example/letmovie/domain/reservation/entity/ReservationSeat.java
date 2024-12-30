@@ -42,8 +42,8 @@ public class ReservationSeat {
     public static ReservationSeat createReservationSeat(Seat seat, Showtime showtime) {
         ReservationSeat reservationSeat = ReservationSeat.builder()
                 .seatPrice(seat.getPrice())
-                .seat(seat)
                 .build();
+        reservationSeat.setSeat(seat);
 
         //seat 감소 로직
         showtime.removeSeats(1);
