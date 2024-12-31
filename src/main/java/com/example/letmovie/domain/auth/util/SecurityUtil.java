@@ -12,6 +12,11 @@ public class SecurityUtil {
 
     private static MemberRepository memberRepository;
 
+    // setter method
+    public static void setMemberRepository(MemberRepository memberRepository) {
+        SecurityUtil.memberRepository = memberRepository;
+    }
+
     /**
      *  현재 인증된 멤버 정보를 가져옴
      */

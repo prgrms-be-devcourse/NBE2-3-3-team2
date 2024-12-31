@@ -1,5 +1,6 @@
 package com.example.letmovie.domain.member.service;
 
+import com.example.letmovie.domain.auth.util.SecurityUtil;
 import com.example.letmovie.domain.member.dto.request.SignupRequestDTO;
 import com.example.letmovie.domain.member.entity.Authority;
 import com.example.letmovie.domain.member.entity.Grade;
@@ -7,6 +8,7 @@ import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.member.entity.MemberStatus;
 import com.example.letmovie.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    public MemberService(PasswordEncoder passwordEncoder, MemberRepository memberRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.memberRepository = memberRepository;
+        SecurityUtil.setMemberRepository(memberRepository);  // memberRepository를 static 방식으로 설정
+    }
 
     // 회원가입
     public void signup(SignupRequestDTO request) {
