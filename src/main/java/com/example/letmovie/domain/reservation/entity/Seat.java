@@ -16,7 +16,6 @@ public class Seat {
 
     @Id
     @Column(name ="seat_id")
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,6 +25,7 @@ public class Seat {
     private Screen screen;
 
     @NotNull
+    @Builder.Default
     @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL) //casecade
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 

@@ -18,7 +18,6 @@ public class Screen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     @Column(name = "screen_id")
     private Long id;
 
@@ -28,6 +27,7 @@ public class Screen {
     private Theater theater;
 
     @NotNull
+    @Builder.Default
     @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL) //양방향 세팅
     private List<Seat> seats = new ArrayList<>();
 

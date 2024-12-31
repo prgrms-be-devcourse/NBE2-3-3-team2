@@ -16,7 +16,6 @@ import java.time.LocalTime;
 public class Showtime {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "showtime_id")
     private Long id;

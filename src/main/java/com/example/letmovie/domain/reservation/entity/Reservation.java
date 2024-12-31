@@ -18,7 +18,6 @@ import java.util.List;
 public class Reservation {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Reservation_id")
     private Long id;
@@ -37,7 +36,7 @@ public class Reservation {
     private ReservationStatus status;
 
     @NotNull
-    @Builder.Default // Builder를 사용할 때 기본값 설정
+    @Builder.Default
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL) //양방향 매핑
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
@@ -58,9 +57,12 @@ public class Reservation {
         reservationSeat.setReservation(this);
 
     }
+    public void updateTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     /**
-     *  생성 메서드 - 정적 팩토리 메서드
+     *  생성 메서드 - 정적 팩토리 메서드 -> // notnull 정합성 실패로 로직 변경
      */
     public static Reservation createReservation(Member member, Showtime showtime,List<ReservationSeat> reservationSeats){
         Reservation reservation = Reservation.builder()

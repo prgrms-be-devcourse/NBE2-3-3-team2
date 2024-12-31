@@ -12,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationSeat {
 
-    @NotNull
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_seat_id")
     private Long id;

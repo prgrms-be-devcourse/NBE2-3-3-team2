@@ -141,7 +141,7 @@ class OptimisticLockReservationFacadeTest {
                 .email("jinyoung@gmail.com")
                 .password("1234")
                 .birthDate("881213")
-                .authority(Authority.ROLE_USER)
+                .authority(Authority.USER)
                 .grade(Grade.GENERAL)
                 .memberStatus(MemberStatus.AVAILABLE)
                 .build();
