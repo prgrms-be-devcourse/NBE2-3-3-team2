@@ -13,12 +13,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/search")
+@RequestMapping("")
 public class SearchController {
 
     private final MovieServiceImpl movieService;
 
-    @GetMapping("/suggestions")
+    @GetMapping({"/api/search/suggestions", "/private/api/search/suggestions"})
     public List<Map<String, Object>> getSuggestions(@RequestParam String query) {
         return movieService.searchMoviesByName(query).stream()
                 .map(movie -> {
