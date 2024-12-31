@@ -64,14 +64,18 @@
                         <!-- 스틸 이미지 -->
                         <img th:src="@{${movie.stillImageUrl}}" class="card-img-top" alt="스틸 이미지">
 
-                        <!-- 영화 이름 배경 및 텍스트 -->
+                        <!-- 영화 이름 -->
                         <div class="position-absolute top-0 start-0 p-3 bg-dark bg-opacity-50 text-white">
                             <h5 class="mb-0" th:text="${movie.movieName}">영화 이름</h5>
                         </div>
 
                         <!-- 버튼 배치 -->
                         <div class="position-absolute bottom-0 start-0 p-3">
-                            <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
+                            <!-- 왜 삼항연산자에서 빨간줄이 나오는지 모르겠음. 실행은 문제없이 되나 일단 주석 -->
+<!--                            <a th:href="${isLoggedIn} ? @{/private/movie/{id}(id=${movie.id})} : @{/movie/{id}(id=${movie.id})}"-->
+<!--                               class="btn btn-primary me-2">영화 상세 정보</a>-->
+                            <a th:if="${isLoggedIn}" th:href="@{/private/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
+                            <a th:unless="${isLoggedIn}" th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
                             <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>
                         </div>
                     </div>
@@ -133,7 +137,8 @@
     <div>
         <div class="d-flex justify-content-between align-items-center">
             <h1>박스오피스</h1>
-            <a th:href="@{/movies(category=ALL)}" class="btn btn-link">더 많은 영화보기 +</a>
+            <a th:if="${isLoggedIn}" th:href="@{/private/movies(category=ALL)}" class="btn btn-link">더 많은 영화보기 +</a>
+            <a th:unless="${isLoggedIn}" th:href="@{/movies(category=ALL)}" class="btn btn-link">더 많은 영화보기 +</a>
         </div>
         <!-- 캐러셀 -->
         <div class="position-relative">
@@ -148,14 +153,17 @@
                             <!-- 등급 아이콘 -->
                             <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"
                                  th:switch="${movie.rating}">
-                                <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
-                                <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
-                                <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                                <span th:case="'12세이상관람가'" class="bg-warning rounded px-2 py-1">12</span>
+                                <span th:case="'15세이상관람가'" class="bg-orange rounded px-2 py-1">15</span>
+                                <span th:case="'19세이상관람가'" class="bg-danger rounded px-2 py-1">19</span>
                                 <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
                             </div>
 
                             <!-- 포스터 이미지 -->
-                            <a th:href="@{/movie/{id}(id=${movie.id})}">
+                            <a th:if="${isLoggedIn}" th:href="@{/private/movie/{id}(id=${movie.id})}">
+                                <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
+                            </a>
+                            <a th:unless="${isLoggedIn}" th:href="@{/movie/{id}(id=${movie.id})}">
                                 <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
                             </a>
                             <div class="card-body text-center">
@@ -189,14 +197,17 @@
                             <!-- 등급 아이콘 -->
                             <div class="rating-icon position-absolute top-0 end-0 mt-2 me-2 text-white fw-bold"
                                  th:switch="${movie.rating}">
-                                <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
-                                <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
-                                <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                                <span th:case="'12세이상관람가'" class="bg-warning rounded px-2 py-1">12</span>
+                                <span th:case="'15세이상관람가'" class="bg-orange rounded px-2 py-1">15</span>
+                                <span th:case="'19세이상관람가'" class="bg-danger rounded px-2 py-1">19</span>
                                 <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
                             </div>
 
                             <!-- 포스터 이미지 -->
-                            <a th:href="@{/movie/{id}(id=${movie.id})}">
+                            <a th:if="${isLoggedIn}" th:href="@{/private/movie/{id}(id=${movie.id})}">
+                                <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
+                            </a>
+                            <a th:unless="${isLoggedIn}" th:href="@{/movie/{id}(id=${movie.id})}">
                                 <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">
                             </a>
                             <div class="card-body text-center">
@@ -221,13 +232,9 @@
     <!-- Bootstrap JS -->
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
-    <!-- JavaScript for Carousel -->
     <script th:src="@{/js/initCarousel.js}"></script>
 
-    <!-- JavaScript for FeaturedCarousel -->
     <script th:src="@{/js/initFeaturedCarousel.js}"></script>
 
-    <!--&lt;!&ndash; JavaScript for search popup &ndash;&gt;-->
-    <!--<script th:src="@{/js/searchPopUp.js}"></script>-->
 </body>
 </html>

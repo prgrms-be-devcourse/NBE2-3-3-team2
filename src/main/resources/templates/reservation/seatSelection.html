@@ -33,7 +33,6 @@
 
   <div class="screen">스크린</div>
 
-
   <div class="seat-container">
     <!-- 행 반복 -->
     <div th:each="entry : ${seatMap}" class="seat-row">
@@ -48,8 +47,6 @@
            th:text="${seat.seatCol}"
            onclick="selectSeat(this)"></div>
     </div>
-  </div>
-
   </div>
 
   <div class="legend">
@@ -69,6 +66,7 @@
   let selectedSeats = []; // 선택된 좌석 배열
   let maxPerson = 1; // 초기 최대 인원 수는 1명
   const showtimeId = [[${showtime.id}]];
+  let reservationData; // 상위 스코프에 reservation 데이터를 저장할 변수 선언
 
   // 인원 수 제한 업데이트
   function updatePersonLimit() {
@@ -76,7 +74,7 @@
     resetSelection(); // 기존 선택 좌석 초기화
   }
 
-  // 좌석 선택시 예약 불가인지 판단.
+  // 좌석 선택시 예약 불가인지 판단
   function selectSeat(seatElement) {
     if (!seatElement.classList.contains('available')) {
       alert("예약 불가한 좌석입니다!");
@@ -134,7 +132,7 @@
       return;
     }
     alert(`선택한 좌석: ${selectedSeats.join(", ")}`);
-// 서버로 데이터 전송
+    // 서버로 데이터 전송
     fetch('/reserve-seats', {
       method: 'POST',
       headers: {
@@ -142,7 +140,6 @@
       },
       body: JSON.stringify({ seats: selectedSeats, showtimeId: showtimeId }),
     })
-
             .then((response) => {
               if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -155,6 +152,9 @@
               console.log("reservation.memberId:", reservation.memberId);
               console.log("reservation.memberName:", reservation.memberName);
               console.log("reservation.totalPrice:", reservation.totalPrice);
+
+              // reservation 데이터 저장
+              reservationData = reservation;
 
               // 결제 준비 API 호출
               return fetch('/api/v1/payment/ready', {
@@ -178,15 +178,23 @@
             })
             .then((paymentReadyResponse) => {
               console.log("Payment Ready Response:", paymentReadyResponse);
-              alert('결제 준비 완료');
+              if (paymentReadyResponse.tid) {
+                sessionStorage.setItem('tid', paymentReadyResponse.tid);
+                sessionStorage.setItem('member_id', reservationData.memberId);
+                sessionStorage.setItem('reservation_id', reservationData.reservationId);
+              }
+              if (paymentReadyResponse.next_redirect_pc_url) {
+                // 카카오페이 결제 페이지로 리다이렉트
+                window.location.href = paymentReadyResponse.next_redirect_pc_url;
+              } else {
+                throw new Error('결제 페이지 URL을 받지 못했습니다.');
+              }
             })
             .catch((error) => {
               console.error('Error:', error);
               alert('오류가 발생했습니다. 다시 시도해주세요.');
             });
-
   }
-
 </script>
 </body>
 </html>

@@ -60,9 +60,9 @@
                         <!-- 등급 아이콘 -->
                         <div class="rating-icon position-absolute top-0 end-0 mt-2 me-4 text-white fw-bold"
                              th:switch="${movie.rating}">
-                            <span th:case="'12세'" class="bg-warning rounded px-2 py-1">12</span>
-                            <span th:case="'15세'" class="bg-orange rounded px-2 py-1">15</span>
-                            <span th:case="'19세'" class="bg-danger rounded px-2 py-1">19</span>
+                            <span th:case="'12세이상관람가'" class="bg-warning rounded px-2 py-1">12</span>
+                            <span th:case="'15세이상관람가'" class="bg-orange rounded px-2 py-1">15</span>
+                            <span th:case="'19세이상관람가'" class="bg-danger rounded px-2 py-1">19</span>
                             <span th:case="*" class="bg-success rounded px-2 py-1">ALL</span>
                         </div>
                         <img th:src="@{${movie.posterImageUrl}}" class="img-fluid poster-image" alt="포스터 이미지">
@@ -76,14 +76,22 @@
                             <li><strong>장르:</strong> <span th:text="${movie.genreName}"></span></li>
                             <li><strong>감독:</strong> <span th:text="${movie.directorName}"></span></li>
                             <li><strong>제작사:</strong> <span th:text="${movie.companys}"></span></li>
-                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>
+<!--                            <li><strong>개봉일:</strong> <span th:text="${movie.openDate}"></span></li>-->
+                            <!-- 20241224 -> 2024-12-24 로 변환-->
+                            <li><strong>개봉일:</strong>
+                                <span th:text="${#strings.substring(movie.openDate, 0, 4)} + '-' + ${#strings.substring(movie.openDate, 4, 6)} + '-' + ${#strings.substring(movie.openDate, 6)}"></span>
+                            </li>
                             <li><strong>누적관객수:</strong> <span th:text="${movie.audiAcc}"></span>명</li>
                             <li><strong>매출액:</strong> <span th:text="${movie.salesAcc}"></span></li>
                         </ul>
                         <hr>
                         <p th:text="${movie.plot}" class="text-muted">줄거리</p>
                         <div class="d-flex gap-3 mt-4">
-                            <a href="/" class="btn btn-secondary btn-custom px-4">홈으로</a>
+<!--                            <a th:href="${isLoggedIn} ? @{/private} : @{/}" class="btn btn-secondary btn-custom px-4">홈으로</a>-->
+                            <a th:if="${isLoggedIn}" th:href="@{/private}"
+                               class="btn btn-secondary btn-custom px-4">홈으로</a>
+                            <a th:unless="${isLoggedIn}" th:href="@{/}"
+                               class="btn btn-secondary btn-custom px-4">홈으로</a>
                             <a th:if="${movie.status.name() != 'PREV'}"
                                th:href="@{/reservation(movieId=${movie.id})}"
                                class="btn btn-success btn-custom px-4">예매하기</a>
@@ -123,6 +131,7 @@
                             <!-- 삭제 기능 -->
                             <div class="d-flex align-items-center">
                                 <form action="/review/delete" method="post" class="d-flex align-items-center gap-2 position-relative">
+                                    &nbsp;
                                     <input type="password" class="form-control form-control-sm" name="password"
                                            placeholder="비밀번호" style="width: 120px;" required>
                                     <input type="hidden" name="reviewId" th:value="${review.id}">
@@ -136,13 +145,12 @@
             </div>
         </div>
 
-        <!-- 리뷰 작성 카드 -->
         <div class="col-lg-10 mt-5">
             <div class="movie-detail-card">
                 <div class="card-header">리뷰 & 기대평 작성</div>
                 <br>
                 <div class="card-body">
-                    <form action="/review/add" method="post">
+                    <form action="/review/add" method="post" id="reviewForm">
                         <input type="hidden" name="movieId" th:value="${movie.id}">
                         <div class="input-inline mb-3">
                             <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임" required>
@@ -161,13 +169,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">리뷰 내용</label>
-                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                            <textarea class="form-control" id="content" name="content" rows="3" maxlength="100" required></textarea>
+                            <small class="text-muted" id="contentCounter">0/100</small>
                         </div>
                         <button type="submit" class="btn btn-primary">작성</button>
                     </form>
                 </div>
             </div>
         </div>
+        <br><br>
 
     </div>
 </div>
@@ -175,7 +185,11 @@
 <script>
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
-    const reviewForm = document.querySelector('form[action="/review/add"]');
+    const reviewForm = document.getElementById('reviewForm');
+    const contentInput = document.getElementById('content');
+    const nicknameInput = document.getElementById('nickname');
+    const passwordInput = document.getElementById('password');
+    const contentCounter = document.getElementById('contentCounter');
 
     // 별점을 선택하면 값이 설정되도록 이벤트 리스너 추가
     stars.forEach(star => {
@@ -188,27 +202,45 @@
         });
     });
 
-    // 폼 제출 시 별점이 입력되지 않았을 경우 경고 메시지
+    // 닉네임과 비밀번호 입력 검사
+    const checkLength = (input, maxLength, message) => {
+        input.addEventListener('input', () => {
+            if (input.value.length > maxLength) {
+                alert(message);
+                input.value = input.value.slice(0, maxLength); // 초과한 입력 제거
+            }
+        });
+    };
+
+    checkLength(nicknameInput, 10, "닉네임은 10자 이하로 입력해 주세요!");
+    checkLength(passwordInput, 10, "비밀번호는 10자 이하로 입력해 주세요!");
+
+    // 글자 수 업데이트
+    contentInput.addEventListener('input', () => {
+        const length = contentInput.value.length;
+        contentCounter.textContent = `${length}/100`;
+
+        // 100자 초과 시 글자 수 제한
+        if (length > 100) {
+            contentInput.value = contentInput.value.slice(0, 100);
+            contentCounter.textContent = `100/100`;
+        }
+    });
+
+    // 폼 제출 시 별점 및 글자 수 검사
     reviewForm.addEventListener('submit', (e) => {
         if (!ratingInput.value) {
             e.preventDefault();
             alert('별점을 입력해 주세요!');
         }
+
+        if (contentInput.value.length > 100) {
+            e.preventDefault();
+            alert('100자 이하로 입력해 주세요!');
+        }
     });
 </script>
-<!--<script>-->
-<!--    const stars = document.querySelectorAll('.star');-->
-<!--    const ratingInput = document.getElementById('rating');-->
-<!--    stars.forEach(star => {-->
-<!--        star.addEventListener('click', () => {-->
-<!--            const value = parseInt(star.getAttribute('data-value'));-->
-<!--            stars.forEach((s, index) => {-->
-<!--                s.classList.toggle('selected', index < value);-->
-<!--            });-->
-<!--            ratingInput.value = value;-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
+
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
