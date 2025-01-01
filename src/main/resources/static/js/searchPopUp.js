@@ -22,13 +22,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // 검색 입력 이벤트 (자동완성 기능)
     searchInput.addEventListener('input', async () => {
         const query = searchInput.value.trim();
+        // console.log(isLoggedIn)
         if (query.length > 0) {
+            const baseUrl = isLoggedIn
+                ? '/private/api/search/suggestions' // 로그인 상태
+                : '/api/search/suggestions'; // 비로그인 상태
+
             try {
-                const response = await fetch(`/api/search/suggestions?query=${query}`);
+                const response = await fetch(`${baseUrl}?query=${query}`);
                 const suggestions = await response.json();
                 suggestionsList.innerHTML = suggestions.map(
-                    (suggestion) =>
-                        `<li class="list-group-item" onclick="location.href='/movie/${suggestion.id}'">${suggestion.name}</li>`
+                    (suggestion) => {
+                        const movieUrl = isLoggedIn
+                            ? `/private/movie/${suggestion.id}` // 로그인 상태
+                            : `/movie/${suggestion.id}`; // 비로그인 상태
+
+                        return `<li class="list-group-item" onclick="location.href='${movieUrl}'">${suggestion.name}</li>`;
+                    }
                 ).join('');
             } catch (error) {
                 suggestionsList.innerHTML = '<li class="list-group-item text-danger">검색어를 불러오지 못했습니다.</li>';

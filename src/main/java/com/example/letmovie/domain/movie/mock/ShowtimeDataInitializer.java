@@ -18,6 +18,7 @@ import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import com.example.letmovie.domain.reservation.repository.TheaterRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 @Component
+@Profile("!test")
 public class ShowtimeDataInitializer implements CommandLineRunner {
 
     private final TheaterRepository theaterRepository;
@@ -53,7 +55,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .email("jinyoung@gmail.com")
                 .password("1234")
                 .birthDate("881213")
-                .authority(Authority.ROLE_USER) // 기본값이 ROLE_USER라면 생략 가능
+                .authority(Authority.USER) // 기본값이 USER라면 생략 가능
                 .grade(Grade.GENERAL)          // 기본값이 GENERAL이라면 생략 가능
                 .memberStatus(MemberStatus.AVAILABLE) // 기본값이 AVAILABLE이라면 생략 가능
                 .build();
@@ -61,15 +63,15 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         // 생성한 Member를 저장
         memberRepository.save(member);
 
-        Theater theater1 = theaterRepository.save(new Theater(null, "강남 메가박스"));
-        Theater theater2 = theaterRepository.save(new Theater(null, "신촌 CGV"));
-        Theater theater3 = theaterRepository.save(new Theater(null, "용산 아이맥스"));
+        Theater theater1 = theaterRepository.save(Theater.builder().id(null).theaterName("강남 메가박스").build());
+        Theater theater2 = theaterRepository.save( Theater.builder().id(null).theaterName("신촌 CGV").build());
+        Theater theater3 = theaterRepository.save(Theater.builder().id(null).theaterName("용산 아이맥스").build());
 
         // Screen 데이터 추가
-        Screen screen1 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "1관", 100, 100));
-        Screen screen2 = screenRepository.save(new Screen(null, theater1, new ArrayList<>(), "2관", 150, 150));
-        Screen screen3 = screenRepository.save(new Screen(null, theater2, new ArrayList<>(), "3관", 180, 180));
-        Screen screen4 = screenRepository.save(new Screen(null, theater3, new ArrayList<>(), "아이맥스관", 300, 300));
+        Screen screen1 = screenRepository.save(Screen.builder().id(null).theater(theater1).seats(new ArrayList<>()).screenName("1관").build());
+        Screen screen2 = screenRepository.save(Screen.builder().id(null).theater(theater1).seats(new ArrayList<>()).screenName("2관").build());
+        Screen screen3 = screenRepository.save(Screen.builder().id(null).theater(theater2).seats(new ArrayList<>()).screenName("3관").build());
+        Screen screen4 = screenRepository.save(Screen.builder().id(null).theater(theater3).seats(new ArrayList<>()).screenName("아이맥스관").build());
 
         Movie movie1 = movieJpaRepository.save(new Movie(null,
                 "이처럼 사소한 것들", "M0001", "감독 1", "15세이상관람가", "120",
@@ -278,25 +280,126 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "20240901", "코미디", "제작사 4",
                 Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
 
-        // Showtime 데이터 추가
-        //12 23
-        showtimeRepository.save(new Showtime(null, screen1, movie1, LocalDate.of(2024, 12, 23), LocalTime.of(23, 30)));
-        showtimeRepository.save(new Showtime(null, screen1, movie2, LocalDate.of(2024, 12, 23), LocalTime.of(8, 30)));
-        showtimeRepository.save(new Showtime(null, screen1, movie3, LocalDate.of(2024, 12, 23), LocalTime.of(11, 0)));
-        showtimeRepository.save(new Showtime(null, screen1, movie4, LocalDate.of(2024, 12, 23), LocalTime.of(13, 0)));
+// Showtime 데이터 추가
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen1)
+                .movie(movie1)
+                .showtimeDate(LocalDate.of(2024, 12, 31))
+                .showtimeTime(LocalTime.of(23, 30))
+                .totalSeats(100)
+                .remainingSeats(100)
+                .build());
 
-        //12 24
-        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen2, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
-        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen3, movie8, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
-        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(12, 0)));
-        showtimeRepository.save(new Showtime(null, screen4, movie9, LocalDate.of(2024, 12, 24), LocalTime.of(14, 0)));
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen1)
+                .movie(movie2)
+                .showtimeDate(LocalDate.of(2024, 12, 31))
+                .showtimeTime(LocalTime.of(8, 30))
+                .totalSeats(100)
+                .remainingSeats(100)
+                .build());
 
-        //12 25
-        showtimeRepository.save(new Showtime(null, screen1, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(12, 30)));
-        showtimeRepository.save(new Showtime(null, screen4, movie5, LocalDate.of(2024, 12, 25), LocalTime.of(14, 50)));
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen1)
+                .movie(movie3)
+                .showtimeDate(LocalDate.of(2024, 12, 31))
+                .showtimeTime(LocalTime.of(11, 0))
+                .totalSeats(100)
+                .remainingSeats(100)
+                .build());
 
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen1)
+                .movie(movie4)
+                .showtimeDate(LocalDate.of(2024, 12, 31))
+                .showtimeTime(LocalTime.of(13, 0))
+                .totalSeats(100)
+                .remainingSeats(100)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen2)
+                .movie(movie8)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(12, 0))
+                .totalSeats(32)
+                .remainingSeats(32)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen2)
+                .movie(movie8)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(14, 0))
+                .totalSeats(32)
+                .remainingSeats(32)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen3)
+                .movie(movie8)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(12, 0))
+                .totalSeats(20)
+                .remainingSeats(20)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen3)
+                .movie(movie8)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(14, 0))
+                .totalSeats(20)
+                .remainingSeats(20)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen4)
+                .movie(movie9)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(12, 0))
+                .totalSeats(25)
+                .remainingSeats(25)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen4)
+                .movie(movie9)
+                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeTime(LocalTime.of(14, 0))
+                .totalSeats(25)
+                .remainingSeats(25)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen1)
+                .movie(movie5)
+                .showtimeDate(LocalDate.of(2024, 12, 29))
+                .showtimeTime(LocalTime.of(12, 30))
+                .totalSeats(100)
+                .remainingSeats(100)
+                .build());
+
+        showtimeRepository.save(Showtime.builder()
+                .id(null)
+                .screen(screen4)
+                .movie(movie5)
+                .showtimeDate(LocalDate.of(2024, 12, 29))
+                .showtimeTime(LocalTime.of(14, 50))
+                .totalSeats(25)
+                .remainingSeats(25)
+                .build());
 
 
         // Seat 데이터 추가
@@ -312,7 +415,15 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 boolean isAble = !(row == 6 && col == 2); // 특정 좌석 비활성화
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
-                Seat seat = new Seat(null, screen, new ArrayList<>(), seatType, row, col, true, price);
+                Seat seat = Seat.builder()
+                        .id(null)
+                        .screen(screen)
+                        .reservationSeats(new ArrayList<>())
+                        .seatType(seatType)
+                        .seatLow(row)
+                        .seatCol(col)
+                        .isAble(true)
+                        .price(price).build();
                 seatRepository.save(seat);
             }
         }

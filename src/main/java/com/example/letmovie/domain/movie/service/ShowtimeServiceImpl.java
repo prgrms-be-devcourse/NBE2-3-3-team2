@@ -24,8 +24,8 @@ public class ShowtimeServiceImpl {
                         showtime.getId(),
                         showtime.getMovie().getMovieName(),
                         showtime.getScreen().getScreenName(),
-                        showtime.getScreen().getTotalSeats(),
-                        showtime.getScreen().getRemainingSeats(),
+                        showtime.getTotalSeats(),
+                        showtime.getRemainingSeats(),
                         showtime.getShowtimeDate(),
                         showtime.getShowtimeTime()))
                 .collect(Collectors.toList());

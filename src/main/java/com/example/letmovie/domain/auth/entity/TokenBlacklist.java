@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "token_blacklist")
 public class TokenBlacklist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

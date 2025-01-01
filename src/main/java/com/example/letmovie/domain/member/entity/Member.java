@@ -28,7 +28,7 @@ public class Member {
     private String birthDate; // 생년월일 (YYYYMMDD)
 
     @Column(nullable = false)
-    private Authority authority = Authority.ROLE_USER;
+    private Authority authority = Authority.USER;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
