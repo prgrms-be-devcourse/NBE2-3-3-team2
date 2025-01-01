@@ -6,6 +6,8 @@ import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import com.example.letmovie.domain.payment.entity.PaymentStatus;
 import com.example.letmovie.domain.payment.repository.PaymentHistoryRepository;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
+import com.example.letmovie.global.exception.ErrorCodes;
+import com.example.letmovie.global.exception.PaymentException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,13 +30,12 @@ public class PaymentFailureService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handlePaymentFailure(Long reservationId, Exception e) {
         log.error("결제 실패 - reservationId: {}, error: {}", reservationId, e.getMessage());
-
-        try {
             Payment payment = paymentRepository.findByReservationId(reservationId)
-                    .orElseThrow(() -> new EntityNotFoundException("결제 정보를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
+
 
             payment.updateStatus(PaymentStatus.PAYMENT_FAILED);
-            Payment savedPayment = paymentRepository.save(payment);
+            paymentRepository.save(payment);
 
             // 에러 응답 파싱
             String errorCode = "";
@@ -43,7 +44,6 @@ public class PaymentFailureService {
             if (e instanceof HttpClientErrorException) {
                 String errorResponse = ((HttpClientErrorException) e).getResponseBodyAsString();
                 try {
-                    // 앞뒤 쌍따옴표 제거 후 파싱
                     String cleanResponse = errorResponse.replaceAll("^\"|\"$", "");
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode jsonNode = mapper.readTree(cleanResponse);
@@ -61,7 +61,6 @@ public class PaymentFailureService {
             }
             log.info("errorMessage={}", errorMessage);
             log.info("errorCode={}", errorCode);
-            log.info("errorCode={}", errorCode);
 
             PaymentHistory failureHistory = PaymentHistory.toFailureHistory(
                     payment,
@@ -70,34 +69,5 @@ public class PaymentFailureService {
             );
             paymentHistoryRepository.save(failureHistory);
 
-        } catch (Exception ex) {
-            log.error("결제 실패 처리 중 오류 발생", ex);
         }
     }
-
-
-
-//    @Transactional(propagation = Propagation.REQUIRES_NEW)
-//    public void handlePaymentFailure(Long reservationId, Exception e) {
-//
-//        log.error("결제 실패 - reservationId: {}, error: {}", reservationId, e.getMessage());
-//
-//        try {
-//            log.info("Payment 조회 시도 - reservationId: {}", reservationId);
-//            Payment payment = paymentRepository.findByReservationId(reservationId)
-//                    .orElseThrow(() -> new EntityNotFoundException("결제 정보를 찾을 수 없습니다."));
-//
-//            payment.updateStatus(PaymentStatus.PAYMENT_FAILED);
-//            Payment savedPayment = paymentRepository.save(payment);
-//            log.info("저장된 Payment  - paymentId: {}", savedPayment.getId());
-//            log.info("저장된 Payment  - reservationId: {}", savedPayment.getReservation().getId());
-//
-//
-//            PaymentHistory failureHistory = PaymentHistory.toFailureHistory(payment, e.getMessage());
-//            paymentHistoryRepository.save(failureHistory);
-//
-//        } catch (Exception ex) {
-//            log.error("결제 실패 처리 중 오류 발생", ex);
-//        }
-//    }
-}
