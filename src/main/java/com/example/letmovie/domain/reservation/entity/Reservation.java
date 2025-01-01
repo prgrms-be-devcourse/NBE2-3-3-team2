@@ -94,4 +94,8 @@ public class Reservation {
             reservationSeat.cancel(this.getShowTime()); //예매좌석->좌석에서 가능여부 true, 상영관 총 좌석 수 증가.
         }
     }
+
+    public void setStatus(ReservationStatus reservationStatus) {
+        this.status = reservationStatus;
+    }
 }
