@@ -99,6 +99,7 @@ public class PaymentResponse {
             Long reservationId,
             Long memberId,
             int amount,
+            String nickName,
             PaymentStatus paymentStatus,
             LocalDateTime paidAt
     ) {
@@ -108,6 +109,7 @@ public class PaymentResponse {
                     payment.getReservation().getId(),
                     payment.getMember().getId(),
                     payment.getAmount(),
+                    payment.getReservation().getShowTime().getMovie().getMovieName(),    // Member 엔티티의 getName() 메서드 사용
                     payment.getPaymentStatus(),
                     payment.getPaidAt()
             );

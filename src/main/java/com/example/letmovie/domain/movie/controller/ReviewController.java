@@ -25,7 +25,7 @@ public class ReviewController {
                             @RequestParam String content) {
         reviewService.addReview(movieId, nickname, password, rating, content);
         System.out.println("add review controller");
-        return "redirect:/movie/" + movieId;
+        return "redirect:/private/movie/" + movieId;
     }
 
 //    @PostMapping("/delete")
@@ -61,15 +61,17 @@ public class ReviewController {
                                @RequestParam int movieId,
                                RedirectAttributes redirectAttributes) {
 
+        System.out.println("delete review controller");
+
         try {
             reviewService.deleteReview(reviewId, password);
 
-            return "redirect:/movie/" + movieId;
+            return "redirect:/private/movie/" + movieId;
         } catch (IllegalArgumentException e) {
             System.out.println("비밀번호 에러 발생");
             redirectAttributes.addFlashAttribute("errorMessage", "비밀번호 오류");
 
-            return "redirect:/movie/" + movieId;
+            return "redirect:/private/movie/" + movieId;
         }
     }
 

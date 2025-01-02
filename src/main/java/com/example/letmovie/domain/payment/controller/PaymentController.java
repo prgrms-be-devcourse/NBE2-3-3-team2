@@ -46,11 +46,13 @@ public class PaymentController {
     @Operation(summary = "사용자 결제 취소 API 처리")
     public ResponseEntity<PaymentResponse.Cancel> paymentCancel (@RequestParam("payment_id") Long paymentId) {
         PaymentResponse.Cancel response = paymentService.cancel(paymentId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok()
+                .body(response);
     }
 
 
     @GetMapping("/my-payments")
+    @Operation(summary = "사용자 결제 내역 조회")
     public ResponseEntity<List<PaymentResponse.Get>> getMemberPayments(@RequestParam(name = "member_id") Long memberId) {
         List<PaymentResponse.Get> response = paymentService.getMemberPayment(memberId);
         return ResponseEntity.ok()
@@ -58,11 +60,5 @@ public class PaymentController {
     }
 
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @DeleteMapping("/admin/payments/{payment_id}")
-//    @Operation(summary = "관리자 결제 내역 삭제",description = "관리자 인증 권한 확인후, 결제 내역 삭제 가능")
-//    public ResponseEntity<Void> getMemberPayment(@PathVariable(name = "payment_id") Long paymentId) {
-//        paymentHistoryService.deletePaymentHistory(paymentId);
-//        return ResponseEntity.noContent().build();
-//    }
+
 }

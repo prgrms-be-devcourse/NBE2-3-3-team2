@@ -10,7 +10,11 @@ import com.example.letmovie.domain.payment.entity.PaymentStatus;
 import com.example.letmovie.domain.payment.repository.PaymentHistoryRepository;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
 import com.example.letmovie.domain.payment.util.HttpRequestUtil;
+import com.example.letmovie.domain.reservation.entity.Reservation;
+import com.example.letmovie.domain.reservation.entity.ReservationStatus;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
+import com.example.letmovie.global.exception.ErrorCodes;
+import com.example.letmovie.global.exception.PaymentException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +50,9 @@ public class PaymentService {
 
 
     public PaymentResponse.Ready ready(PaymentRequest.Info request) {
-        initializePayment(request);
+        String movieName = initializePayment(request);
         HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
-        Map<String, String> parameters = httpRequestUtil.createReadyParams(request);
+        Map<String, String> parameters = httpRequestUtil.createReadyParams(request,movieName);
         return httpRequestUtil.post(
                 HOST+"/online/v1/payment/ready",
                 parameters,
@@ -58,7 +62,6 @@ public class PaymentService {
 
     public PaymentResponse.Success success(String pgToken, String tid, String cid, String partnerUserId, String partnerOrderId) {
         Long reservationId = Long.parseLong(partnerOrderId);
-//        .replace("ORDER_", "")
         log.info("변환된 reservationId = {}", reservationId);
 
         try{
@@ -77,7 +80,7 @@ public class PaymentService {
         return response;
         } catch (Exception e){
             paymentFailureService.handlePaymentFailure(reservationId, e);
-            throw e;
+            throw new PaymentException(ErrorCodes.PAYMENT_FAILED);
         }
     }
 
@@ -85,9 +88,7 @@ public class PaymentService {
     public PaymentResponse.Cancel cancel(Long paymentId) {
         log.info("결제 취소 시작 - paymentId: {}", paymentId);
         PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
-                .orElseThrow(EntityNotFoundException::new);
-//        log.info("결제 취소 검증 시작 - paymentId: {}, 현재 상태: {}",
-//                validateCancellablePayment(paymentHistory);
+                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
         try {
             HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
             Map<String, String> parameters = httpRequestUtil.createCancelParams(paymentHistory);
@@ -103,44 +104,53 @@ public class PaymentService {
             // 결제 상태 업데이트
             Payment payment = paymentHistory.getPayment();
             payment.updateStatus(PaymentStatus.valueOf(response.status()));
-
+            // 예매상태변경
+            payment.getReservation().setStatus(ReservationStatus.CANCELLED);
             // 취소 이력 생성 및 저장
             PaymentHistory cancelHistory = PaymentHistory.toCancelHistory(paymentHistory, response);
             paymentHistoryRepository.save(cancelHistory);
 
             return response;
         } catch (Exception e) {
-//            Long reservationId = paymentHistory.getPayment().getReservation().getId();
-//            paymentFailureService.handlePaymentFailure(reservationId, e);
-            throw e;
+            throw new PaymentException(ErrorCodes.PAYMENT_FAILED);
         }
     }
 
 
     @Transactional(readOnly = true)
     public List<PaymentResponse.Get> getMemberPayment(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("회원 없음"));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
+
         List<Payment> payments = paymentRepository.findByMemberId(memberId);
         return payments.stream()
                 .map(PaymentResponse.Get::from)
                 .collect(Collectors.toList());
     }
 
-    private void initializePayment(PaymentRequest.Info request) {
+    private String initializePayment(PaymentRequest.Info request) {
         Payment payment = Payment.builder()
                 .member(memberRepository.findById(request.member_id())
-                        .orElseThrow(() -> new EntityNotFoundException("회원없음")))
+                        .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND)))
                 .reservation(reservationRepository.findById(request.reservation_id())
-                        .orElseThrow(() -> new EntityNotFoundException("예약번호불일치")))
+                        .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND)))
                 .amount(request.totalPrice())
                 .paymentStatus(PaymentStatus.AWAITING_PAYMENT)
                 .build();
+        String name = payment.getReservation().getShowTime().getMovie().getMovieName();
         paymentRepository.save(payment);
+        return name;
     }
 
     private void initializePaymentAndPaymentHistory(Long reservationId, PaymentResponse.Success response) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("예약 없음."));
+        log.info("상태 변경 전 reservation 정보 = {}", reservation.getStatus());
+        reservation.setStatus(ReservationStatus.COMPLETED);
+        log.info("상태 변경 후 reservation = {}", reservation.getStatus());
+
         Payment payment = paymentRepository.findByReservationId(reservationId)
-                .orElseThrow(() -> new EntityNotFoundException("결제 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
 
         log.info("상태 변경 전 payment 정보 = {}", payment.getPaymentStatus());
         payment.updateStatus(PaymentStatus.PAYMENT_SUCCESS);
@@ -154,12 +164,14 @@ public class PaymentService {
         paymentHistoryRepository.save(paymentHistory);
 
     }
+
 //    private void validateCancellablePayment(PaymentHistory paymentHistory) {
 //        PaymentStatus status = paymentHistory.getPaymentStatus();
-//        if (status == PaymentStatus.PAYMENT_CANCELLED ||
-//                status == PaymentStatus.PAYMENT_FAILED) {
-//            throw new IllegalArgumentException("이미 취소되었거나 실패한 결제입니다.");
+//        if (status == PaymentStatus.PAYMENT_CANCELLED) {
+//            throw new PaymentException(ErrorCodes.PAYMENT_ALREADY_CANCELLED);
 //        }
-
-
+//        if (status == PaymentStatus.PAYMENT_FAILED) {
+//            throw new PaymentException(ErrorCodes.INVALID_PAYMENT_STATUS);
+//        }
+//    }
 }
