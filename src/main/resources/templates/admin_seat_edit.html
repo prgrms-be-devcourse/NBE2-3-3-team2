@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>관리자 - 회원관리</title>
+  <title>관리자 - 좌석</title>
   <style>
     body {
       display: flex;
@@ -40,50 +40,31 @@
       flex: 1;
       padding: 20px;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f4f4f4;
-    }
-    form {
-      margin-bottom: 20px;
-    }
   </style>
 </head>
 <body>
 <!-- Sidebar navigation -->
 <div th:replace="~{fragments/admin_sidebar :: sidebar}"></div>
 
-
-<!-- Main content -->
 <main>
-  <h1>회원 관리</h1>
-  <h2>회원 검색</h2>
-  <!-- 검색 폼 -->
-  <form th:action="@{/admin/member/search}" method="get">
-    <label for="inputnickname">닉네임:</label>
-    <input type="text" id="inputnickname" name="inputnickname" placeholder="닉네임 입력">
-    <button type="submit">검색</button>
-  </form>
+  <!-- Edit Seat Form -->
+  <form action="/admin/seat/edit/update" method="post">
+    <input type="hidden" name="seatId" th:value="${seat.id}">
 
-  <h2>회원 수정</h2>
-  <!-- 검색 폼 -->
-  <form th:action="@{/admin/member/modify}" method="get">
-    <label for="id">ID:</label>
-    <input type="text" id="id" name="id" placeholder="ID 입력">
-    <button type="submit">검색</button>
+    <label for="seatType">Seat Type:</label>
+    <select id="seatType" name="seatType" required>
+      <option th:each="seatType : ${seatTypes}"
+              th:value="${seatType}"
+              th:text="${seatType}"
+              th:selected="${seatType == seat.seatType}"></option>
+    </select>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" th:value="${seat.price}" required>
+
+    <button type="submit" class="btn btn-primary">Update</button>
   </form>
 
 </main>
-
-
 </body>
 </html>

@@ -17,4 +17,8 @@ public class Theater {
 
     @Column(nullable = false)
     private String theaterName;
+
+    public void setTheaterName(String theaterName) {
+        this.theaterName = theaterName;
+    }
 }
