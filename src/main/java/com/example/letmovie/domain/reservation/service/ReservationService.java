@@ -61,7 +61,8 @@ public class ReservationService {
                     .orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
 
             if(!seatEntity.isAble()) {
-                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
+                char rowLabel = (char) ('A' + row - 1);
+                throw new RuntimeException("좌석 " + rowLabel  + "-" + col + "는 이미 선택된 좌석입니다.");
             }
 
             ReservationSeat reservationSeat = ReservationSeat.createReservationSeat(seatEntity, showtime);

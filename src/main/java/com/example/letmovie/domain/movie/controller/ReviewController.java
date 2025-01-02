@@ -61,6 +61,8 @@ public class ReviewController {
                                @RequestParam int movieId,
                                RedirectAttributes redirectAttributes) {
 
+        System.out.println("delete review controller");
+
         try {
             reviewService.deleteReview(reviewId, password);
 
