@@ -149,9 +149,9 @@ public class AuthController {
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            // 리다이렉트 응답
+            // 리다이렉트 응답 (홈페이지로 가게 설정)
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", "/login")
+                    .header("Location", "/")
                     .build();
         }
 
