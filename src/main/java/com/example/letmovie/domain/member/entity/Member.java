@@ -26,6 +26,7 @@ public class Member {
     @Column(nullable = false, unique = true, length = 20)
     private String email;
 
+    @Setter
     @Column(nullable = false, length = 64)
     private String password;
 
@@ -42,4 +43,11 @@ public class Member {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus = MemberStatus.AVAILABLE;
+
+    @OneToMany(mappedBy = "member")
+    private List<Reservation> reservations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Payment> payments = new ArrayList<>();
+
 }
