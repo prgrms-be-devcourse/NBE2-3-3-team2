@@ -122,6 +122,7 @@
                                 <p th:text="${review.content}" class="mb-0"></p>
                             </div>
                             <!-- 삭제 버튼 -->
+                            <!-- 닉네임 중복 x -->
                             <div th:if="${review.nickname == userNickname}" class="d-flex align-items-center">
                                 <form action="/review/delete" method="post" class="d-flex align-items-center gap-2 position-relative">
                                     <input type="hidden" name="reviewId" th:value="${review.id}">
