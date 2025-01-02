@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/css/seatSelection.css">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
-
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -131,7 +130,19 @@
       alert("좌석을 선택하세요!");
       return;
     }
-    alert(`선택한 좌석: ${selectedSeats.join(", ")}`);
+
+    // 선택된 좌석 배열을 a,b,c .. 으로 변환
+    const readableSeats = selectedSeats
+            .map(seat => {
+              const [row, col] = seat.split('-'); // row와 col 분리
+              const rowLabel = String.fromCharCode(64 + parseInt(row)); // 숫자 행(row)을 문자(A, B, C 등)로 변환
+              return { readable: `${rowLabel}-${col}`, row: parseInt(row), col: parseInt(col) }; // 변환된 데이터와 정렬용 데이터 저장
+            })
+            .sort((a, b) => a.row === b.row ? a.col - b.col : a.row - b.row) // 행(row) 우선, 열(col)로 정렬
+            .map(seat => seat.readable); // 정렬 후 사용자 친화적인 형식으로 변환
+
+    alert(`선택한 좌석: ${readableSeats.join(", ")}`);
+
     // 서버로 데이터 전송
     fetch('/reserve-seats', {
       method: 'POST',
@@ -192,7 +203,8 @@
             })
             .catch((error) => {
               console.error('Error:', error);
-              alert('오류가 발생했습니다. 다시 시도해주세요.');
+              alert('이미 선택된 좌석입니다 다시 시도해주세요.');
+              window.location.reload(); // 현재 페이지 새로고침
             });
   }
 </script>
