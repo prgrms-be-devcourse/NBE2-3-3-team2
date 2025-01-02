@@ -30,7 +30,7 @@ public class PaymentScheduler {
     @Transactional
     public void checkExpiredPayments() {
         LocalDateTime expirationCutoff = LocalDateTime.now().minusMinutes(14);
-        log.info("Checking for expired payments before: {}", expirationCutoff);
+        log.info("결제 만료전 체크: {}", expirationCutoff);
 
         List<Payment> expiredPayments = paymentRepository.findByPaymentStatusAndPaidAtBefore(
                 PaymentStatus.AWAITING_PAYMENT,
@@ -41,7 +41,7 @@ public class PaymentScheduler {
             try {
                 handleExpiredPayment(payment);
             } catch (Exception e) {
-                log.error("Failed to handle expired payment for reservationId: {}",
+                log.error("결제에 대한 예약 아이디 조회 실패 {}",
                         payment.getReservation().getId(), e);
             }
         }
@@ -62,7 +62,7 @@ public class PaymentScheduler {
                 "EXPIRED"
         );
         paymentHistoryRepository.save(expirationHistory);
-        log.info("Payment expired - PaymentId: {}, ReservationId: {}",
+        log.info("결제 만료 - PaymentId: {}, ReservationId: {}",
                 payment.getId(), reservation.getId());
     }
 }
