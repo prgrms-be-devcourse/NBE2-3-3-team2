@@ -105,7 +105,7 @@ public class PaymentService {
             Payment payment = paymentHistory.getPayment();
             payment.updateStatus(PaymentStatus.valueOf(response.status()));
             // 예매상태변경
-            payment.getReservation().setStatus(ReservationStatus.CANCELLED);
+            payment.getReservation().cancelReservation();
             // 취소 이력 생성 및 저장
             PaymentHistory cancelHistory = PaymentHistory.toCancelHistory(paymentHistory, response);
             paymentHistoryRepository.save(cancelHistory);
