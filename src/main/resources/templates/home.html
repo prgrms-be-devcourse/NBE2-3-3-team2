@@ -78,6 +78,8 @@
                             <a th:if="${isLoggedIn}" th:href="@{/private/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
                             <a th:unless="${isLoggedIn}" th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>
                             <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>
+<!--                            <a th:if="${isLoggedIn}" th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>-->
+<!--                            <a th:unless="${isLoggedIn}" th:href="@{/login}" class="btn btn-success">예매하기</a>-->
                         </div>
                     </div>
                 </div>
