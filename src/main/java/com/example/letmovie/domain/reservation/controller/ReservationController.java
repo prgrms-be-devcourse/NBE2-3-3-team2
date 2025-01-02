@@ -1,5 +1,7 @@
 package com.example.letmovie.domain.reservation.controller;
 
+import com.example.letmovie.domain.auth.util.SecurityUtil;
+import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.reservation.dto.request.DateRequestDTO;
 import com.example.letmovie.domain.reservation.dto.request.ReserveSeatsRequestDTO;
@@ -144,9 +146,10 @@ public class ReservationController {
             log.info("seat: {}, {}", split[0], split[1]);
         }
 
-        //member id는 public static Long getCurrentMemberId() 이런식으로 가져오자.
-        Long memberId = 1L;
-        ReservationResponseDTO responseDTO = reservationService.reservation(seats, memberId, showtimeId);
+        Member member = SecurityUtil.getCurrentMember()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+
+        ReservationResponseDTO responseDTO = reservationService.reservation(seats, member.getId(), showtimeId);
 
         log.info("MemberName = {}" , responseDTO.getMemberName());
         log.info("ReservationId = {}" , responseDTO.getReservationId());

@@ -47,6 +47,7 @@
     <!--    </div>-->
 
     <div class="position-relative mb-5">
+        <button th:if="${isLoggedIn == null or !isLoggedIn}" id="invisible-button" class="btn btn-outline-primary">hidden</button>
         <!-- 제목 -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>추천 영화</h1>
@@ -238,5 +239,10 @@
 
     <script th:src="@{/js/initFeaturedCarousel.js}"></script>
 
+<script>
+    document.getElementById('invisible-button').addEventListener('click', function () {
+        window.location.href = '/admin-login';
+    });
+</script>
 </body>
 </html>
