@@ -38,7 +38,13 @@ public class AuthController {
         return "login";
     }
 
-    @PostMapping("/login")
+    @GetMapping("/admin-login")
+    public String adminLoginPage(Model model) {
+        model.addAttribute("loginForm", new LoginRequestDTO());
+        return "admin_login";
+    }
+
+    @PostMapping({"/login", "/admin-login"})
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request, HttpServletResponse response, Model model) {
 
         try {
