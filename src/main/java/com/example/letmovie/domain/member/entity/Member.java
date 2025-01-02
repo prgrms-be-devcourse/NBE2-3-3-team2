@@ -1,7 +1,12 @@
 package com.example.letmovie.domain.member.entity;
 
+import com.example.letmovie.domain.payment.entity.Payment;
+import com.example.letmovie.domain.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
