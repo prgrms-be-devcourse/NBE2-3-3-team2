@@ -1,6 +1,7 @@
 package com.example.letmovie.domain.movie.controller;
 
 import com.example.letmovie.domain.auth.util.SecurityUtil;
+import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.movie.dto.ReviewDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.service.MovieServiceImpl;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -158,7 +160,14 @@ public class MovieController {
     @ModelAttribute
     private void addAuthenticationAttributes(Model model) {
         String email = SecurityUtil.getCurrentMemberEmail();
+
+        Optional<Member> currentMember = SecurityUtil.getCurrentMember();
+        String userNickname = currentMember.map(Member::getNickname).orElse("Guest");
+        String userPassword = currentMember.map(Member::getPassword).orElse("Guest");
+
         model.addAttribute("isLoggedIn", email != null);
         model.addAttribute("userEmail", email);
+        model.addAttribute("userNickname", userNickname);
+        model.addAttribute("userPassword", userPassword);
     }
 }
