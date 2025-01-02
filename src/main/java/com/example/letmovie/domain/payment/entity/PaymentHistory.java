@@ -125,4 +125,16 @@ public class PaymentHistory {
                 .approvedAt(response.approved_at())
                 .build();
     }
+
+    public static PaymentHistory toExpirationHistory(
+            Payment payment,
+            String message,
+            String code) {
+        return PaymentHistory.builder()
+                .payment(payment)
+                .paymentStatus(PaymentStatus.PAYMENT_CANCELLED)
+                .errorMessage(message)
+                .errorCode(code)
+                .build();
+    }
 }

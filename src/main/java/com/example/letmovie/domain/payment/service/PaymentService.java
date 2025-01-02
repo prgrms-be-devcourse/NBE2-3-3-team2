@@ -165,13 +165,5 @@ public class PaymentService {
 
     }
 
-//    private void validateCancellablePayment(PaymentHistory paymentHistory) {
-//        PaymentStatus status = paymentHistory.getPaymentStatus();
-//        if (status == PaymentStatus.PAYMENT_CANCELLED) {
-//            throw new PaymentException(ErrorCodes.PAYMENT_ALREADY_CANCELLED);
-//        }
-//        if (status == PaymentStatus.PAYMENT_FAILED) {
-//            throw new PaymentException(ErrorCodes.INVALID_PAYMENT_STATUS);
-//        }
-//    }
+
 }
