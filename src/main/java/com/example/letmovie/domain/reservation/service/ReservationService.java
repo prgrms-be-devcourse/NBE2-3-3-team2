@@ -3,6 +3,7 @@ package com.example.letmovie.domain.reservation.service;
 import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.member.repository.MemberRepository;
 import com.example.letmovie.domain.movie.entity.Showtime;
+import com.example.letmovie.domain.payment.service.PaymentService;
 import com.example.letmovie.domain.reservation.dto.response.ReservationResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Reservation;
 import com.example.letmovie.domain.reservation.entity.ReservationSeat;
@@ -29,6 +30,7 @@ public class ReservationService {
     private final SeatRepository seatRepository;
     private final MemberRepository memberRepository;
     private final ShowtimeRepository showtimeRepository;
+    private final PaymentService paymentService;
 
 
     @Transactional
@@ -82,5 +84,6 @@ public class ReservationService {
     public void reservationCancel(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("예매 번호가 없습니다."));
         reservation.cancelReservation();
+        paymentService.cancel(reservationId);
     }
 }
