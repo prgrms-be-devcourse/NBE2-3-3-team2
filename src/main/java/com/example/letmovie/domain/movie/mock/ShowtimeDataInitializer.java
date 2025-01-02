@@ -18,6 +18,7 @@ import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import com.example.letmovie.domain.reservation.repository.TheaterRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -35,14 +36,16 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
     private final SeatRepository seatRepository;
     private final MovieJpaRepository movieJpaRepository;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ShowtimeDataInitializer(TheaterRepository theaterRepository, ScreenRepository screenRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository, MovieJpaRepository movieJpaRepository, MemberRepository memberRepository) {
+    public ShowtimeDataInitializer(TheaterRepository theaterRepository, ScreenRepository screenRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository, MovieJpaRepository movieJpaRepository, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.theaterRepository = theaterRepository;
         this.screenRepository = screenRepository;
         this.showtimeRepository = showtimeRepository;
         this.seatRepository = seatRepository;
         this.movieJpaRepository = movieJpaRepository;
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -53,8 +56,28 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         Member member = Member.builder()
                 .nickname("홍길동")
                 .email("jinyoung@gmail.com")
-                .password("1234")
-                .birthDate("881213")
+                .password(passwordEncoder.encode("1234"))
+                .birthDate("19881213")
+                .authority(Authority.USER) // 기본값이 USER라면 생략 가능
+                .grade(Grade.GENERAL)          // 기본값이 GENERAL이라면 생략 가능
+                .memberStatus(MemberStatus.AVAILABLE) // 기본값이 AVAILABLE이라면 생략 가능
+                .build();
+
+        Member admin = Member.builder()
+                .nickname("admin")
+                .email("admin@gmail.com")
+                .password(passwordEncoder.encode("123456"))
+                .birthDate("19901213")
+                .authority(Authority.ADMIN)  // 관리자
+                .grade(Grade.GENERAL)
+                .memberStatus(MemberStatus.AVAILABLE)
+                .build();
+
+        Member test = Member.builder()
+                .nickname("김영희")
+                .email("user2@example.com")
+                .password(passwordEncoder.encode("1212"))
+                .birthDate("19901223")
                 .authority(Authority.USER) // 기본값이 USER라면 생략 가능
                 .grade(Grade.GENERAL)          // 기본값이 GENERAL이라면 생략 가능
                 .memberStatus(MemberStatus.AVAILABLE) // 기본값이 AVAILABLE이라면 생략 가능
@@ -62,6 +85,8 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
         // 생성한 Member를 저장
         memberRepository.save(member);
+        memberRepository.save(admin);
+        memberRepository.save(test);
 
         Theater theater1 = theaterRepository.save(Theater.builder().id(null).theaterName("강남 메가박스").build());
         Theater theater2 = theaterRepository.save( Theater.builder().id(null).theaterName("신촌 CGV").build());
@@ -375,7 +400,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .id(null)
                 .screen(screen4)
                 .movie(movie9)
-                .showtimeDate(LocalDate.of(2024, 12, 30))
+                .showtimeDate(LocalDate.of(2024, 1, 4))
                 .showtimeTime(LocalTime.of(14, 0))
                 .totalSeats(25)
                 .remainingSeats(25)
@@ -385,7 +410,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .id(null)
                 .screen(screen1)
                 .movie(movie5)
-                .showtimeDate(LocalDate.of(2024, 12, 29))
+                .showtimeDate(LocalDate.of(2025, 1, 7))
                 .showtimeTime(LocalTime.of(12, 30))
                 .totalSeats(100)
                 .remainingSeats(100)
@@ -395,7 +420,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .id(null)
                 .screen(screen4)
                 .movie(movie5)
-                .showtimeDate(LocalDate.of(2024, 12, 29))
+                .showtimeDate(LocalDate.of(2025, 1, 7))
                 .showtimeTime(LocalTime.of(14, 50))
                 .totalSeats(25)
                 .remainingSeats(25)
