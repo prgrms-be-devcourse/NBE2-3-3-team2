@@ -38,7 +38,13 @@ public class AuthController {
         return "login";
     }
 
-    @PostMapping("/login")
+    @GetMapping("/admin-login")
+    public String adminLoginPage(Model model) {
+        model.addAttribute("loginForm", new LoginRequestDTO());
+        return "admin_login";
+    }
+
+    @PostMapping({"/login", "/admin-login"})
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request, HttpServletResponse response, Model model) {
 
         try {
@@ -143,9 +149,9 @@ public class AuthController {
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            // 리다이렉트 응답
+            // 리다이렉트 응답 (홈페이지로 가게 설정)
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", "/login")
+                    .header("Location", "/")
                     .build();
         }
 

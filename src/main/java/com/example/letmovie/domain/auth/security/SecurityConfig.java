@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용ㅍ
                         .requestMatchers("/js/**", "/css/**", "/images/**")
                         .permitAll()
-                        .requestMatchers( "/favicon.ico", "/", "/signup", "/login", "/logout","/status", "/token/refresh", "/movie/**", "/movies", "/api/search/**")
+                        .requestMatchers( "/favicon.ico", "/", "/signup", "/login", "/admin-login", "/logout","/status", "/token/refresh", "/movie/**", "/movies", "/api/search/**")
                         .permitAll()
                         .requestMatchers("/mypage/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/private/**").hasAuthority("ROLE_USER")
