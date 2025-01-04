@@ -86,6 +86,7 @@
 
 <main>
   <h1>상영관ID: <span th:text="${screenId}"></span></h1>
+  <h4>삭제 주의 : 해당 상영관에 상영 일정이 존재할경우, 삭제되지 않습니다.</h4>
   <form th:action="@{/admin/seat/delete/all/{screenId}(screenId=${screenId})}" method="post">
     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete all seats?');">
       좌석 일괄삭제

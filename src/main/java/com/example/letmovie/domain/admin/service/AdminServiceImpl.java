@@ -7,6 +7,7 @@ import com.example.letmovie.domain.movie.dto.TheaterDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Theater;
+import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import com.example.letmovie.domain.reservation.dto.ScreenDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
@@ -53,6 +54,9 @@ public class AdminServiceImpl {
 
     @Autowired
     private AdminSeatRepository adminSeatRepository;
+
+    @Autowired
+    private AdminPaymentHistoryRepository adminPaymentHistoryRepository;
 
     // 영화 목록에서 movieCd 검색
     public String getMovieCodeByName(String movieNm) {
@@ -195,30 +199,6 @@ public class AdminServiceImpl {
         adminMovieJpaRepository.deleteById(movieId);
     }
 
-
-    // 닉네임으로 회원 조회
-    public List<Member> findMemberByName(String nickname) {
-        return adminMemberRepository.findByNicknameContainingIgnoreCase(nickname);
-    }
-
-    // ID로 회원 조회
-    public Member findMemberById(Long memberId) {
-        return adminMemberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. ID: " + memberId));
-    }
-
-    // 회원 수정
-    public void updateMember(Member member) {
-        Member existingMember = adminMemberRepository.findById(member.getId())
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. ID: " + member.getId()));
-
-        existingMember.setNickname(member.getNickname());
-
-        existingMember.setGrade(member.getGrade());
-        existingMember.setMemberStatus(member.getMemberStatus());
-
-        adminMemberRepository.save(existingMember);
-    }
 
     // 영화관 목록 조회
     public List<Theater> findAllTheaters() {
@@ -411,27 +391,6 @@ public class AdminServiceImpl {
         return adminSeatRepository.countAvailableSeatsByScreenId(screenId);
     }
 
-
-
-    // Update showtime (e.g., update remainingSeats, etc.)
-    /*@Transactional
-    public void updateShowtime(Showtime showtime) {
-        adminShowtimeRepository.save(showtime);
-    }*/
-
-    /*@Transactional
-    public void updateShowtime(ShowtimeDTO showtimeDTO) {
-        Showtime showtime = adminShowtimeRepository.findById(showtimeDTO.getId()) // ID로 엔터티 찾기
-                .orElseThrow(() -> new IllegalArgumentException("Invalid showtime ID"));
-
-        showtime.setMovie(new Movie(showtimeDTO.getMovieId())); // movieId로 Movie 설정
-        showtime.setShowtimeDate(showtimeDTO.getShowDate());
-        showtime.setShowtimeTime(showtimeDTO.getStartTime());
-
-        adminShowtimeRepository.save(showtime); // 엔터티 업데이트 저장
-    }*/
-
-
     // Delete showtime
     @Transactional
     public void deleteShowtime(Long id) {
@@ -440,6 +399,42 @@ public class AdminServiceImpl {
 
     public Showtime getShowtimeById(Long id) {
         return adminShowtimeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid showtime ID"));
+    }
+
+
+    // 닉네임으로 회원 조회
+    public List<Member> findMemberByName(String nickname) {
+        return adminMemberRepository.findByNicknameContainingIgnoreCase(nickname);
+    }
+
+    // ID로 회원 조회
+    public Member findMemberById(Long memberId) {
+        return adminMemberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. ID: " + memberId));
+    }
+
+    // 회원 수정
+    public void updateMember(Member member) {
+        System.out.println("id : " + member.getId());
+        Member existingMember = adminMemberRepository.findById(member.getId())
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. ID: " + member.getId()));
+
+        System.out.println("nickname : " + member.getNickname());
+        System.out.println("nickname : " + member.getGrade());
+        System.out.println("nickname : " + member.getMemberStatus());
+        existingMember.setNickname(member.getNickname());
+
+        existingMember.setGrade(member.getGrade());
+        existingMember.setMemberStatus(member.getMemberStatus());
+
+        adminMemberRepository.save(existingMember);
+    }
+
+    // 특정 회원의 결제 내역 조회
+    public List<PaymentHistory> findPaymentHistoryByMemberId(Long memberId) {
+        String partnerUserId = memberId.toString(); // Member의 ID를 partnerUserId와 매칭
+        return adminPaymentHistoryRepository.findByPartnerUserId(partnerUserId);
+        //return adminPaymentHistoryRepository.findByPaymentMemberId(memberId);
     }
 
     // tag값의 정보를 가져오는 함수

@@ -50,6 +50,10 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Payment> payments = new ArrayList<>();
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }

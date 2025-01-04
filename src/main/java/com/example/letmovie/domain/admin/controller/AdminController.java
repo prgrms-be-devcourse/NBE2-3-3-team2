@@ -2,11 +2,10 @@ package com.example.letmovie.domain.admin.controller;
 
 import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.member.entity.Member;
-import com.example.letmovie.domain.movie.dto.ShowtimeDTO;
 import com.example.letmovie.domain.movie.dto.TheaterDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
-import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Theater;
+import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import com.example.letmovie.domain.reservation.dto.ScreenDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
@@ -29,59 +28,6 @@ public class AdminController {
 
     @Autowired
     private AdminServiceImpl adminService;
-
-    // /admin/member : 회원정보
-    @GetMapping("/member")
-    public String member() {
-        return "admin_member";
-    }
-
-    // /admin/member/search : 회원정보검색후
-    @GetMapping("/member/search")
-    public String memberSearch(@RequestParam("inputnickname") String nickname, Model model) {
-
-        try {
-            List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
-            if(members != null) {
-                model.addAttribute("members", members);
-            } else {
-                model.addAttribute("error", "검색 결과가 없습니다. 검색어를 확인해주세요.");
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
-        }
-
-        return "admin_member_search";
-    }
-
-    // /admin/member/modify : ID로 특정 회원 조회
-    @GetMapping("/member/modify")
-    public String modifyMemberById(@RequestParam("id") Long memberId, Model model) {
-        System.out.println("modifyMemberById called with memberId: " + memberId);
-        try {
-            Member member = adminService.findMemberById(memberId);
-            if (member != null) {
-                model.addAttribute("member", member);
-            } else {
-                model.addAttribute("error", "해당 ID에 해당하는 회원이 없습니다.");
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
-        }
-        return "admin_member_modify";
-    }
-
-    // /admin/member/modify/ok : 회원 수정 처리
-    @PostMapping("/member/modify/ok")
-    public String modifyMemberOk(@ModelAttribute Member member, RedirectAttributes redirectAttributes) {
-        try {
-            adminService.updateMember(member);
-            redirectAttributes.addFlashAttribute("success", "회원 정보가 성공적으로 수정되었습니다.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "오류가 발생했습니다. 수정에 실패했습니다.");
-        }
-        return "redirect:/admin/movie";
-    }
 
 
     // /admin/movie : 영화목록
@@ -437,6 +383,89 @@ public class AdminController {
 
 
 
+    // /admin/member : 회원정보
+    @GetMapping("/member")
+    public String member() {
+        return "admin_member";
+    }
 
+    // /admin/member/search : 회원정보검색후
+    @GetMapping("/member/search")
+    public String memberSearch(@RequestParam("inputnickname") String nickname, Model model) {
+
+        try {
+            List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
+            if(members != null) {
+                model.addAttribute("members", members);
+            } else {
+                model.addAttribute("error", "검색 결과가 없습니다. 검색어를 확인해주세요.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
+        }
+
+        return "admin_member_search";
+    }
+
+    // /admin/member/modify : ID로 특정 회원 조회
+    @GetMapping("/member/modify")
+    public String modifyMemberById(@RequestParam("id") Long memberId, Model model) {
+        System.out.println("modifyMemberById called with memberId: " + memberId);
+        try {
+            Member member = adminService.findMemberById(memberId);
+            if (member != null) {
+                model.addAttribute("member", member);
+            } else {
+                model.addAttribute("error", "해당 ID에 해당하는 회원이 없습니다.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
+        }
+        return "admin_member_modify";
+    }
+
+    // /admin/member/modify/ok : 회원 수정 처리
+    @PostMapping("/member/modify/ok")
+    public String modifyMemberOk(@ModelAttribute Member member, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.updateMember(member);
+            redirectAttributes.addFlashAttribute("success", "회원 정보가 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "오류가 발생했습니다. 수정에 실패했습니다.");
+        }
+        return "redirect:/admin/member";
+    }
+
+    // 회원 결제 관리 메인페이지
+    @GetMapping("/payment")
+    public String payment() {
+        return "admin_payment";
+    }
+
+    // 회원 닉네임 검색
+    @GetMapping("/payment/membersearch")
+    public String paymentMemberSearch(@RequestParam("inputnickname") String nickname, Model model) {
+        /*List<Member> members = adminService.findMemberByName(nickname);
+        model.addAttribute("members", members);*/
+        try {
+            List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
+            if(members != null) {
+                model.addAttribute("members", members);
+            } else {
+                model.addAttribute("error", "검색 결과가 없습니다. 검색어를 확인해주세요.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
+        }
+        return "admin_payment_membersearch";
+    }
+
+    // 회원 결제내역 조회
+    @GetMapping("/payment/{memberId}")
+    public String viewMemberPayments(@PathVariable("memberId") Long memberId, Model model) {
+        List<PaymentHistory> paymentHistories = adminService.findPaymentHistoryByMemberId(memberId);
+        model.addAttribute("paymentHistories", paymentHistories);
+        return "admin_payment_memberpaymenthistory";
+    }
 
 }
