@@ -3,7 +3,6 @@ package com.example.letmovie.domain.payment.util;
 import com.example.letmovie.domain.payment.dto.request.PaymentRequest;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

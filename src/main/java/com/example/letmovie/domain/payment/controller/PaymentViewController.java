@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PaymentViewController {
 
     @GetMapping("/success")
-    public String showPaymentSuccess() {
+    public String showPaymentSuccess(Model model) {
+        Member member = SecurityUtil.getCurrentMember()
+                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
+
+        model.addAttribute("member", member);
+        model.addAttribute("isLoggedIn", true);  // 이 부분 추가
         return "payment-success";
     }
 
@@ -27,6 +32,7 @@ public class PaymentViewController {
                 .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
 
         model.addAttribute("member", member);
+        model.addAttribute("isLoggedIn", true);  // 이 부분 추가
         return "paymentlist";
     }
 }

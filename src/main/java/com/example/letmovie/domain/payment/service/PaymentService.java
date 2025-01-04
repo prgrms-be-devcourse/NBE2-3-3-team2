@@ -119,9 +119,6 @@ public class PaymentService {
 
     @Transactional(readOnly = true)
     public List<PaymentResponse.Get> getMemberPayment(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
-
         List<Payment> payments = paymentRepository.findByMemberId(memberId);
         return payments.stream()
                 .map(PaymentResponse.Get::from)
@@ -137,6 +134,7 @@ public class PaymentService {
                 .amount(request.totalPrice())
                 .paymentStatus(PaymentStatus.AWAITING_PAYMENT)
                 .build();
+
         String name = payment.getReservation().getShowTime().getMovie().getMovieName();
         paymentRepository.save(payment);
         return name;
