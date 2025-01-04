@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -319,9 +320,13 @@ public class AdminController {
     public String showtime(Model model) {
         model.addAttribute("showtimes", adminService.getAllShowtimes());
 
-        // Add additional attributes for screen and movie names
-        model.addAttribute("screenNames", adminService.getAllScreenNames()); // ScreenService에서 스크린 이름 가져오기
-        model.addAttribute("movieNames", adminService.getAllMovieNames()); // MovieService에서 영화 이름 가져오기
+        // 수정된 방식으로 screenNames 가져오기
+        Map<Long, String> screenNamesMap = adminService.getAllScreenNamesById(); // screenId 기반 맵 생성
+        model.addAttribute("screenNames", screenNamesMap); // ID로 접근하여 이름 가져오기
+
+        //model.addAttribute("movieNames", adminService.getAllMovieNames()); // MovieService에서 영화 이름 가져오기
+        Map<Long,String> movieNamesMap = adminService.getAllMovieNamesById();
+        model.addAttribute("movieNames", movieNamesMap);
 
         return "admin_showtime";
     }

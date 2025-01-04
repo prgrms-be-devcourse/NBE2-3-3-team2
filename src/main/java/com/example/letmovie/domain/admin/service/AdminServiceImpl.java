@@ -354,11 +354,24 @@ public class AdminServiceImpl {
                 .collect(Collectors.toList());
     }
 
+    // Get all screen names by screen ID - 상영관 오류 수정
+    public Map<Long, String> getAllScreenNamesById() {
+        return adminScreenRepository.findAll().stream()
+                .collect(Collectors.toMap(Screen::getId, Screen::getScreenName)); // screenId로 매핑
+    }
+
+
     // Get all movie names
     public List<String> getAllMovieNames() {
         return adminMovieJpaRepository.findAll().stream()
                 .map(Movie::getMovieName) // Assuming Movie has a method to get its title
                 .collect(Collectors.toList());
+    }
+
+    // Get all movie names by movie ID - 영화명 오류 방지
+    public Map<Long, String> getAllMovieNamesById() {
+        return adminMovieJpaRepository.findAll().stream()
+                .collect(Collectors.toMap(Movie::getId, Movie::getMovieName));
     }
 
     // Retrieve showtimes by screen ID
