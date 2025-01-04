@@ -63,4 +63,12 @@ public class Seat {
     public void setAble(@NotNull boolean able) {
         isAble = able;
     }
+
+    public void setSeatType(@NotNull SeatType seatType) {
+        this.seatType = seatType;
+    }
+
+    public void setPrice(@NotNull int price) {
+        this.price = price;
+    }
 }
