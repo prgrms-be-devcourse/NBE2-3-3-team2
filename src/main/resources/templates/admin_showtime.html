@@ -107,8 +107,8 @@
     <tbody>
     <tr th:each="showtime : ${showtimes}">
       <td th:text="${showtime.id}"></td>
-      <td th:text="${screenNames[showtime.screen.id - 1]} + '(' + ${showtime.screen.id} + ')'"></td> <!-- Screen Name from index -->
-      <td th:text="${movieNames[showtime.movie.id - 1]}"></td> <!-- Movie Name from index -->
+      <td th:text="${screenNames[showtime.screen.id]} + '(' + ${showtime.screen.id} + ')'"></td> <!-- Screen Name from index -->
+      <td th:text="${movieNames[showtime.movie.id]}"></td> <!-- Movie Name from index -->
       <td th:text="${showtime.showtimeDate}"></td>
       <td th:text="${showtime.showtimeTime}"></td>
       <td th:text="${showtime.totalSeats}"></td>
