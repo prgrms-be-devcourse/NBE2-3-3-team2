@@ -87,12 +87,21 @@ public class PaymentService {
     @Transactional
     public PaymentResponse.Cancel cancel(Long paymentId) {
         log.info("결제 취소 시작 - paymentId: {}", paymentId);
-        PaymentHistory paymentHistory = paymentHistoryRepository.findById(paymentId)
+        Payment beforePayment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
+
+        PaymentHistory paymentHistory = paymentHistoryRepository
+                .findByPaymentAndPaymentStatus(beforePayment, PaymentStatus.PAYMENT_SUCCESS)
+                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
+
+        log.info("결제취소 = {} ",paymentHistory.getId());
         try {
             HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
             Map<String, String> parameters = httpRequestUtil.createCancelParams(paymentHistory);
-            log.info("카카오페이 결제 취소 요청 - parameters: {}, tid: {}, amount: {}");
+            log.info("카카오페이 결제 취소 요청 - parameters: {}, tid: {}, amount: {}",
+                    parameters,
+                    paymentHistory.getTid(),
+                    paymentHistory.getAmount());
 
             PaymentResponse.Cancel response = httpRequestUtil.post(
                     HOST + "/online/v1/payment/cancel",
