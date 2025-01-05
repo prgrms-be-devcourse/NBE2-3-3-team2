@@ -1,22 +1,26 @@
 package com.example.letmovie.domain.member.controller;
 
 import com.example.letmovie.domain.member.dto.request.SignupRequestDTO;
+import com.example.letmovie.domain.member.service.MailService;
 import com.example.letmovie.domain.member.service.MemberService;
+import com.example.letmovie.global.exception.TooManyRequestsException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final MailService mailService;
 
     @GetMapping("/signup")
     @Operation(summary = "회원 가입 뷰")
@@ -27,7 +31,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원 가입 처리 API")
-    public ResponseEntity<String> signup(@RequestBody SignupRequestDTO request, Model model) {
+    public ResponseEntity<String> signup(@RequestBody SignupRequestDTO request) {
         try {
             memberService.signup(request);
             // 성공
@@ -38,6 +42,28 @@ public class MemberController {
         } catch (Exception e) {
             // 기타 예외 발생 시
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 가입 처리 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/send-email")
+    public ResponseEntity<Map<String, Object>> sendMail(@RequestBody SignupRequestDTO request){
+        try {
+            int resultCode = mailService.sendMail(request.getEmail()); // 이메일 전송 후 인증 코드 생성
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("authCode", resultCode);  // 인증 코드 전송
+
+            return ResponseEntity.ok(response); // JSON 형식으로 반환
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage()); // 에러 메시지 전달
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (TooManyRequestsException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage()); // 에러 메시지 전달
+
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(errorResponse);
         }
     }
 }
