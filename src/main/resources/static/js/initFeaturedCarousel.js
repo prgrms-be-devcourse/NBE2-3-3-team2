@@ -34,34 +34,3 @@ function initFeaturedCarousel() {
 
 // 캐러셀 초기화
 initFeaturedCarousel();
-
-// function initFeaturedCarousel() {
-//     const featuredContainer = document.getElementById('featured-movie-container');
-//     const prevBtn = document.getElementById('prev-btn-feature');
-//     const nextBtn = document.getElementById('next-btn-feature');
-//
-//     let currentIndex = 0;
-//     const cards = featuredContainer.children;
-//
-//     function updateCarousel() {
-//         for (let i = 0; i < cards.length; i++) {
-//             cards[i].style.display = 'none';
-//         }
-//         cards[currentIndex].style.display = 'block';
-//     }
-//
-//     prevBtn.addEventListener('click', () => {
-//         currentIndex = (currentIndex > 0) ? currentIndex - 1 : cards.length - 1;
-//         updateCarousel();
-//     });
-//
-//     nextBtn.addEventListener('click', () => {
-//         currentIndex = (currentIndex < cards.length - 1) ? currentIndex + 1 : 0;
-//         updateCarousel();
-//     });
-//
-//     updateCarousel();
-// }
-//
-// // 캐러셀 초기화
-// initFeaturedCarousel();
