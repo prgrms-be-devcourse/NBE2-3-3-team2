@@ -9,12 +9,8 @@
     <!-- 네비게이션 바 -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <!-- 로고 -->
-            <!--<a class="navbar-brand" th:href="@{/}">
-                <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
-            </a>-->
             <a class="navbar-brand" th:if="${isLoggedIn}" th:href="@{/private}">
-            <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
+                <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
             </a>
             <a class="navbar-brand" th:unless="${isLoggedIn}" th:href="@{/}">
                 <img th:src="@{/images/letmovielogo6.png}" alt="LetMovie" style="width: 150px; height: auto;">
@@ -27,8 +23,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-<!--                        <a class="nav-link" th:href="@{/movie/total_movie}">영화</a>-->
-                        <!--<a class="nav-link" th:href="@{/movies(category=ALL)}">영화</a>-->
                         <a class="nav-link" th:if="${isLoggedIn}" th:href="@{/private/movies(category=ALL)}">영화</a>
                         <a class="nav-link" th:unless="${isLoggedIn}" th:href="@{/movies(category=ALL)}">영화</a>
                     </li>
@@ -47,13 +41,6 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
-                    <!-- 로그아웃 상태 -->
-                    <!--<li class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">로그인</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/signup}">회원가입</a>
-                    </li>-->
                     <li class="nav-item" th:unless="${isLoggedIn}">
                         <a class="nav-link" th:href="@{/login}">로그인</a>
                     </li>
@@ -63,7 +50,7 @@
 
                     <!-- 로그인 상태 -->
                     <li class="nav-item" th:if="${isLoggedIn}">
-                        <span class="nav-link">안녕하세요, <span th:text="${userEmail}">사용자</span>님!</span>
+                        <span class="nav-link">안녕하세요, <span th:text="${userNickname}">사용자</span>님!</span>
                     </li>
                     <li class="nav-item" th:if="${isLoggedIn}">
                         <form action="/logout" method="POST" style="display: inline;">
@@ -73,9 +60,6 @@
                     <li class="nav-item" th:if="${isLoggedIn}">
                         <a class="nav-link" th:href="@{/mypage}">마이페이지</a>
                     </li>
-                    <!--<li class="nav-item">
-                        <a class="nav-link" th:href="@{/mypage}">마이페이지</a>
-                    </li>-->
                 </ul>
             </div>
         </div>

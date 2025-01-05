@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
@@ -43,9 +43,37 @@
   </style>
 </head>
 <body>
-<!-- Sidebar navigation -->
+
 <div th:replace="~{fragments/admin_sidebar :: sidebar}"></div>
 
-Movietime
+<main>
+  <h1>Edit Showtime</h1>
+
+  <form action="/admin/showtime/edit/update" method="post">
+    <input type="hidden" name="id" th:value="${showtime.id}">
+
+    <label for="screenId">Screen:</label>
+    <select id="screenId" name="screenId" required>
+      <option th:each="screen : ${screens}" th:value="${screen.id}" th:text="${screen.screenName}"></option>
+    </select>
+
+    <label for="movieId">Movie:</label>
+    <select id="movieId" name="movie" required>
+      <option th:each="movie : ${movies}" th:value="${movie.id}" th:text="${movie.movieName}"></option>
+    </select>
+
+    <label for="showtimeDate">Date:</label>
+    <input type="date" id="showtimeDate" name="showtimeDate" th:value="${showtime.showtimeDate}" required>
+
+    <label for="showtimeTime">Time:</label>
+    <input type="time" id="showtimeTime" name="showtimeTime" th:value="${showtime.showtimeTime}" required>
+
+    <button type="submit" class="btn btn-primary">Update Showtime</button>
+  </form>
+</main>
+
+
+
+
 </body>
-</html>
+</html>-->

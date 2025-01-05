@@ -178,15 +178,14 @@
 </head>
 <body>
 <div class="payment-container">
-    <!-- member ID를 hidden input에 저장 -->
     <input type="hidden" id="memberId" th:value="${member.id}">
 
     <h1 class="page-title">나의 결제 내역</h1>
     <div id="payment-list" class="payment-list">
-        <!-- 여기에 결제 내역이 동적으로 추가됩니다 -->
     </div>
     <div class="button-container">
-        <a href="/" class="home-button">홈으로</a>
+        <a th:if="${isLoggedIn}" th:href="@{/private}" class="home-button">홈으로</a>
+        <a th:unless="${isLoggedIn}" th:href="@{/}" class="home-button">홈으로</a>
     </div>
 </div>
 
@@ -305,3 +304,4 @@
 </script>
 </body>
 </html>
+<!DOCTYPE html>

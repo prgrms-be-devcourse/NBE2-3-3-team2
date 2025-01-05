@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용ㅍ
                         .requestMatchers("/js/**", "/css/**", "/images/**")
                         .permitAll()
-                        .requestMatchers( "/favicon.ico", "/", "/signup", "/login", "/admin-login", "/logout","/status", "/token/refresh", "/movie/**", "/movies", "/api/search/**")
+                        .requestMatchers( "/favicon.ico", "/","/send-email", "/signup",  "/login", "/admin-login", "/logout","/status", "/token/refresh", "/movie/**", "/movies", "/api/search/**")
                         .permitAll()
                         .requestMatchers("/mypage/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/private/**").hasAuthority("ROLE_USER")
@@ -50,6 +50,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
+                            System.out.println("exception : " + exception);
                             System.out.println("Access denied for: " + SecurityContextHolder.getContext().getAuthentication());
                             response.sendRedirect("/login"); // 인증되지 않은 사용자를 로그인 페이지로 리디렉션
                         })

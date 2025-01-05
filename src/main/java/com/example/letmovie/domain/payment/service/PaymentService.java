@@ -105,7 +105,7 @@ public class PaymentService {
             Payment payment = paymentHistory.getPayment();
             payment.updateStatus(PaymentStatus.valueOf(response.status()));
             // 예매상태변경
-            payment.getReservation().setStatus(ReservationStatus.CANCELLED);
+            payment.getReservation().cancelReservation();
             // 취소 이력 생성 및 저장
             PaymentHistory cancelHistory = PaymentHistory.toCancelHistory(paymentHistory, response);
             paymentHistoryRepository.save(cancelHistory);
@@ -119,9 +119,6 @@ public class PaymentService {
 
     @Transactional(readOnly = true)
     public List<PaymentResponse.Get> getMemberPayment(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
-
         List<Payment> payments = paymentRepository.findByMemberId(memberId);
         return payments.stream()
                 .map(PaymentResponse.Get::from)
@@ -137,6 +134,7 @@ public class PaymentService {
                 .amount(request.totalPrice())
                 .paymentStatus(PaymentStatus.AWAITING_PAYMENT)
                 .build();
+
         String name = payment.getReservation().getShowTime().getMovie().getMovieName();
         paymentRepository.save(payment);
         return name;
@@ -165,13 +163,5 @@ public class PaymentService {
 
     }
 
-//    private void validateCancellablePayment(PaymentHistory paymentHistory) {
-//        PaymentStatus status = paymentHistory.getPaymentStatus();
-//        if (status == PaymentStatus.PAYMENT_CANCELLED) {
-//            throw new PaymentException(ErrorCodes.PAYMENT_ALREADY_CANCELLED);
-//        }
-//        if (status == PaymentStatus.PAYMENT_FAILED) {
-//            throw new PaymentException(ErrorCodes.INVALID_PAYMENT_STATUS);
-//        }
-//    }
+
 }

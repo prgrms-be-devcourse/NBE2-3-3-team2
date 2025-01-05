@@ -40,11 +40,56 @@
       flex: 1;
       padding: 20px;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    form {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 <!-- Sidebar navigation -->
 <div th:replace="~{fragments/admin_sidebar :: sidebar}"></div>
-Member
+
+
+<!-- Main content -->
+<main>
+  <h1>회원 관리</h1>
+  <h2>회원 검색</h2>
+  <!-- 검색 폼 -->
+  <form th:action="@{/admin/member/search}" method="get">
+    <label for="inputnickname">닉네임:</label>
+    <input type="text" id="inputnickname" name="inputnickname" placeholder="닉네임 입력">
+    <button type="submit">검색</button>
+  </form>
+
+  <h2>회원 수정</h2>
+  <!-- 검색 폼 -->
+  <form th:action="@{/admin/member/modify}" method="get">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" placeholder="ID 입력">
+    <button type="submit">검색</button>
+  </form>
+
+  <!-- 성공/에러 메시지 -->
+  <div>
+    <p th:if="${success}" th:text="${success}" class="success"></p>
+    <p th:if="${error}" th:text="${error}" class="error"></p>
+  </div>
+
+</main>
+
+
 </body>
 </html>

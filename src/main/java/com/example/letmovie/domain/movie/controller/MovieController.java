@@ -1,7 +1,5 @@
 package com.example.letmovie.domain.movie.controller;
 
-import com.example.letmovie.domain.auth.util.SecurityUtil;
-import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.movie.dto.ReviewDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.service.MovieServiceImpl;
@@ -11,12 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,8 +25,6 @@ public class MovieController {
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
 
-        addAuthenticationAttributes(model);
-
         List<Movie> movies = movieService.getAllMovies();
         model.addAttribute("movies", movies);
 
@@ -40,8 +34,6 @@ public class MovieController {
     // 영화 상세 페이지
     @GetMapping({"/movie/{movieId}", "private/movie/{movieId}"})
     public String movieDetail(@PathVariable int movieId, Model model) {
-
-        addAuthenticationAttributes(model);
 
         Movie movie = movieService.getMovieById(movieId);
         List<ReviewDTO> reviews = reviewService.getReviewsByMovieId(movieId); // 해당 영화의 리뷰 목록 가져오기
@@ -124,8 +116,6 @@ public class MovieController {
             @RequestParam(defaultValue = "20") int size, // 페이지 크기
             Model model) {
 
-        addAuthenticationAttributes(model);
-
         if (query != null && !query.isEmpty()) {
             // 검색어가 있을 경우 이름으로 검색
             List<Movie> movies = movieService.searchMoviesByName(query);
@@ -154,20 +144,4 @@ public class MovieController {
         return "total_movie";
     }
 
-    /**
-     *  회원 비회원 구분 후 ui 할당
-     */
-    @ModelAttribute
-    private void addAuthenticationAttributes(Model model) {
-        String email = SecurityUtil.getCurrentMemberEmail();
-
-        Optional<Member> currentMember = SecurityUtil.getCurrentMember();
-        String userNickname = currentMember.map(Member::getNickname).orElse("Guest");
-        String userPassword = currentMember.map(Member::getPassword).orElse("Guest");
-
-        model.addAttribute("isLoggedIn", email != null);
-        model.addAttribute("userEmail", email);
-        model.addAttribute("userNickname", userNickname);
-        model.addAttribute("userPassword", userPassword);
-    }
 }
