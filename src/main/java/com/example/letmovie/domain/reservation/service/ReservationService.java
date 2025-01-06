@@ -3,6 +3,7 @@ package com.example.letmovie.domain.reservation.service;
 import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.member.repository.MemberRepository;
 import com.example.letmovie.domain.movie.entity.Showtime;
+import com.example.letmovie.domain.payment.dto.response.PaymentResponse;
 import com.example.letmovie.domain.payment.entity.Payment;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
 import com.example.letmovie.domain.payment.service.PaymentService;
@@ -92,11 +93,13 @@ public class ReservationService {
             Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("예매 번호가 없습니다."));
             Payment payment = paymentRepository.findByReservationId(reservationId).orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
             log.info("예매취소시작");
-            reservation.cancelReservation();
             log.info("예매취소시작2");
-
-            paymentService.cancel(payment.getId());
-            log.info("예매취소시작3");
+            PaymentResponse.Cancel cancelResult = paymentService.cancel(payment.getId());
+        // 결제 취소가 성공하면 예매 취소 진행
+        if (cancelResult.status().equals("CANCEL_PAYMENT")) {
+            reservation.cancelReservation();
+        }
+        log.info("예매취소시작3");
 
     }
 }
