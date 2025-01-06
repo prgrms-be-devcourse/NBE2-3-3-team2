@@ -7,6 +7,7 @@ import com.example.letmovie.domain.payment.dto.response.PaymentResponse;
 import com.example.letmovie.domain.payment.entity.Payment;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import com.example.letmovie.domain.payment.entity.PaymentStatus;
+import com.example.letmovie.domain.payment.provider.PaymentParamProvider;
 import com.example.letmovie.domain.payment.repository.PaymentHistoryRepository;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
 import com.example.letmovie.domain.payment.util.HttpRequestUtil;
@@ -40,6 +41,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentHistoryRepository paymentHistoryRepository;
     private final PaymentFailureService paymentFailureService;
+    private final PaymentParamProvider paymentParamProvider;
 
     @Value("${kakao.pay.host}")
     private String HOST;
@@ -52,7 +54,7 @@ public class PaymentService {
     public PaymentResponse.Ready ready(PaymentRequest.Info request) {
         String movieName = initializePayment(request);
         HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
-        Map<String, String> parameters = httpRequestUtil.createReadyParams(request,movieName);
+        Map<String, String> parameters = paymentParamProvider.createReadyParams(request,movieName);
         return httpRequestUtil.post(
                 HOST+"/online/v1/payment/ready",
                 parameters,
@@ -66,7 +68,7 @@ public class PaymentService {
 
         try{
         HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
-        Map<String, String> parameters = httpRequestUtil.createApprovalParams(pgToken, tid,partnerUserId, partnerOrderId,cid);
+        Map<String, String> parameters = paymentParamProvider.createApprovalParams(pgToken, tid,partnerUserId, partnerOrderId,cid);
         log.info("결제 승인 요청 파라미터 = {}", parameters);
 
         PaymentResponse.Success response = httpRequestUtil.post(
@@ -97,7 +99,7 @@ public class PaymentService {
         log.info("결제취소 = {} ",paymentHistory.getId());
         try {
             HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
-            Map<String, String> parameters = httpRequestUtil.createCancelParams(paymentHistory);
+            Map<String, String> parameters = paymentParamProvider.createCancelParams(paymentHistory);
             log.info("카카오페이 결제 취소 요청 - parameters: {}, tid: {}, amount: {}",
                     parameters,
                     paymentHistory.getTid(),
