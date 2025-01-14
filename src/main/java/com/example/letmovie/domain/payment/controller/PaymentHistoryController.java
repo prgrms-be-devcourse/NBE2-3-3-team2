@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/paymentHistory")
+@RequestMapping("/api/v1/payment-histories")
 @RequiredArgsConstructor
 @Tag(name = " 결제 내역 API")
 public class PaymentHistoryController {
@@ -23,13 +23,15 @@ public class PaymentHistoryController {
     private final PaymentHistoryService paymentHistoryService;
 
 
-    @GetMapping("/payment_histories")
+    @GetMapping
     @Operation(summary = "관리자 모든 결제 내역 상세 조회")
     public ResponseEntity<Page<PaymentHistoryResponse.Info>> getAllPaymentHistory(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(paymentHistoryService.getAllPaymentHistory(pageable));
     }
+
+    
 
 
 }
