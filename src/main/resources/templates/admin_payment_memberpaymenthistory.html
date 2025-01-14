@@ -65,29 +65,38 @@
 
 <!-- Main content -->
 <main>
-  <h1>회원 관리</h1>
-  <h2>회원 검색</h2>
-  <!-- 검색 폼 -->
-  <form th:action="@{/admin/member/search}" method="get">
-    <label for="inputnickname">닉네임:</label>
-    <input type="text" id="inputnickname" name="inputnickname" placeholder="닉네임 입력">
-    <button type="submit">검색</button>
-  </form>
-
-  <h2>회원 수정</h2>
-  <!-- 검색 폼 -->
-  <form th:action="@{/admin/member/modify}" method="get">
-    <label for="id">ID:</label>
-    <input type="text" id="id" name="id" placeholder="ID 입력">
-    <button type="submit">검색</button>
-  </form>
-
-  <!-- 성공/에러 메시지 -->
-  <div>
-    <p th:if="${success}" th:text="${success}" class="success"></p>
-    <p th:if="${error}" th:text="${error}" class="error"></p>
-  </div>
-
+  <h1>회원 결제 내역</h1>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>결제 ID</th>
+      <th>회원 ID</th>
+      <th>예매 영화명</th>
+      <th>결제 금액</th>
+      <th>결제 수단</th>
+      <th>결제 요청 시각</th>
+      <th>결제 승인 시각</th>
+      <th>에러 코드</th>
+      <th>에러 메시지</th>
+      <th>paymentStatus</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payment : ${paymentHistories}">
+      <td th:text="${payment.id}"></td>
+      <td th:text="${payment.partnerUserId}"></td>
+      <td th:text="${payment.itemName}"></td>
+      <td th:text="${payment.amount}"></td>
+      <td th:text="${payment.paymentMethodType}"></td>
+      <td th:text="${payment.createdAt}"></td>
+      <td th:text="${payment.approvedAt}"></td>
+      <td th:text="${payment.errorCode}"></td>
+      <td th:text="${payment.errorMessage}"></td>
+      <td th:text="${payment.paymentStatus}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <!--<a th:href="@{/admin/payment}">회원 검색으로 돌아가기</a>-->
 </main>
 
 
