@@ -94,6 +94,7 @@ public class PaymentHistory {
                 .amount(response.amount().total())  // Amount 객체에서 total 값을 가져옴
                 .createdAt(response.created_at())
                 .approvedAt(response.approved_at())
+                .paymentStatus(PaymentStatus.PAYMENT_SUCCESS)
                 .build();
     }
     // 실패 케이스
