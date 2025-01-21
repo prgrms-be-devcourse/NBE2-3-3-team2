@@ -3,7 +3,7 @@ package com.example.letmovie.domain.member.controller;
 import com.example.letmovie.domain.member.dto.request.SignupRequestDTO;
 import com.example.letmovie.domain.member.service.MailService;
 import com.example.letmovie.domain.member.service.MemberService;
-import com.example.letmovie.global.exception.TooManyRequestsException;
+import com.example.letmovie.global.exception.exceptionClass.payment.TooManyRequestsException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

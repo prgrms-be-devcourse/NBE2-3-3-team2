@@ -10,6 +10,9 @@ import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
+import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
+import com.example.letmovie.global.exception.exceptionClass.reservation.SeatNotFound;
+import com.example.letmovie.global.exception.exceptionClass.reservation.ShowtimeNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +35,8 @@ public class OptimisticLockReservationService {
 
     @Transactional
     public ReservationResponseDTO reservation(List<String> seatList, Long memberId, Long showtimeId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("회원이 없습니다.")); //전역 오류 핸들링으로 바꿔야 함.
-        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId).orElseThrow(() -> new RuntimeException("영화 상영시간이 없습니다"));
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new); //전역 오류 핸들링으로 바꿔야 함.
+        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId).orElseThrow(ShowtimeNotFound::new);
 
         List<ReservationSeat> reservationSeats = seatList.stream().map(seat -> {
             String[] split = seat.split("-");
@@ -41,11 +44,11 @@ public class OptimisticLockReservationService {
             int col = Integer.parseInt(split[1]);
 
             Long screenId = showtime.getScreen().getId();
-            Seat seatEntity = seatRepository.findByIdWithOptimisticLock(col, row, screenId).orElseThrow(() -> new RuntimeException("좌석을 찾을 수 없습니다."));
+            Seat seatEntity = seatRepository.findByIdWithOptimisticLock(col, row, screenId).orElseThrow(SeatNotFound::new);
 
-//            if (!seatEntity.isAble()) {
-//                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
-//            }
+            if (!seatEntity.isAble()) {
+                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
+            }
 
             return ReservationSeat.createReservationSeat(seatEntity, showtime);
         }).collect(Collectors.toList());

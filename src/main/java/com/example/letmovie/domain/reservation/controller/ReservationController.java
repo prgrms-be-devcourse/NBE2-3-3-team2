@@ -15,6 +15,8 @@ import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
+import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
+import com.example.letmovie.global.exception.exceptionClass.reservation.ShowtimeNotFound;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -92,9 +94,7 @@ public class ReservationController {
     @GetMapping("/seatSelection")
     public String seatSelection(@RequestParam("showtimeId") Long showtimeId, Model model) {
         Showtime showtime = showtimeService.findById(Long.valueOf(showtimeId))
-                .orElseThrow(() -> new RuntimeException("쇼타임 아이디 없음: " + showtimeId)); //에러 만들어 줘야 함.
-
-//        Screen screen = screenService.findById(showtime.getScreen().getId()).orElseThrow(() -> new RuntimeException("스크린 정보를 찾을 수 없습니다:" + showtime.getScreen().getId()));
+                .orElseThrow(ShowtimeNotFound::new);
 
         Screen screen = showtime.getScreen(); //스크린 가져오기
         List<Seat> seats = showtime.getScreen().getSeats(); //Seat 리스트 가져오기.
@@ -147,7 +147,7 @@ public class ReservationController {
         }
 
         Member member = SecurityUtil.getCurrentMember()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+                .orElseThrow(MemberNotFoundException::new);
 
         ReservationResponseDTO responseDTO = reservationService.reservation(seats, member.getId(), showtimeId);
 

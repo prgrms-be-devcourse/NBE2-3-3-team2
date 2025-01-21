@@ -1,5 +1,6 @@
-package com.example.letmovie.global.exception;
+package com.example.letmovie.global.exception.exceptionClass.payment;
 
+import com.example.letmovie.global.exception.ErrorCodes;
 import lombok.Getter;
 
 @Getter
