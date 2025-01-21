@@ -32,12 +32,9 @@ public class AdminController {
 
 
     // /admin/movie : 영화목록
-    @GetMapping("/movie")
+/*    @GetMapping("/movie")
     public String movie(Model model) {
         List<Movie> movies = adminService.findAllMovies();
-        /*for(Movie movie : movies) {
-            System.out.println(movie);
-        }*/
         model.addAttribute("movies", movies);
         return "admin_movie";
     }
@@ -142,10 +139,10 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "영화 삭제 중 오류가 발생했습니다.");
         }
         return "redirect:/admin/movie"; // 영화 목록으로 리다이렉트
-    }
+    }*/
 
     //영화관
-    @GetMapping("/theater")
+/*    @GetMapping("/theater")
     public String theater(Model model) {
         model.addAttribute("theaters", adminService.findAllTheaters());
         return "admin_theater";
@@ -201,9 +198,9 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "극장 삭제 중 오류가 발생했습니다.");
         }
         return "redirect:/admin/theater";
-    }
+    }*/
 
-    //상영관
+/*    //상영관
     @GetMapping("/screen")
     public String screenManagement(Model model) {
         List<Screen> screens = adminService.findAllScreens();
@@ -258,9 +255,9 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "상영관 삭제 중 문제가 발생했습니다: " + e.getMessage());
         }
         return "redirect:/admin/screen";
-    }
+    }*/
 
-    // 좌석 메인페이지 (상영관을 보여줌)
+/*    // 좌석 메인페이지 (상영관을 보여줌)
     @GetMapping("/seat")
     public String seat(Model model) {
         model.addAttribute("screens", adminService.getAllScreens());
@@ -313,10 +310,10 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "Failed to delete seats: " + e.getMessage());
         }
         return "redirect:/admin/seat";
-    }
+    }*/
 
     // 상영시간대
-    @GetMapping("/showtime")
+/*    @GetMapping("/showtime")
     public String showtime(Model model) {
         model.addAttribute("showtimes", adminService.getAllShowtimes());
 
@@ -356,27 +353,6 @@ public class AdminController {
         return "redirect:/admin/showtime";
     }
 
-    /*@GetMapping("/showtime/edit/{id}")
-    public String editShowtimeForm(@PathVariable Long id, Model model) {
-        Showtime showtime = adminService.getShowtimeById(id); // Showtime 엔터티 가져오기
-        model.addAttribute("showtime", showtime);
-        model.addAttribute("screens", adminService.getAllScreens());
-        model.addAttribute("movies", adminService.findAllMovies());
-        return "admin_showtime_edit";
-    }*/
-
-    /*@PostMapping("/showtime/edit/update")
-    @Transactional
-    public String updateShowtime(@ModelAttribute Showtime showtime, RedirectAttributes redirectAttributes) {
-        // Optionally recalculate remainingSeats if needed (for modifications)
-        adminService.updateShowtime(showtime);
-
-        redirectAttributes.addFlashAttribute("message", "Showtime updated successfully!");
-        return "redirect:/admin/showtime";
-    }*/
-
-
-
 
     @GetMapping("/showtime/delete/{id}")
     @Transactional
@@ -384,11 +360,11 @@ public class AdminController {
         adminService.deleteShowtime(id);
         redirectAttributes.addFlashAttribute("message", "Showtime deleted successfully!");
         return "redirect:/admin/showtime";
-    }
+    }*/
 
 
 
-    // /admin/member : 회원정보
+/*    // /admin/member : 회원정보
     @GetMapping("/member")
     public String member() {
         return "admin_member";
@@ -439,9 +415,9 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "오류가 발생했습니다. 수정에 실패했습니다.");
         }
         return "redirect:/admin/member";
-    }
+    }*/
 
-    // 회원 결제 관리 메인페이지
+/*    // 회원 결제 관리 메인페이지
     @GetMapping("/payment")
     public String payment() {
         return "admin_payment";
@@ -450,8 +426,7 @@ public class AdminController {
     // 회원 닉네임 검색
     @GetMapping("/payment/membersearch")
     public String paymentMemberSearch(@RequestParam("inputnickname") String nickname, Model model) {
-        /*List<Member> members = adminService.findMemberByName(nickname);
-        model.addAttribute("members", members);*/
+
         try {
             List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
             if(members != null) {
@@ -471,6 +446,6 @@ public class AdminController {
         List<PaymentHistory> paymentHistories = adminService.findPaymentHistoryByMemberId(memberId);
         model.addAttribute("paymentHistories", paymentHistories);
         return "admin_payment_memberpaymenthistory";
-    }
+    }*/
 
 }

@@ -14,6 +14,8 @@ import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.entity.SeatType;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
@@ -31,11 +33,14 @@ import java.util.stream.Collectors;
 @Service
 public class AdminServiceImpl {
 
-    private static final String API_KEY = "3427155cf97431b4c03ce4235b4ea90a";
+/*    @Value("${movie.api.key}")
+    private String API_KEY;
     //영화 목록 (영화 이름을 검색해 영화 코드를 가져옴 movieNm -> movieCd)
     private static final String MOVIE_LIST_URL = "https://kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.xml";
     //영화 상세정보 (movieCd로 검색)
     private static final String MOVIE_INFO_URL = "https://kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.xml";
+
+    private final RestTemplate restTemplate;*/
 
     @Autowired
     private AdminMovieJpaRepository adminMovieJpaRepository;
@@ -58,11 +63,16 @@ public class AdminServiceImpl {
     @Autowired
     private AdminPaymentHistoryRepository adminPaymentHistoryRepository;
 
+/*    public AdminServiceImpl() {
+        this.restTemplate = new RestTemplate();
+    }
+
     // 영화 목록에서 movieCd 검색
     public String getMovieCodeByName(String movieNm) {
         try {
             String url = MOVIE_LIST_URL + "?key=" + API_KEY + "&movieNm=" + movieNm;
-            RestTemplate restTemplate = new RestTemplate();
+            //RestTemplate restTemplate = new RestTemplate();
+            System.out.println("Injected RestTemplate: " + restTemplate);
             String response = restTemplate.getForObject(url, String.class);
 
             // XML 파싱
@@ -197,10 +207,10 @@ public class AdminServiceImpl {
     // 영화 삭제
     public void deleteMovieById(Long movieId) {
         adminMovieJpaRepository.deleteById(movieId);
-    }
+    }*/
 
 
-    // 영화관 목록 조회
+    /*// 영화관 목록 조회
     public List<Theater> findAllTheaters() {
         return adminTheaterRepository.findAll();
     }
@@ -217,12 +227,6 @@ public class AdminServiceImpl {
     }
 
     // 극장 수정
-    /*public void updateTheater(Theater theater) {
-        Theater existingTheater = adminTheaterRepository.findById(theater.getId())
-                .orElseThrow(() -> new IllegalArgumentException("극장을 찾을 수 없습니다. ID: " + theater.getId()));
-        existingTheater.setTheaterName(theater.getTheaterName());
-        adminTheaterRepository.save(existingTheater);
-    }*/
     public void updateTheater(TheaterDTO theaterDto) {
         Theater existingTheater = adminTheaterRepository.findById(theaterDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("극장을 찾을 수 없습니다. ID: " + theaterDto.getId()));
@@ -233,11 +237,16 @@ public class AdminServiceImpl {
     // 극장 삭제
     public void deleteTheaterById(Long id) {
         adminTheaterRepository.deleteById(id);
-    }
+    }*/
 
-    // 상영관 목록조회
+    /*// 상영관 목록조회
     public List<Screen> findAllScreens() {
         return adminScreenRepository.findAll();
+    }
+
+    // 극장 목록 조회
+    public List<Theater> findAllTheaters() {
+        return adminTheaterRepository.findAll();
     }
 
     // ID조회
@@ -279,9 +288,9 @@ public class AdminServiceImpl {
             throw new IllegalArgumentException("상영관을 찾을 수 없습니다. ID: " + screenId);
         }
         adminScreenRepository.deleteById(screenId);
-    }
+    }*/
 
-    // 좌석
+    /*// 좌석
     public List<Screen> getAllScreens() {
         return adminScreenRepository.findAll(); // 상영관 리스트 가져오기
     }
@@ -333,9 +342,9 @@ public class AdminServiceImpl {
         Screen screen = adminScreenRepository.findById(screenId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen ID"));
         adminSeatRepository.deleteByScreen(screen);
-    }
+    }*/
 
-    //상영시간대
+    /*//상영시간대
     // Create a new showtime
     @Transactional
     public void createShowtime(Showtime showtime) {
@@ -345,6 +354,11 @@ public class AdminServiceImpl {
     // Retrieve all showtimes
     public List<Showtime> getAllShowtimes() {
         return adminShowtimeRepository.findAll();
+    }
+
+    // get all screens
+    public List<Screen> getAllScreens() {
+        return adminScreenRepository.findAll(); // 상영관 리스트 가져오기
     }
 
     // Get all screen names
@@ -360,6 +374,12 @@ public class AdminServiceImpl {
                 .collect(Collectors.toMap(Screen::getId, Screen::getScreenName)); // screenId로 매핑
     }
 
+    // find all movies
+    public List<Movie> findAllMovies(){
+        List<Movie> movies = adminMovieJpaRepository.findAllMovies();
+
+        return movies;
+    }
 
     // Get all movie names
     public List<String> getAllMovieNames() {
@@ -412,10 +432,10 @@ public class AdminServiceImpl {
 
     public Showtime getShowtimeById(Long id) {
         return adminShowtimeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid showtime ID"));
-    }
+    }*/
 
 
-    // 닉네임으로 회원 조회
+    /*// 닉네임으로 회원 조회
     public List<Member> findMemberByName(String nickname) {
         return adminMemberRepository.findByNicknameContainingIgnoreCase(nickname);
     }
@@ -448,9 +468,9 @@ public class AdminServiceImpl {
         String partnerUserId = memberId.toString(); // Member의 ID를 partnerUserId와 매칭
         return adminPaymentHistoryRepository.findByPartnerUserId(partnerUserId);
         //return adminPaymentHistoryRepository.findByPaymentMemberId(memberId);
-    }
+    }*/
 
-    // tag값의 정보를 가져오는 함수
+/*    // tag값의 정보를 가져오는 함수
     public static String getTagValue(String tag, Element eElement) {
 
         //결과를 저장할 result 변수 선언
@@ -516,6 +536,6 @@ public class AdminServiceImpl {
             }
         }
         return result.toString().trim(); // 결과 반환
-    }
+    }*/
 
 }
