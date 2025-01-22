@@ -1,7 +1,6 @@
 package com.example.letmovie.domain.admin.controller;
 
 import com.example.letmovie.domain.admin.service.AdminMovieServiceImpl;
-import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.movie.entity.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

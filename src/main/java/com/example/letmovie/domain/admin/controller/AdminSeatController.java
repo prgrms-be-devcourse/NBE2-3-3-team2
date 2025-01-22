@@ -1,7 +1,6 @@
 package com.example.letmovie.domain.admin.controller;
 
 import com.example.letmovie.domain.admin.service.AdminSeatServiceImpl;
-import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.entity.SeatType;
 import org.springframework.beans.factory.annotation.Autowired;

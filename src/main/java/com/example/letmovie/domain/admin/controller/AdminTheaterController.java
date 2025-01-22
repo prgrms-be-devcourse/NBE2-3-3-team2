@@ -1,6 +1,5 @@
 package com.example.letmovie.domain.admin.controller;
 
-import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.admin.service.AdminTheaterServiceImpl;
 import com.example.letmovie.domain.movie.dto.TheaterDTO;
 import com.example.letmovie.domain.movie.entity.Theater;

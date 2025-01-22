@@ -1,6 +1,5 @@
 package com.example.letmovie.domain.admin.controller;
 
-import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.admin.service.AdminShowtimeServiceImpl;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

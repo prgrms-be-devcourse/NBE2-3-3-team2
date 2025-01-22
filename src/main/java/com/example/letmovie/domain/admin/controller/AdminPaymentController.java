@@ -1,7 +1,6 @@
 package com.example.letmovie.domain.admin.controller;
 
 import com.example.letmovie.domain.admin.service.AdminPaymentServiceImpl;
-import com.example.letmovie.domain.admin.service.AdminServiceImpl;
 import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import org.springframework.beans.factory.annotation.Autowired;
