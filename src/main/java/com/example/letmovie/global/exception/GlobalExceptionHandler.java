@@ -1,5 +1,8 @@
 package com.example.letmovie.global.exception;
 
+import com.example.letmovie.global.exception.exceptionClass.payment.PaymentException;
+import com.example.letmovie.global.exception.exceptionClass.payment.TooManyRequestsException;
+import com.example.letmovie.global.exception.exceptionClass.payment.VerificationCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,4 +32,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleTooManyRequests(TooManyRequestsException e) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
     }
+
+
+
+
+
+
+
 }

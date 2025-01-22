@@ -14,7 +14,7 @@ import com.example.letmovie.domain.reservation.entity.Reservation;
 import com.example.letmovie.domain.reservation.entity.ReservationStatus;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import com.example.letmovie.global.exception.ErrorCodes;
-import com.example.letmovie.global.exception.PaymentException;
+import com.example.letmovie.global.exception.exceptionClass.payment.PaymentException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

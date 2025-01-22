@@ -34,7 +34,7 @@ public class Screen {
     @NotNull
     private String screenName;
 
-    public void setId(Long id) {
+    public void setId(@NotNull Long id) {
         this.id = id;
     }
 

@@ -1,13 +1,12 @@
 package com.example.letmovie.domain.payment.service;
 
-import com.example.letmovie.domain.payment.dto.response.PaymentResponse;
 import com.example.letmovie.domain.payment.entity.Payment;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
 import com.example.letmovie.domain.payment.entity.PaymentStatus;
 import com.example.letmovie.domain.payment.repository.PaymentHistoryRepository;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
 import com.example.letmovie.global.exception.ErrorCodes;
-import com.example.letmovie.global.exception.PaymentException;
+import com.example.letmovie.global.exception.exceptionClass.payment.PaymentException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

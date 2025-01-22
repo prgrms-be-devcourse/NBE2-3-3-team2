@@ -44,7 +44,7 @@ public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
     );
 
     /**
-     * 비관적 락 테스트
+     * 비관적 락 테스트 - 쓰기
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Showtime s WHERE s.id = :id")
