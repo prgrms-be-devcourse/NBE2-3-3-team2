@@ -28,33 +28,6 @@ public class ReviewController {
         return "redirect:/private/movie/" + movieId;
     }
 
-//    @PostMapping("/delete")
-//    public String deleteReview(@RequestParam Long reviewId,
-//                               @RequestParam String password,
-//                               @RequestParam int movieId) {
-//        System.out.println("delete review controller");
-//        reviewService.deleteReview(reviewId, password);
-//        return "redirect:/movie/" + movieId;
-//    }
-
-//    @PostMapping("/delete")
-//    public String deleteReview(@RequestParam Long reviewId,
-//                               @RequestParam String password,
-//                               @RequestParam int movieId,
-//                               Model model) {
-//
-//        try {
-//            reviewService.deleteReview(reviewId, password);
-//            return "redirect:/movie/" + movieId;
-//        } catch (IllegalArgumentException e) {
-//            System.out.println("비밀번호 에러 발생");
-//            // 에러 메시지를 모델에 추가
-//            model.addAttribute("errorMessage", e.getMessage());
-//            model.addAttribute("movieId", movieId);
-//            return "forward:/movie/" + movieId;
-//        }
-//    }
-
     @PostMapping("/delete")
     public String deleteReview(@RequestParam Long reviewId,
                                @RequestParam String password,
