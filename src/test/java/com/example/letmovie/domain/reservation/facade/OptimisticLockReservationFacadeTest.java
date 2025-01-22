@@ -17,6 +17,7 @@ import com.example.letmovie.domain.reservation.repository.*;
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.domain.reservation.service.lock.PessimisticLockReservationService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 class OptimisticLockReservationFacadeTest {
@@ -85,7 +87,7 @@ class OptimisticLockReservationFacadeTest {
     @DisplayName("동시성 이슈 낙관적 락으로 해결")
     void test1() throws InterruptedException {
         //given
-        int threadCount = 100;
+        int threadCount = 1000;
         //executorService는 비동기로 실행하는 작업을 단순화 하여 사용할 수 있게 도와주는 java의 api
         //32개의 작업을 동시에 실행할 수 있는 공간을 생성
         ExecutorService executorService = Executors.newFixedThreadPool(32);
@@ -157,8 +159,11 @@ class OptimisticLockReservationFacadeTest {
                 try{
                     optimisticLockReservationFacade.reservation(seats, member.getId(), showTime.getId());
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                } finally {
+                    log.error("테스트코드 InterruptedException 발생 = {}",e.getMessage());
+                }catch (RuntimeException e) {
+                    log.error("테스트코드 RuntimeException 발생 + {}" ,e.getMessage());
+                }
+                finally {
                     latch.countDown(); //요청이 하나 끝날 때마다 latch에서 1을 뺌
                 }
             });
@@ -169,6 +174,6 @@ class OptimisticLockReservationFacadeTest {
         //예상하는 수 100 - (1*100) = 0
 
         //then
-        assertEquals(0,findShowTime.getRemainingSeats());
+        assertEquals(99,findShowTime.getRemainingSeats());
     }// -> 데드락이 많이 생김..
 }

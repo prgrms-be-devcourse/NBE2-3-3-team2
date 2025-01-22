@@ -44,10 +44,10 @@ public class OptimisticLockReservationService {
             int col = Integer.parseInt(split[1]);
 
             Long screenId = showtime.getScreen().getId();
-            Seat seatEntity = seatRepository.findByIdWithOptimisticLock(col, row, screenId).orElseThrow(SeatNotFound::new);
+            Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(SeatNotFound::new);
 
             if (!seatEntity.isAble()) {
-                throw new RuntimeException("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
+                throw new SeatNotFound("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
             }
 
             return ReservationSeat.createReservationSeat(seatEntity, showtime);
