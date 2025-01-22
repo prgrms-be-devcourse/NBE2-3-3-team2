@@ -5,6 +5,7 @@ import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.service.MovieServiceImpl;
 import com.example.letmovie.domain.movie.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class MovieController {
 
@@ -52,11 +54,17 @@ public class MovieController {
             @RequestParam(defaultValue = "20") int size, // 페이지 크기
             Model model) {
 
+        long startTime = System.currentTimeMillis(); // 시작 시간 측정
+
         if (query != null && !query.isEmpty()) {
             // 검색어가 있을 경우 이름으로 검색
             List<Movie> movies = movieService.searchMoviesByName(query);
             model.addAttribute("movies", movies);
             model.addAttribute("query", query); // 검색어 전달
+
+            long endTime = System.currentTimeMillis(); // 종료 시간 측정
+            log.info("영화 검색 - 검색어: {}, 소요 시간: {} ms", query, (endTime - startTime));
+
         } else {
             // 카테고리별 영화 필터링
             Page<Movie> moviePage;
@@ -74,6 +82,9 @@ public class MovieController {
             model.addAttribute("movies", moviePage.getContent());
             model.addAttribute("totalPages", moviePage.getTotalPages());
             model.addAttribute("page", page);
+
+            long endTime = System.currentTimeMillis(); // 종료 시간 측정
+            log.info("영화 검색(전체 영화) - 검색어: {}, time: {} ms", query, (endTime - startTime));
         }
 
         model.addAttribute("category", category.toUpperCase());

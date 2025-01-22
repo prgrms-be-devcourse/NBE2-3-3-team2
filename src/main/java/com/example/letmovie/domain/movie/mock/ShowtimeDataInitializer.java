@@ -303,6 +303,15 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "20240901", "코미디", "제작사 4",
                 Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
 
+        // 영화 검색 성능 측청을 위한 데이터
+        for (int i = 0; i < 10000; i++) {
+            movieJpaRepository.save(new Movie(null,
+                    "이처럼 사소한 것들", "M0001", "감독 1", "15세이상관람가", "120",
+                    "20240510", "액션", "제작사 1",
+                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/iIdBv0pMqZ9XKYOQeK42N1LZIeN.jpg", "still1.jpg", "줄거리 1", "100,000", "12340"));
+        }
+
+
 // Showtime 데이터 추가
         showtimeRepository.save(Showtime.builder()
                 .id(null)
