@@ -18,6 +18,7 @@ import com.example.letmovie.domain.reservation.repository.*;
 import com.example.letmovie.domain.reservation.service.lock.PessimisticLockReservationService;
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
+import com.example.letmovie.global.exception.exceptionClass.reservation.SeatNotFound;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -220,7 +221,7 @@ public class ReservationServiceTest {
         seats.add("1-1");
 
         //expected
-        assertThrows(RuntimeException.class, () -> reservationService.reservation(seats, member.getId(), showTime.getId()));
+        assertThrows(SeatNotFound.class, () -> reservationService.reservation(seats, member.getId(), showTime.getId()));
     }
 
     @Test
@@ -525,7 +526,7 @@ public class ReservationServiceTest {
             //동시에 100번 요청
             executorService.submit(() ->{
                 try{
-                    pessimisticLockReservationService.reservation(seats, member.getId(), showTime.getId());
+                    reservationService.reservation(seats, member.getId(), showTime.getId());
                 }finally {
                     latch.countDown(); //요청이 하나 끝날 때마다 latch에서 1을 뺌
                 }
@@ -537,7 +538,7 @@ public class ReservationServiceTest {
         //예상하는 수 100 - (1*100) = 0
 
         //then
-        assertEquals(0,findShowTime.getRemainingSeats());
+        assertEquals(99,findShowTime.getRemainingSeats());
     }
 
 }

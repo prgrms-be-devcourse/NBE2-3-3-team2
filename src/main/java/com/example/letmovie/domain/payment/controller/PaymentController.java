@@ -25,9 +25,8 @@ public class PaymentController {
     @PostMapping("/ready")
     @Operation(summary = "사용자 결제 준비 API 처리 ")
     public ResponseEntity<PaymentResponse.Ready> paymentReady(@RequestBody PaymentRequest.Info request) {
-        PaymentResponse.Ready response = paymentService.ready(request);
         return ResponseEntity.ok()
-                .body(response);
+                .body(paymentService.ready(request));
     }
 
     @GetMapping("/success")
@@ -37,26 +36,23 @@ public class PaymentController {
                                                                   @RequestParam("cid") String cid,
                                                                   @RequestParam("partner_user_id") String partner_user_id,
                                                                   @RequestParam("partner_order_id") String partner_order_id) {
-        PaymentResponse.Success response = paymentService.success(pg_token, tid, cid, partner_user_id, partner_order_id);
         return ResponseEntity.ok()
-                .body(response);
+                .body(paymentService.success(pg_token, tid, cid, partner_user_id, partner_order_id));
     }
 
     @PostMapping("/cancel")
     @Operation(summary = "사용자 결제 취소 API 처리")
     public ResponseEntity<PaymentResponse.Cancel> paymentCancel (@RequestParam("payment_id") Long paymentId) {
-        PaymentResponse.Cancel response = paymentService.cancel(paymentId);
         return ResponseEntity.ok()
-                .body(response);
+                .body(paymentService.cancel(paymentId));
     }
 
 
     @GetMapping("/my-payments")
     @Operation(summary = "사용자 결제 내역 조회")
     public ResponseEntity<List<PaymentResponse.Get>> getMemberPayments(@RequestParam(name = "member_id") Long memberId) {
-        List<PaymentResponse.Get> response = paymentService.getMemberPayment(memberId);
         return ResponseEntity.ok()
-                .body(response);
+                .body(paymentService.getMemberPayment(memberId));
     }
 
 
