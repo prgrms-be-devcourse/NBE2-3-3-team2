@@ -28,8 +28,14 @@ public class MovieController {
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
 
+        long startTime = System.currentTimeMillis(); // 시작 시간
+
         List<Movie> movies = movieService.getAllMovies();
         model.addAttribute("movies", movies);
+
+        long endTime = System.currentTimeMillis(); // 종료 시간
+
+        log.info("전체 영화 로딩 - time : {} ms", (endTime - startTime));
 
         return "home";
     }

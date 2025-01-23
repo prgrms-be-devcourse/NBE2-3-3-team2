@@ -24,6 +24,7 @@ public class MovieServiceImpl {
         this.movieJpaRepository = movieJpaRepository;
     }
 
+    @Cacheable(value = "all_movies", key = "'allMovies'")
     public List<Movie> getAllMovies() {
         return movieJpaRepository.findAll();
     }
@@ -36,15 +37,15 @@ public class MovieServiceImpl {
     @Cacheable(value = "movies", key = "#query") // Redis 캐싱 추가
     public List<Movie> searchMoviesByName(String query) {
 
-        long startTime = System.currentTimeMillis(); // 시작 시간
+        //long startTime = System.currentTimeMillis(); // 시작 시간
 
         List<Movie> movies = movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
 //        List<Movie> movies = movieJpaRepository.findByMovieNameStartingWithIgnoreCase(query);
         // full Text 인덱스
 //        List<Movie> movies = movieJpaRepository.searchMoviesByNameFullText(query);
-        long endTime = System.currentTimeMillis(); // 종료 시간
+        //long endTime = System.currentTimeMillis(); // 종료 시간
 
-        log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
+        //log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
         return movies;
     }
 
