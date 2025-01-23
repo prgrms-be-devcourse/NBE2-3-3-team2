@@ -49,6 +49,13 @@ dependencies {
 
     // Mail
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.5'
+
+    // Liquibase
+    implementation 'org.liquibase:liquibase-core'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {

@@ -17,10 +17,13 @@ import com.example.letmovie.domain.reservation.repository.ScreenRepository;
 import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import com.example.letmovie.domain.reservation.repository.TheaterRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,6 +40,8 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
     private final MovieJpaRepository movieJpaRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public ShowtimeDataInitializer(TheaterRepository theaterRepository, ScreenRepository screenRepository, ShowtimeRepository showtimeRepository, SeatRepository seatRepository, MovieJpaRepository movieJpaRepository, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.theaterRepository = theaterRepository;
@@ -49,7 +54,11 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
+
+        // ALTER TABLE 쿼리 실행 -> full text 인덱스 강제로 넣어줌.
+        entityManager.createNativeQuery("ALTER TABLE movie ADD FULLTEXT INDEX idx_movie_name_fulltext (movie_name)").executeUpdate();
 
         Member member = Member.builder()
                 .nickname("홍길동")

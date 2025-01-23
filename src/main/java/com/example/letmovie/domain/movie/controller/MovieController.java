@@ -6,6 +6,7 @@ import com.example.letmovie.domain.movie.service.MovieServiceImpl;
 import com.example.letmovie.domain.movie.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -63,7 +64,7 @@ public class MovieController {
             model.addAttribute("query", query); // 검색어 전달
 
             long endTime = System.currentTimeMillis(); // 종료 시간 측정
-            log.info("영화 검색 - 검색어: {}, 소요 시간: {} ms", query, (endTime - startTime));
+            log.info("영화 검색(전체 영화) - 검색어: {}, 소요 시간: {} ms", query, (endTime - startTime));
 
         } else {
             // 카테고리별 영화 필터링
