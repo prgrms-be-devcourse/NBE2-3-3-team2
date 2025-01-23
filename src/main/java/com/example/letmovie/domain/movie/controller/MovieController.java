@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @Slf4j
@@ -90,11 +92,19 @@ public class MovieController {
             model.addAttribute("totalPages", moviePage.getTotalPages());
             model.addAttribute("page", page);
 
+            List<Integer> pageNumbers = IntStream.rangeClosed(
+                    Math.max(1, (int) Math.ceil((double) page / 10) * 10 - 9),
+                    Math.min(moviePage.getTotalPages(), (int) Math.ceil((double) page / 10) * 10)
+            ).boxed().collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+
             long endTime = System.currentTimeMillis(); // 종료 시간 측정
             log.info("영화 검색(전체 영화) - 검색어: {}, time: {} ms", query, (endTime - startTime));
         }
 
         model.addAttribute("category", category.toUpperCase());
+        model.addAttribute("Math", Math.class); // Math 클래스
+
         return "total_movie";
     }
 
