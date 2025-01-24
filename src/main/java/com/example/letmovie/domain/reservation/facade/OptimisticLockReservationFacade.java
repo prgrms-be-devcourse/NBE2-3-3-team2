@@ -20,12 +20,13 @@ public class OptimisticLockReservationFacade {
      */
 
     public void reservation(List<String> seatList, Long memberId, Long showtimeId) throws InterruptedException {
-        int maxRetries = 3; // 최대 재시도 횟수
+        int maxRetries = 2; // 최대 재시도 횟수
         int attempt = 0;
 
         while (attempt < maxRetries) {
             try {
                 optimisticLockReservationService.reservation(seatList, memberId, showtimeId);
+                return;
             } catch (Exception e) {
                 attempt++;
                 log.info("시도 횟수 = {} : ",attempt);

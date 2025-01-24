@@ -47,7 +47,8 @@ public class OptimisticLockReservationService {
             Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(SeatNotFound::new);
 
             if (!seatEntity.isAble()) {
-                throw new SeatNotFound("좌석 " + row + "-" + col + "은 예매가 불가능합니다.");
+                char rowLabel = (char) ('A' + row - 1);
+                throw new SeatNotFound("좌석 " + rowLabel + "-" + col + "은 예매가 불가능합니다.");
             }
 
             return ReservationSeat.createReservationSeat(seatEntity, showtime);

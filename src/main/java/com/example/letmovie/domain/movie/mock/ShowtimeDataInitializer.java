@@ -96,6 +96,49 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         Screen screen3 = screenRepository.save(Screen.builder().id(null).theater(theater2).seats(new ArrayList<>()).screenName("3관").build());
         Screen screen4 = screenRepository.save(Screen.builder().id(null).theater(theater3).seats(new ArrayList<>()).screenName("아이맥스관").build());
 
+
+
+
+        // 2) 5만 건 Movie 데이터 추가 (제목이 전부 다르고, 한글로 시작)
+        for (int i = 1; i <= 10000; i++) {
+            // 1) 한글 "고유 문자열" 얻기 (가~힣 조합)
+            String prefix = toHangulBase(i);
+
+            // 2) 최종 영화 제목 예: "가 영화 1", "각 영화 2", ...
+            String title = prefix + " 영화입니당구리" + i;
+
+            // 3) 영화 코드 (M00001 ~ M50000)
+            String code = "M" + String.format("%05d", i);
+
+            // 4) Movie 엔티티 생성
+            Movie dummyMovie = new Movie(
+                    null,
+                    title,              // 예) "가 영화 1"
+                    code,               // 예) "M00001"
+                    "감독 " + i,         // 임의
+                    "15세이상관람가",    // 임의
+                    "120",              // 임의(문자열)
+                    "20250101",         // 임의(개봉일)
+                    "장르",              // 임의(장르)
+                    "제작사 " + i,       // 임의
+                    Status.SHOW,        // 상영 상태
+                    "https://www.themoviedb.org/t/p/w1280/rajTvnpDKRupZPpKJRxeJMKrIs6.jpg" + i,  // 임의
+                    "still1.jpg" + i,   // 임의
+                    "줄거리 진짜진짜 재밌고요" + i,       // 임의
+                    "1234",                 // 임의
+                    "1234"                  // 임의
+            );
+
+            // 5) DB에 저장
+            movieJpaRepository.save(dummyMovie);
+        }
+
+        // 필요 시 flush / clear 처리
+
+
+
+
+
         Movie movie1 = movieJpaRepository.save(new Movie(null,
                 "이처럼 사소한 것들", "M0001", "감독 1", "15세이상관람가", "120",
                 "20240510", "액션", "제작사 1",
@@ -450,5 +493,20 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 seatRepository.save(seat);
             }
         }
+    }
+
+    /**
+     * 숫자를 한글(가~힣) 1글자 이상으로 변환하는 "Base 11172" 함수
+     */
+    private String toHangulBase(int num) {
+        StringBuilder sb = new StringBuilder();
+        while (num > 0) {
+            num--;
+            int remainder = num % 11172;
+            char c = (char) (0xAC00 + remainder);
+            sb.insert(0, c);
+            num /= 11172;
+        }
+        return sb.toString();
     }
 }
