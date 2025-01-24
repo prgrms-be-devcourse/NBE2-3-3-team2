@@ -10,7 +10,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI()
+        return new OpenAPI().openapi("3.0.3")
                 .info(apiInfo());
     }
 
@@ -18,7 +18,7 @@ public class SwaggerConfig {
 
         return new Info()
                 .title("LetMovie")
-                .description("2차 프로젝트")
+                .description("영화관 웹 플랫폼 프로젝트")
                 .title("v1");
     }
 }
