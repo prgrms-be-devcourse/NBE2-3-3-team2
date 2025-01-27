@@ -35,6 +35,8 @@ public class MovieServiceImpl {
     // Status별 영화 가져오기 + 개수 제한
     @Cacheable(value = "movies_by_status_limited", key = "#status.name() + '-' + #limit")
     public List<Movie> getMoviesByStatusWithLimit(Status status, int limit) {
+        // 페이징 처리를 하는 이유는 효율성 때문
+        // findAll을 한 후에 20개 제한을 걸어버리면 리소스 낭비
         Pageable pageable = PageRequest.of(0, limit);
         return movieJpaRepository.findByStatus(status, pageable).getContent();
     }

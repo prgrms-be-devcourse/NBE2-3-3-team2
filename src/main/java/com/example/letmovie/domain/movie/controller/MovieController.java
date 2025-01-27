@@ -44,6 +44,7 @@ public class MovieController {
 //        return "home";
 //    }
 
+    // 전체 영화를 뿌리던 기존 방식에서 영화의 상태 별로 개수 제한을 두어 뿌리는 식으로 변경
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
         long startTime = System.currentTimeMillis();
