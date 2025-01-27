@@ -74,6 +74,22 @@ public class AdminMovieController {
         return "admin_movie_modify";
     }
 
+    // /admin/movie/modify/idsearch : 영화 수정 첫화면
+    @GetMapping("/movie/modify/idsearch")
+    public String modifyMovieIdSearch(@RequestParam("movieNm") String movieNm, Model model) {
+        try {
+            List<Movie> movies = adminService.findMovieByName(movieNm);
+            if (movies != null) {
+                model.addAttribute("movies", movies);
+            } else {
+                model.addAttribute("error", "해당 이름에 해당하는 영화가 없습니다.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
+        }
+        return "admin_movie_modify_idsearch";
+    }
+
     // /admin/movie/modify/search : 영화 수정 검색 이후 화면
     @GetMapping("/movie/modify/search")
     public String modifyMovieSearch(@RequestParam("movieId") Long movieId, Model model) {

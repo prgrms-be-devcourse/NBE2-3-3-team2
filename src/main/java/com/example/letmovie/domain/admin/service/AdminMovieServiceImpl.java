@@ -146,6 +146,11 @@ public class AdminMovieServiceImpl {
         return movies;
     }
 
+    public List<Movie> findMovieByName(String movieNm) {
+        List<Movie> movies = adminMovieJpaRepository.findMovieByName(movieNm);
+        return movies;
+    }
+
     public void addMovie(Movie movie) {
         // 기본값 설정
         movie.setId(null);

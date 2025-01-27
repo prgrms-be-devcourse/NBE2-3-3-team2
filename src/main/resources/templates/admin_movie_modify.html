@@ -58,6 +58,14 @@
         <button type="submit">조회</button>
     </form>
 
+    <!-- 검색 폼 -->
+    <h3>검색할 영화 이름를 입력하세요.</h3>
+    <form th:action="@{/admin/movie/modify/idsearch}" method="get">
+        <label for="movieNm" style="font-weight: bold;">영화 이름:</label>
+        <input type="text" id="movieNm" name="movieNm" required>
+        <button type="submit">조회</button>
+    </form>
+
 </main>
 
 </body>
