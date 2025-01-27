@@ -54,11 +54,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
     }
 
     @Override
-    @Transactional
     public void run(String... args) throws Exception {
-
-        // ALTER TABLE 쿼리 실행 -> full text 인덱스 강제로 넣어줌.
-        entityManager.createNativeQuery("ALTER TABLE movie ADD FULLTEXT INDEX idx_movie_name_fulltext (movie_name)").executeUpdate();
 
         Member member = Member.builder()
                 .nickname("홍길동")
