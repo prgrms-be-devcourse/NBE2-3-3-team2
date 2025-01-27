@@ -6,6 +6,7 @@ import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.reservation.dto.response.ReservationResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Reservation;
 import com.example.letmovie.domain.reservation.entity.ReservationSeat;
+import com.example.letmovie.domain.reservation.entity.ReservationStatus;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import com.example.letmovie.domain.reservation.repository.SeatRepository;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +38,21 @@ public class OptimisticLockReservationService {
 
     @Transactional
     public ReservationResponseDTO reservation(List<String> seatList, Long memberId, Long showtimeId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new); //전역 오류 핸들링으로 바꿔야 함.
-        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId).orElseThrow(ShowtimeNotFound::new);
+        Showtime showtime = showtimeRepository.findByIdWithOptimisticLock(showtimeId).orElseThrow(SeatNotFound::new);
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+
+        // 먼저 Reservation 생성
+        Reservation reservation = Reservation.builder()
+                .showTime(showtime)
+                .member(member)
+                .reservationSeats(new ArrayList<>())
+                .status(ReservationStatus.PENDING)
+                .reservationDate(LocalDateTime.now())
+                .totalSeats(seatList.size())
+                .build();
+
+        // Reservation을 먼저 저장
+        reservationRepository.save(reservation);
 
         List<ReservationSeat> reservationSeats = seatList.stream().map(seat -> {
             String[] split = seat.split("-");
@@ -44,18 +60,21 @@ public class OptimisticLockReservationService {
             int col = Integer.parseInt(split[1]);
 
             Long screenId = showtime.getScreen().getId();
-            Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId).orElseThrow(SeatNotFound::new);
+            Seat seatEntity = seatRepository.findByColAndRowAndScreenId(col, row, screenId)
+                    .orElseThrow(SeatNotFound::new);
 
-            if (!seatEntity.isAble()) {
+            if(!seatEntity.isAble()) {
                 char rowLabel = (char) ('A' + row - 1);
-                throw new SeatNotFound("좌석 " + rowLabel + "-" + col + "은 예매가 불가능합니다.");
+                throw new SeatNotFound("좌석 " + rowLabel  + "-" + col + "는 이미 선택된 좌석입니다.");
             }
 
-            return ReservationSeat.createReservationSeat(seatEntity, showtime);
+            ReservationSeat reservationSeat = ReservationSeat.createReservationSeat(seatEntity, showtime);
+            reservation.addReservationSeat(reservationSeat);
+
+            return reservationSeat;
         }).collect(Collectors.toList());
 
-        Reservation reservation = Reservation.createReservation(member, showtime, reservationSeats);
-        reservationRepository.save(reservation);
+        reservation.updateTotalPrice(reservationSeats.stream().mapToInt(ReservationSeat::getSeatPrice).sum());
 
         return new ReservationResponseDTO(
                 reservation.getId(),

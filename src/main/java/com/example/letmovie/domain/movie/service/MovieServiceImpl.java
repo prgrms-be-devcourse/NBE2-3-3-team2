@@ -33,7 +33,15 @@ public class MovieServiceImpl {
     // 검색 기능
     public List<Movie> searchMoviesByName(String query) {
 //        return movieJpaRepository.findByMovieNameStartingWithIgnoreCase(query);
-        return movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
+        long start = System.currentTimeMillis();
+
+        List<Movie> byMovieNameContainingIgnoreCase = movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("[인덱스 전/후 전체 영화 조회 시간(ms)] : " + (end - start));
+
+        return byMovieNameContainingIgnoreCase;
     }
 
     // 카테고리

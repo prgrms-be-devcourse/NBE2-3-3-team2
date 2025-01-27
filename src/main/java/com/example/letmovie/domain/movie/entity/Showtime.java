@@ -9,6 +9,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
+@Table(
+        name = "showtime",
+        indexes = {
+                @Index(name = "idx_movie_theater_date", columnList = "showtimeDate")
+        }
+)
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

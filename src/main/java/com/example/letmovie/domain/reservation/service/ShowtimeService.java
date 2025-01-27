@@ -24,14 +24,6 @@ public class ShowtimeService {
 
 
     /**
-     * 날짜로 showtime 객체 가져오기.
-     */
-    public List<Showtime> findShowTimesByDate(String date) {
-        return showtimeRepository.findByShowtimeDate(LocalDate.parse(date));
-    }
-
-
-    /**
      *  날짜로 영화 이름 가져오기.
      */
     public MovieNamesResponseDTO findMovieNameByDate(String date) {

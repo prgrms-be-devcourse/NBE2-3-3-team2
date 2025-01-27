@@ -15,8 +15,6 @@ import java.util.Optional;
 
 public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
 
-    List<Showtime> findByShowtimeDate(LocalDate showtimeDate);
-
     @Query("SELECT DISTINCT s.movie.movieName FROM Showtime s WHERE s.showtimeDate = :showtimeDate")
     List<String> findDistinctMovieNamesByDate(@Param("showtimeDate") LocalDate showtimeDate);
 

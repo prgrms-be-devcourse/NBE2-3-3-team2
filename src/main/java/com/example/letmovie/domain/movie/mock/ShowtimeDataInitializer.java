@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Profile("!test")
@@ -99,12 +100,10 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
 
 
-        // 2) 5만 건 Movie 데이터 추가 (제목이 전부 다르고, 한글로 시작)
-        for (int i = 1; i <= 10000; i++) {
+        for (int i = 1; i <= 100; i++) {
             // 1) 한글 "고유 문자열" 얻기 (가~힣 조합)
             String prefix = toHangulBase(i);
 
-            // 2) 최종 영화 제목 예: "가 영화 1", "각 영화 2", ...
             String title = prefix + " 영화입니당구리" + i;
 
             // 3) 영화 코드 (M00001 ~ M50000)
@@ -122,8 +121,8 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                     "장르",              // 임의(장르)
                     "제작사 " + i,       // 임의
                     Status.SHOW,        // 상영 상태
-                    "https://www.themoviedb.org/t/p/w1280/rajTvnpDKRupZPpKJRxeJMKrIs6.jpg" + i,  // 임의
-                    "still1.jpg" + i,   // 임의
+                    "h" + i,  // 임의
+                    "s" + i,   // 임의
                     "줄거리 진짜진짜 재밌고요" + i,       // 임의
                     "1234",                 // 임의
                     "1234"                  // 임의
@@ -134,10 +133,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         }
 
         // 필요 시 flush / clear 처리
-
-
-
-
 
         Movie movie1 = movieJpaRepository.save(new Movie(null,
                 "이처럼 사소한 것들", "M0001", "감독 1", "15세이상관람가", "120",
@@ -346,7 +341,20 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "20240901", "코미디", "제작사 4",
                 Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
 
-// Showtime 데이터 추가
+        List<Movie> all = movieJpaRepository.findAll();
+        for (Movie movie : all) {
+            showtimeRepository.save(Showtime.builder()
+                    .id(null)
+                    .screen(screen1)
+                    .movie(movie)
+                    .showtimeDate(LocalDate.of(2025, 1, 30))
+                    .showtimeTime(LocalTime.of(23, 30))
+                    .totalSeats(100)
+                    .remainingSeats(100)
+                    .build());
+        }
+
+
         showtimeRepository.save(Showtime.builder()
                 .id(null)
                 .screen(screen1)

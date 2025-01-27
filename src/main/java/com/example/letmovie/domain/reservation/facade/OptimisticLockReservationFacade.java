@@ -14,13 +14,8 @@ import java.util.List;
 public class OptimisticLockReservationFacade {
     private final OptimisticLockReservationService optimisticLockReservationService;
 
-    /**
-     * 시도횟수는 맞음 300개임 -> 100명에 3번씩
-     *
-     */
-
     public void reservation(List<String> seatList, Long memberId, Long showtimeId) throws InterruptedException {
-        int maxRetries = 2; // 최대 재시도 횟수
+        int maxRetries = 1; // 최대 재시도 횟수
         int attempt = 0;
 
         while (attempt < maxRetries) {
@@ -29,7 +24,7 @@ public class OptimisticLockReservationFacade {
                 return;
             } catch (Exception e) {
                 attempt++;
-                log.info("시도 횟수 = {} : ",attempt);
+                log.info("시도 횟수 = {}",attempt);
                 if (attempt >= maxRetries) {
                     throw new RuntimeException("최대 재시도 횟수를 초과했습니다. : " + e.getMessage());
                 }

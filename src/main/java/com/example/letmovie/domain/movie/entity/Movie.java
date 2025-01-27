@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(
+        name = "movie",
+        indexes = {
+                @Index(name = "idx_movie_title", columnList = "movieName")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
