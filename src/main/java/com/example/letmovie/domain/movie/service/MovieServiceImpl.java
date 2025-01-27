@@ -32,6 +32,13 @@ public class MovieServiceImpl {
         return movieJpaRepository.findAll();
     }
 
+    // Status별 영화 가져오기 + 개수 제한
+    @Cacheable(value = "movies_by_status_limited", key = "#status.name() + '-' + #limit")
+    public List<Movie> getMoviesByStatusWithLimit(Status status, int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return movieJpaRepository.findByStatus(status, pageable).getContent();
+    }
+
     public Movie getMovieById(int movieId) {
         return movieJpaRepository.findById(movieId).orElse(null);
     }

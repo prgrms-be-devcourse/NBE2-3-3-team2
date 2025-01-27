@@ -28,18 +28,37 @@ public class MovieController {
     private final MovieServiceImpl movieService;
     private final ReviewServiceImpl reviewService;
 
-    // home page
+//    // home page
+//    @GetMapping({"/", "/private"})
+//    public String homePage(Model model) {
+//
+//        long startTime = System.currentTimeMillis(); // 시작 시간
+//
+//        List<Movie> movies = movieService.getAllMovies();
+//        model.addAttribute("movies", movies);
+//
+//        long endTime = System.currentTimeMillis(); // 종료 시간
+//
+//        log.info("전체 영화 로딩 - time : {} ms", (endTime - startTime));
+//
+//        return "home";
+//    }
+
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
+        long startTime = System.currentTimeMillis();
 
-        long startTime = System.currentTimeMillis(); // 시작 시간
+        // 영화 데이터를 Status별로 개수를 제한하여 가져옴
+        List<Movie> recommendMovies = movieService.getMoviesByStatusWithLimit(Status.RECOMMEND, 20);
+        List<Movie> boxOfficeMovies = movieService.getMoviesByStatusWithLimit(Status.SHOW, 20);
+        List<Movie> upcomingMovies = movieService.getMoviesByStatusWithLimit(Status.PREV, 20);
 
-        List<Movie> movies = movieService.getAllMovies();
-        model.addAttribute("movies", movies);
+        model.addAttribute("recommendMovies", recommendMovies);
+        model.addAttribute("boxOfficeMovies", boxOfficeMovies);
+        model.addAttribute("upcomingMovies", upcomingMovies);
 
-        long endTime = System.currentTimeMillis(); // 종료 시간
-
-        log.info("전체 영화 로딩 - time : {} ms", (endTime - startTime));
+        long endTime = System.currentTimeMillis();
+        log.info("홈 페이지 영화 로딩 - time: {} ms", (endTime - startTime));
 
         return "home";
     }

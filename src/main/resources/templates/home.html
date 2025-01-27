@@ -30,7 +30,7 @@
         <div class="position-relative overflow-hidden" id="featured-movie-wrapper">
             <div id="featured-movie-container" class="d-flex">
                 <div class="card w-100"
-                     th:each="movie : ${movies}"
+                     th:each="movie : ${recommendMovies}"
                      th:if="${movie.status.name() == 'RECOMMEND'}">
                     <div class="position-relative">
                         <!-- 스틸 이미지 -->
@@ -74,7 +74,7 @@
                 <div class="carousel-wrapper">
                     <!-- 영화 카드 반복 (Status.SHOW) -->
                     <div class="col-md-3 mb-4"
-                         th:each="movie : ${movies}"
+                         th:each="movie : ${boxOfficeMovies}"
                          th:if="${movie.status.name() == 'SHOW' || movie.status.name() == 'RECOMMEND'}">
                         <div class="card h-100 position-relative">
                             <!-- 등급 아이콘 -->
@@ -118,7 +118,7 @@
                 <div class="carousel-wrapper">
                     <!-- 영화 카드 반복 (Status.PREV) -->
                     <div class="col-md-3 mb-4"
-                         th:each="movie : ${movies}"
+                         th:each="movie : ${upcomingMovies}"
                          th:if="${movie.status.name() == 'PREV'}">
                         <div class="card h-100 position-relative">
                             <!-- 등급 아이콘 -->
