@@ -341,26 +341,26 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "20240901", "코미디", "제작사 4",
                 Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
 
-        List<Movie> all = movieJpaRepository.findAll();
-        for (Movie movie : all) {
-            showtimeRepository.save(Showtime.builder()
-                    .id(null)
-                    .screen(screen1)
-                    .movie(movie)
-                    .showtimeDate(LocalDate.of(2025, 1, 30))
-                    .showtimeTime(LocalTime.of(23, 30))
-                    .totalSeats(100)
-                    .remainingSeats(100)
-                    .build());
-        }
+//        List<Movie> all = movieJpaRepository.findAll();
+//        for (Movie movie : all) {
+//            showtimeRepository.save(Showtime.builder()
+//                    .id(null)
+//                    .screen(screen1)
+//                    .movie(movie)
+//                    .showtimeDate(LocalDate.of(2025, 1, 30))
+//                    .showtimeTime(LocalTime.of(0, 10))
+//                    .totalSeats(100)
+//                    .remainingSeats(100)
+//                    .build());
+//        }
 
 
         showtimeRepository.save(Showtime.builder()
                 .id(null)
                 .screen(screen1)
                 .movie(movie1)
-                .showtimeDate(LocalDate.of(2025, 1, 28))
-                .showtimeTime(LocalTime.of(23, 30))
+                .showtimeDate(LocalDate.of(2025, 1, 29))
+                .showtimeTime(LocalTime.of(0, 30))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());
@@ -369,8 +369,8 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .id(null)
                 .screen(screen1)
                 .movie(movie2)
-                .showtimeDate(LocalDate.of(2025, 1, 26))
-                .showtimeTime(LocalTime.of(8, 30))
+                .showtimeDate(LocalDate.of(2025, 1, 30))
+                .showtimeTime(LocalTime.of(0, 30))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());

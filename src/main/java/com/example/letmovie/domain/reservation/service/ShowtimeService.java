@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,18 +46,18 @@ public class ShowtimeService {
      */
     public List<ShowTimeResponseDTO> findShowtimeByDateAndMovieNameAndTheater(String movieName, String date, String theaterName) {
         LocalDate showtimeDate = LocalDate.parse(date);
-        LocalTime currentTime = LocalTime.now(); // 현재 시간
+        boolean isToday = showtimeDate.equals(LocalDate.now());
 
-        List<Showtime> showtimes = showtimeRepository.findShowtimesByMovieAndDateAndTheater(theaterName, movieName, showtimeDate, currentTime);
+        List<Showtime> showtimes = showtimeRepository.findShowtimesByMovieAndDateAndTheater(theaterName, movieName, showtimeDate, isToday);
 
         return showtimes.stream()
                 .map(showtime -> new ShowTimeResponseDTO(
-                        showtime.getScreen().getTheater().getTheaterName(),       // 극장이름
-                        showtime.getScreen().getScreenName(),                    // 상영관 이름
-                        String.valueOf(showtime.getTotalSeats()),    // 상영관 전체 좌석
-                        String.valueOf(showtime.getRemainingSeats()), // 상영관 예약 가능 좌석
-                        showtime.getShowtimeTime().toString(),                   // 상영 시작 시간
-                        String.valueOf(showtime.getId())                         // 쇼타임 ID
+                        showtime.getScreen().getTheater().getTheaterName(),
+                        showtime.getScreen().getScreenName(),
+                        showtime.getTotalSeats(),
+                        showtime.getRemainingSeats(),
+                        showtime.getShowtimeTime().toString(),
+                        showtime.getId()
                 ))
                 .toList();
     }
