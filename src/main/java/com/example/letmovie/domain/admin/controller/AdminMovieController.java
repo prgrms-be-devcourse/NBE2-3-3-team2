@@ -3,6 +3,9 @@ package com.example.letmovie.domain.admin.controller;
 import com.example.letmovie.domain.admin.service.AdminMovieServiceImpl;
 import com.example.letmovie.domain.movie.entity.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +22,27 @@ public class AdminMovieController {
 
 
     // /admin/movie : 영화목록
-    @GetMapping("/movie")
+    /*@GetMapping("/movie")
     public String movie(Model model) {
         List<Movie> movies = adminService.findAllMovies();
-        /*for(Movie movie : movies) {
-            System.out.println(movie);
-        }*/
+        //for(Movie movie : movies) {
+        //    System.out.println(movie);
+        //}
         model.addAttribute("movies", movies);
+        return "admin_movie";
+    }*/
+    @GetMapping("/movie")
+    public String movie(
+            @RequestParam(defaultValue = "1") int page, // 현재 페이지 (0부터 시작)
+            @RequestParam(defaultValue = "10") int size, // 페이지 크기
+            Model model) {
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<Movie> movies = adminService.findAllMovieswithPage(pageable);
+
+        model.addAttribute("movies", movies.getContent()); // 현재 페이지의 영화 목록
+        model.addAttribute("currentPage", page); // 현재 페이지 번호
+        model.addAttribute("totalPages", movies.getTotalPages()); // 총 페이지 수
+
         return "admin_movie";
     }
 
