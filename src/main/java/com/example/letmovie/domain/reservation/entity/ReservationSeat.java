@@ -7,7 +7,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationSeat {
@@ -61,4 +60,11 @@ public class ReservationSeat {
         this.reservation = reservation;
     }
 
+
+    @Builder
+    public ReservationSeat(Reservation reservation, Seat seat, int seatPrice) {
+        this.reservation = reservation;
+        this.seat = seat;
+        this.seatPrice = seatPrice;
+    }
 }

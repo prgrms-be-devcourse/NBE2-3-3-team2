@@ -92,10 +92,10 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         Theater theater3 = theaterRepository.save(Theater.builder().id(null).theaterName("용산 아이맥스").build());
 
         // Screen 데이터 추가
-        Screen screen1 = screenRepository.save(Screen.builder().id(null).theater(theater1).seats(new ArrayList<>()).screenName("1관").build());
-        Screen screen2 = screenRepository.save(Screen.builder().id(null).theater(theater1).seats(new ArrayList<>()).screenName("2관").build());
-        Screen screen3 = screenRepository.save(Screen.builder().id(null).theater(theater2).seats(new ArrayList<>()).screenName("3관").build());
-        Screen screen4 = screenRepository.save(Screen.builder().id(null).theater(theater3).seats(new ArrayList<>()).screenName("아이맥스관").build());
+        Screen screen1 = screenRepository.save(Screen.builder().theater(theater1).seats(new ArrayList<>()).screenName("1관").build());
+        Screen screen2 = screenRepository.save(Screen.builder().theater(theater1).seats(new ArrayList<>()).screenName("2관").build());
+        Screen screen3 = screenRepository.save(Screen.builder().theater(theater2).seats(new ArrayList<>()).screenName("3관").build());
+        Screen screen4 = screenRepository.save(Screen.builder().theater(theater3).seats(new ArrayList<>()).screenName("아이맥스관").build());
 
 
 
@@ -356,67 +356,60 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen1)
                 .movie(movie1)
-                .showtimeDate(LocalDate.of(2025, 1, 29))
+                .showtimeDate(LocalDate.of(2025, 2, 1))
                 .showtimeTime(LocalTime.of(0, 30))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen1)
                 .movie(movie2)
-                .showtimeDate(LocalDate.of(2025, 1, 30))
+                .showtimeDate(LocalDate.of(2025, 2, 6))
                 .showtimeTime(LocalTime.of(0, 30))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen1)
                 .movie(movie3)
-                .showtimeDate(LocalDate.of(2025, 1, 31))
+                .showtimeDate(LocalDate.of(2025, 2, 6))
                 .showtimeTime(LocalTime.of(11, 0))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen1)
                 .movie(movie4)
-                .showtimeDate(LocalDate.of(2025, 1, 30))
+                .showtimeDate(LocalDate.of(2025, 2, 3))
                 .showtimeTime(LocalTime.of(13, 0))
                 .totalSeats(100)
                 .remainingSeats(100)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen2)
                 .movie(movie8)
-                .showtimeDate(LocalDate.of(2025, 1, 29))
+                .showtimeDate(LocalDate.of(2025, 2, 4))
                 .showtimeTime(LocalTime.of(12, 0))
                 .totalSeats(32)
                 .remainingSeats(32)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen2)
                 .movie(movie8)
-                .showtimeDate(LocalDate.of(2025, 1, 28))
+                .showtimeDate(LocalDate.of(2025, 2, 2))
                 .showtimeTime(LocalTime.of(14, 0))
                 .totalSeats(32)
                 .remainingSeats(32)
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen3)
                 .movie(movie8)
                 .showtimeDate(LocalDate.of(2025, 1, 24))
@@ -426,7 +419,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen3)
                 .movie(movie8)
                 .showtimeDate(LocalDate.of(2025, 1, 27))
@@ -436,7 +428,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen4)
                 .movie(movie9)
                 .showtimeDate(LocalDate.of(2025, 1, 26))
@@ -446,7 +437,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen4)
                 .movie(movie9)
                 .showtimeDate(LocalDate.of(2024, 1, 25))
@@ -456,7 +446,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen1)
                 .movie(movie5)
                 .showtimeDate(LocalDate.of(2025, 1, 26))
@@ -466,7 +455,6 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 .build());
 
         showtimeRepository.save(Showtime.builder()
-                .id(null)
                 .screen(screen4)
                 .movie(movie5)
                 .showtimeDate(LocalDate.of(2025, 1, 26))
@@ -490,15 +478,14 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
+
+
             }
         }
     }

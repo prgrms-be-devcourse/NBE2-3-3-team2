@@ -22,6 +22,7 @@ import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.global.exception.exceptionClass.reservation.SeatNotFound;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.SetType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,10 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -115,16 +113,13 @@ public class ReservationServiceTest {
         for (int row = 1; row <= rows; row++) {
             for (int col = 1; col <= cols; col++) {
                 boolean isAble = !(row == 6 && col == 2); // 특정 좌석 비활성화
-                int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
+                int price = (row > 9) ? SeatType.VIP.getPrice() : SeatType.REGULAR.getPrice(); // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
             }
@@ -186,21 +181,20 @@ public class ReservationServiceTest {
         int cols = 10;
         for (int row = 1; row <= rows; row++) {
             for (int col = 1; col <= cols; col++) {
-                boolean isAble = !(row == 1 && col == 1); // 특정 좌석 비활성화
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(isAble)
                         .price(price).build();
                 seatRepository.save(seat);
             }
         }
+        Seat findSeat = seatRepository.findByColAndRowAndSeat(1, 1).orElseThrow();
+        findSeat.setAble(false);
+        seatRepository.save(findSeat);
 
         Showtime showTime = showtimeRepository.save(Showtime.builder()
                 .screen(screen)
@@ -255,13 +249,10 @@ public class ReservationServiceTest {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(isAble)
                         .price(price).build();
                 seatRepository.save(seat);
             }
@@ -324,13 +315,10 @@ public class ReservationServiceTest {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
             }
@@ -403,13 +391,10 @@ public class ReservationServiceTest {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
             }
@@ -491,13 +476,10 @@ public class ReservationServiceTest {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
             }
@@ -581,13 +563,10 @@ public class ReservationServiceTest {
                 int price = (row > 9) ? 20000 : 10000; // VIP와 REGULAR 가격 분리
                 SeatType seatType = (row > 9) ? SeatType.VIP : SeatType.REGULAR; // VIP와 REGULAR 가격 분리
                 Seat seat = Seat.builder()
-                        .id(null)
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price).build();
                 seatRepository.save(seat);
             }

@@ -120,7 +120,6 @@ public class ReservationTimeServiceTest {
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price)
                         .build();
                 seatRepository.save(seat);
@@ -230,7 +229,6 @@ public class ReservationTimeServiceTest {
                         .seatType(seatType)
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(price)
                         .build();
                 seatRepository.save(seat);
@@ -334,11 +332,9 @@ public class ReservationTimeServiceTest {
             for (int col = 1; col <= cols; col++) {
                 Seat seat = Seat.builder()
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(SeatType.REGULAR) // 예시로 전부 REGULAR
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(10000)
                         .build();
                 seatRepository.save(seat);
@@ -454,11 +450,9 @@ public class ReservationTimeServiceTest {
             for (int col = 1; col <= cols; col++) {
                 Seat seat = Seat.builder()
                         .screen(screen)
-                        .reservationSeats(new ArrayList<>())
                         .seatType(SeatType.REGULAR) // 예시로 전부 REGULAR
                         .seatLow(row)
                         .seatCol(col)
-                        .isAble(true)
                         .price(10000)
                         .build();
                 seatRepository.save(seat);

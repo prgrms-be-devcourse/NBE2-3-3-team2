@@ -42,7 +42,6 @@ public class OptimisticLockReservationService {
         Reservation reservation = Reservation.builder()
                 .showTime(showtime)
                 .member(member)
-                .reservationSeats(new ArrayList<>())
                 .status(ReservationStatus.PENDING)
                 .reservationDate(LocalDateTime.now())
                 .totalSeats(seatList.size())
