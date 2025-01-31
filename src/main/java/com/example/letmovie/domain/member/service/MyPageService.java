@@ -50,7 +50,7 @@ public class MyPageService {
         }
 
         String encodedPassword = passwordEncoder.encode(newPassword);
-        member.setPassword(encodedPassword);
+        member.updatePassword(encodedPassword);
 
         memberRepository.save(member);
         return true;
