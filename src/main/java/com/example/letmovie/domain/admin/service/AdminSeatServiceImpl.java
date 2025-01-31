@@ -39,7 +39,6 @@ public class AdminSeatServiceImpl {
                         .seatLow(row)
                         .seatCol(col)
                         .seatType(SeatType.REGULAR)
-                        .isAble(true)
                         .price(10000)
                         .build();
                 adminSeatRepository.save(seat);

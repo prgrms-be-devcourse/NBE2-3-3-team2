@@ -7,7 +7,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReservationSeat {
@@ -42,9 +41,8 @@ public class ReservationSeat {
         ReservationSeat reservationSeat = ReservationSeat.builder()
                 .seatPrice(seat.getPrice())
                 .build();
-        reservationSeat.setSeat(seat); //동시성 발생!
+        reservationSeat.setSeat(seat);
 
-        //seat 감소 로직 동시성 발생!
         showtime.removeSeats(1);
 
         return reservationSeat;
@@ -62,4 +60,11 @@ public class ReservationSeat {
         this.reservation = reservation;
     }
 
+
+    @Builder
+    public ReservationSeat(Reservation reservation, Seat seat, int seatPrice) {
+        this.reservation = reservation;
+        this.seat = seat;
+        this.seatPrice = seatPrice;
+    }
 }

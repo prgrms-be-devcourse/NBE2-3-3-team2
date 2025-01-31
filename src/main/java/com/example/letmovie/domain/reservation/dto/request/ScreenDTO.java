@@ -1,4 +1,4 @@
-package com.example.letmovie.domain.reservation.dto;
+package com.example.letmovie.domain.reservation.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

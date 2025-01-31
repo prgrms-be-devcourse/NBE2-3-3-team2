@@ -10,7 +10,6 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Showtime {
@@ -43,9 +42,6 @@ public class Showtime {
     @NotNull
     private int remainingSeats;
 
-    /**
-     * 낙관적 락 테스트
-     */
     @Version
     private int version;
 
@@ -55,7 +51,6 @@ public class Showtime {
     public void removeSeats(int lose){
         int restSeats = remainingSeats-lose;
         if(restSeats < 0){
-//            throw new NotEnoughStockException("need more stock", remainingSeats);
             throw new IllegalStateException("좌석이 부족합니다 남은좌석 :" + remainingSeats );
         }
         remainingSeats = restSeats;
@@ -69,5 +64,15 @@ public class Showtime {
             throw new IllegalStateException("총 좌석 수를 초과할 수 없습니다.");
         }
         remainingSeats += add;
+    }
+
+    @Builder
+    public Showtime(Screen screen, Movie movie, LocalDate showtimeDate, LocalTime showtimeTime, int totalSeats, int remainingSeats) {
+        this.screen = screen;
+        this.movie = movie;
+        this.showtimeDate = showtimeDate;
+        this.showtimeTime = showtimeTime;
+        this.totalSeats = totalSeats;
+        this.remainingSeats = remainingSeats;
     }
 }
