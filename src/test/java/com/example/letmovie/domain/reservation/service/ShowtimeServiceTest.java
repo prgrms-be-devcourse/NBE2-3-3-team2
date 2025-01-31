@@ -46,12 +46,16 @@ public class ShowtimeServiceTest {
     @Autowired
     private TheaterRepository theaterRepository;
 
+    @Autowired
+    private MovieJpaRepository movieRepository;
+
 
     @AfterEach
     void clean(){
         showtimeRepository.deleteAll();
+        screenRepository.deleteAll();
         theaterRepository.deleteAll();
-        movieJpaRepository.deleteAll();
+        movieRepository.deleteAll();
     }
 
     @Test

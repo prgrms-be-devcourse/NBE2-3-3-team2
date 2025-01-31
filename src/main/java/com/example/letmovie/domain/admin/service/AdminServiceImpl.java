@@ -2,13 +2,12 @@ package com.example.letmovie.domain.admin.service;
 
 import com.example.letmovie.domain.admin.repository.*;
 import com.example.letmovie.domain.member.entity.Member;
-import com.example.letmovie.domain.movie.dto.ShowtimeDTO;
 import com.example.letmovie.domain.movie.dto.TheaterDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Showtime;
 import com.example.letmovie.domain.movie.entity.Theater;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
-import com.example.letmovie.domain.reservation.dto.ScreenDTO;
+import com.example.letmovie.domain.reservation.dto.request.ScreenDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.entity.SeatType;

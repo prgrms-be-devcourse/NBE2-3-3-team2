@@ -5,6 +5,7 @@ import com.example.letmovie.domain.movie.entity.Theater;
 import com.example.letmovie.domain.reservation.dto.response.MovieNamesResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
+import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.repository.ShowtimeQueryRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -66,4 +69,35 @@ public class ShowtimeService {
     public Optional<Showtime> findById(Long id) {
         return showtimeRepository.findById(id);
     }
+
+    /**
+     * 좌석 리스트를 행(A, B, C...)별로 그룹화하는 메서드.
+     */
+    public Map<String, List<Seat>> convertSeatsToRowMap(List<Seat> seats) {
+        if (seats == null || seats.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        // 최대 행 계산
+        int maxRow = seats.stream()
+                .mapToInt(Seat::getSeatLow) // seatLow 값 추출
+                .max() // 가장 큰 값 찾기
+                .orElse(0);
+
+        // rows를 알파벳 리스트로 변환 ["A", "B", "C", ...]
+        List<String> rowLabels = IntStream.rangeClosed(0, maxRow - 1)
+                .mapToObj(i -> String.valueOf((char) ('A' + i))) // 숫자를 A, B, C로 변환
+                .collect(Collectors.toList());
+
+        // Map<String, List<Seat>> 구조로 변환
+        return rowLabels.stream()
+                .collect(Collectors.toMap(
+                        row -> row, // 키: A, B, C, ...
+                        row -> seats.stream()
+                                .filter(seat -> seat.getSeatLow() == row.charAt(0) - 'A' + 1) // 예: seatLow = 1 → "A"
+                                .collect(Collectors.toList())
+                ));
+    }
+
+
 }

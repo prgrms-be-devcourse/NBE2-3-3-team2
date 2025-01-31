@@ -42,9 +42,8 @@ public class ReservationSeat {
         ReservationSeat reservationSeat = ReservationSeat.builder()
                 .seatPrice(seat.getPrice())
                 .build();
-        reservationSeat.setSeat(seat); //동시성 발생!
+        reservationSeat.setSeat(seat);
 
-        //seat 감소 로직 동시성 발생!
         showtime.removeSeats(1);
 
         return reservationSeat;

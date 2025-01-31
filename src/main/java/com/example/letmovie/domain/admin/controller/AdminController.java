@@ -6,7 +6,7 @@ import com.example.letmovie.domain.movie.dto.TheaterDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Theater;
 import com.example.letmovie.domain.payment.entity.PaymentHistory;
-import com.example.letmovie.domain.reservation.dto.ScreenDTO;
+import com.example.letmovie.domain.reservation.dto.request.ScreenDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.entity.SeatType;
