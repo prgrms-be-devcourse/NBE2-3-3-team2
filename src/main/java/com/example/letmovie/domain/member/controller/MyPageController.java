@@ -57,12 +57,6 @@ public class MyPageController {
             return ResponseEntity.badRequest().body("현재 비밀번호가 올바르지 않습니다.");
         }
 
-        // 비밀번호 변경에 성공 시, 보안을 위해 Spring Security에서 자동으로 로그아웃 후 로그인 페이지로 리다이렉트 함
-        // 이를 방지하기 위해 SecurityContextHolder에 저장된 Authentication 객체를 새로 설정
-        // 했는데도 인증에서 인증 값이 null 으로 로그인 페이지로 빠짐 TODO 추후 해당 사항 수정
-        // Cookie accessTokenCookie = authService.updateNewAuthentication();
-        // response.addCookie(accessTokenCookie);
-
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 

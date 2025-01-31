@@ -11,10 +11,6 @@ public abstract class LetMovieException extends RuntimeException {
 
     private final Map<String,String> validation = new HashMap<>();
 
-    public LetMovieException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public LetMovieException(String message) {
         super(message);
     }

@@ -18,6 +18,11 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
                                    @Param("seatLow") int seatLow,
                                    @Param("screenId") Long screenId);
 
+    @Query("SELECT s " +
+            "FROM Seat s " +
+            "WHERE s.seatCol = :seatCol AND s.seatLow = :seatLow")
+    Optional<Seat> findByColAndRowAndSeat(@Param("seatCol") int seatCol, @Param("seatLow") int seatLow);
+
     /**
      * 비관적 락 테스트
      */
