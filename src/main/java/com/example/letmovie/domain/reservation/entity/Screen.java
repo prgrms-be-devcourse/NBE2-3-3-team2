@@ -34,14 +34,6 @@ public class Screen {
     @NotNull
     private String screenName;
 
-    public void setId(@NotNull Long id) {
-        this.id = id;
-    }
-
-    public void setTheater(@NotNull Theater theater) {
-        this.theater = theater;
-    }
-
     public void setScreenName(@NotNull String screenName) {
         this.screenName = screenName;
     }

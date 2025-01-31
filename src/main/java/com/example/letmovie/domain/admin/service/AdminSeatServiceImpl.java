@@ -2,6 +2,7 @@ package com.example.letmovie.domain.admin.service;
 
 import com.example.letmovie.domain.admin.repository.AdminScreenRepository;
 import com.example.letmovie.domain.admin.repository.AdminSeatRepository;
+import com.example.letmovie.domain.admin.repository.AdminShowtimeRepository;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.entity.SeatType;
@@ -18,6 +19,9 @@ public class AdminSeatServiceImpl {
 
     @Autowired
     private AdminSeatRepository adminSeatRepository;
+
+    @Autowired
+    private AdminShowtimeRepository adminShowtimeRepository;
 
     // 좌석
     public List<Screen> getAllScreens() {
@@ -70,6 +74,13 @@ public class AdminSeatServiceImpl {
     public void deleteAllSeatsByScreenId(Long screenId) {
         Screen screen = adminScreenRepository.findById(screenId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid screen ID"));
+
+        // showtime 테이블에서 해당 screenId가 존재하는지 확인
+        boolean hasShowtime = adminShowtimeRepository.existsByScreenId(screenId);
+        if (hasShowtime) {
+            throw new IllegalStateException("해당 상영관에 상영 시간이 존재하여 좌석을 삭제할 수 없습니다.");
+        }
+
         adminSeatRepository.deleteByScreen(screen);
     }
 }
