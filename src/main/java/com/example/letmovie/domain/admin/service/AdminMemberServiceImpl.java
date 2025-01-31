@@ -33,10 +33,10 @@ public class AdminMemberServiceImpl {
         System.out.println("nickname : " + member.getNickname());
         System.out.println("nickname : " + member.getGrade());
         System.out.println("nickname : " + member.getMemberStatus());
-        existingMember.setNickname(member.getNickname());
+        existingMember.updateNickname(member.getNickname());
 
-        existingMember.setGrade(member.getGrade());
-        existingMember.setMemberStatus(member.getMemberStatus());
+        existingMember.changeGrade(member.getGrade());
+        existingMember.changeStatus(member.getMemberStatus());
 
         adminMemberRepository.save(existingMember);
     }
