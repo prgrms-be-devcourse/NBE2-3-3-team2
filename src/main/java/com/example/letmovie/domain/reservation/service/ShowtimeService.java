@@ -5,6 +5,7 @@ import com.example.letmovie.domain.movie.entity.Theater;
 import com.example.letmovie.domain.reservation.dto.response.MovieNamesResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
+import com.example.letmovie.domain.reservation.repository.ShowtimeQueryRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class ShowtimeService {
 
     private final ShowtimeRepository showtimeRepository;
-
+    private final ShowtimeQueryRepository showtimeQueryRepository;
 
     /**
      *  날짜로 영화 이름 가져오기.
@@ -48,7 +49,7 @@ public class ShowtimeService {
         LocalDate showtimeDate = LocalDate.parse(date);
         boolean isToday = showtimeDate.equals(LocalDate.now());
 
-        List<Showtime> showtimes = showtimeRepository.findShowtimesByMovieAndDateAndTheater(theaterName, movieName, showtimeDate, isToday);
+        List<Showtime> showtimes = showtimeQueryRepository.findShowtimesByMovieNameAndShowtimeDateAndTheaterName(theaterName, movieName, showtimeDate, isToday);
 
         return showtimes.stream()
                 .map(showtime -> new ShowTimeResponseDTO(

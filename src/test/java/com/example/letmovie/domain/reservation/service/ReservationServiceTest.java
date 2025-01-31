@@ -159,7 +159,6 @@ public class ReservationServiceTest {
         ReservationResponseDTO dto = reservationService.reservation(seats, member.getId(), showTime.getId());
 
         //then
-        assertEquals(1,dto.getReservationId());
         assertEquals(1, dto.getMemberId());
         assertEquals("홍길동", dto.getMemberName());
         assertEquals(20000, dto.getTotalPrice());

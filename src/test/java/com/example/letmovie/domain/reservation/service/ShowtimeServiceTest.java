@@ -161,8 +161,8 @@ public class ShowtimeServiceTest {
         assertEquals(1, showtimeRepository.count());
         assertEquals("제주 cgv", dto.get(0).getTheaterName());
         assertEquals("1관", dto.get(0).getScreenName());
-        assertEquals(200, Integer.parseInt(dto.get(0).getScreenTotalSeat()));
-        assertEquals(200, Integer.parseInt(dto.get(0).getScreenRemainSeat()));
+        assertEquals(200, dto.get(0).getScreenTotalSeat());
+        assertEquals(200, dto.get(0).getScreenRemainSeat());
         assertEquals("12:00", dto.get(0).getShowtime());
     }
 }

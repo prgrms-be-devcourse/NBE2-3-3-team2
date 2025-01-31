@@ -100,7 +100,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
 
 
 
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 10; i++) {
             // 1) 한글 "고유 문자열" 얻기 (가~힣 조합)
             String prefix = toHangulBase(i);
 
