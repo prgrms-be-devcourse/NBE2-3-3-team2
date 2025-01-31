@@ -1,10 +1,14 @@
 package com.example.letmovie.domain.movie.controller;
 
+import com.example.letmovie.domain.movie.dto.MoviePageDTO;
 import com.example.letmovie.domain.movie.dto.ReviewDTO;
 import com.example.letmovie.domain.movie.entity.Movie;
+import com.example.letmovie.domain.movie.entity.Status;
 import com.example.letmovie.domain.movie.service.MovieServiceImpl;
 import com.example.letmovie.domain.movie.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,20 +17,49 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class MovieController {
 
     private final MovieServiceImpl movieService;
     private final ReviewServiceImpl reviewService;
 
-    // home page
+//    // home page
+//    @GetMapping({"/", "/private"})
+//    public String homePage(Model model) {
+//
+//        long startTime = System.currentTimeMillis(); // 시작 시간
+//
+//        List<Movie> movies = movieService.getAllMovies();
+//        model.addAttribute("movies", movies);
+//
+//        long endTime = System.currentTimeMillis(); // 종료 시간
+//
+//        log.info("전체 영화 로딩 - time : {} ms", (endTime - startTime));
+//
+//        return "home";
+//    }
+
+    // 전체 영화를 뿌리던 기존 방식에서 영화의 상태 별로 개수 제한을 두어 뿌리는 식으로 변경
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
+        long startTime = System.currentTimeMillis();
 
-        List<Movie> movies = movieService.getAllMovies();
-        model.addAttribute("movies", movies);
+        // 영화 데이터를 Status별로 개수를 제한하여 가져옴
+        List<Movie> recommendMovies = movieService.getMoviesByStatusWithLimit(Status.RECOMMEND, 20);
+        List<Movie> boxOfficeMovies = movieService.getMoviesByStatusWithLimit(Status.SHOW, 20);
+        List<Movie> upcomingMovies = movieService.getMoviesByStatusWithLimit(Status.PREV, 20);
+
+        model.addAttribute("recommendMovies", recommendMovies);
+        model.addAttribute("boxOfficeMovies", boxOfficeMovies);
+        model.addAttribute("upcomingMovies", upcomingMovies);
+
+        long endTime = System.currentTimeMillis();
+        log.info("홈 페이지 영화 로딩 - time: {} ms", (endTime - startTime));
 
         return "home";
     }
@@ -43,105 +76,74 @@ public class MovieController {
         return "movie_detail";
     }
 
-
-//    // 전체 영화 페이지
-//    @GetMapping("/movie/total_movie")
-//    public String totalMovie(@RequestParam(required = false) String query, Model model) {
-//        if (query != null && !query.isEmpty()) {
-//            List<Movie> movies = movieService.searchMoviesByName(query);
-//            model.addAttribute("movies", movies);
-//        } else {
-//            List<Movie> movies = movieService.getAllMovies();
-//            model.addAttribute("movies", movies);
-//        }
-//        return "total_movie";
-//    }
-
-//    // 카테고리별 영화 페이지
-//    @GetMapping("/movies")
-//    public String moviesByCategory(@RequestParam(defaultValue = "ALL") String category, Model model) {
-//        List<Movie> movies;
-//
-//        // 카테고리별 영화 필터링
-//        switch (category.toUpperCase()) {
-//            case "RECOMMEND":
-//                movies = movieService.getMoviesByStatus("RECOMMEND");
-//                break;
-//            case "PREV":
-//                movies = movieService.getMoviesByStatus("PREV");
-//                break;
-//            default: // "ALL"
-//                movies = movieService.getAllMovies();
-//        }
-//
-//        model.addAttribute("movies", movies);
-//        model.addAttribute("category", category.toUpperCase()); // 현재 카테고리
-//        return "total_movie";
-//    }
-
-//    @GetMapping("/movies")
-//    public String moviesByCategory(@RequestParam(defaultValue = "ALL") String category,
-//                                   @RequestParam(required = false) String query, Model model) {
-//        List<Movie> movies;
-//
-//        if (query != null && !query.isEmpty()) {
-//            // 검색어가 있을 경우 이름으로 검색
-//            movies = movieService.searchMoviesByName(query);
-//            model.addAttribute("query", query); // 검색어 전달
-//        } else {
-//            // 카테고리별 영화 필터링
-//            switch (category.toUpperCase()) {
-//                case "RECOMMEND":
-//                    movies = movieService.getMoviesByStatus("RECOMMEND");
-//                    break;
-//                case "PREV":
-//                    movies = movieService.getMoviesByStatus("PREV");
-//                    break;
-//                default:
-//                    movies = movieService.getAllMovies();
-//            }
-//        }
-//
-//        model.addAttribute("movies", movies);
-//        model.addAttribute("category", category.toUpperCase());
-//        return "total_movie";
-//    }
-
-    // 영화 카테고리별 + 페이징(전체 영화 카테고리 에서만)
     @GetMapping({"/movies", "private/movies"})
     public String moviesByCategory(
             @RequestParam(defaultValue = "ALL") String category,
             @RequestParam(required = false) String query,
-            @RequestParam(defaultValue = "1") int page, // 페이지 번호
-            @RequestParam(defaultValue = "20") int size, // 페이지 크기
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int size,
             Model model) {
 
-        if (query != null && !query.isEmpty()) {
-            // 검색어가 있을 경우 이름으로 검색
-            List<Movie> movies = movieService.searchMoviesByName(query);
-            model.addAttribute("movies", movies);
-            model.addAttribute("query", query); // 검색어 전달
-        } else {
-            // 카테고리별 영화 필터링
-            Page<Movie> moviePage;
-            switch (category.toUpperCase()) {
-                case "RECOMMEND":
-                    moviePage = movieService.getMoviesByStatus("RECOMMEND", page, size);
-                    break;
-                case "PREV":
-                    moviePage = movieService.getMoviesByStatus("PREV", page, size);
-                    break;
-                default:
-                    moviePage = movieService.getPagedMovies(page, size);
-            }
+        long startTime = System.currentTimeMillis();
 
-            model.addAttribute("movies", moviePage.getContent());
-            model.addAttribute("totalPages", moviePage.getTotalPages());
-            model.addAttribute("page", page);
+        try { // 예외 처리 추가
+            if (query != null && !query.isBlank()) { // isBlank()로 빈 문자열 체크
+                // 검색 로직
+                List<Movie> movies = movieService.searchMoviesByName(query.strip()); // 공백 제거
+                model.addAttribute("movies", movies);
+                model.addAttribute("query", query);
+
+                log.info("영화 검색(전체 영화) - 검색어: '{}', 소요 시간: {} ms",
+                        query, System.currentTimeMillis() - startTime);
+            } else {
+                // 카테고리 처리
+                Status status = parseCategory(category); // 카테고리 파싱 분리
+                MoviePageDTO moviePage = getMoviePage(status, page, size);
+
+                // 모델 설정
+                setupPaginationModel(model, moviePage, page);
+
+                log.info("영화 목록 조회 - 카테고리: {}, 페이지: {}, 소요 시간: {} ms",
+                        category, page, System.currentTimeMillis() - startTime);
+            }
+        } catch (IllegalArgumentException e) {
+            log.error("잘못된 카테고리 입력: {}", category);
+            model.addAttribute("error", "유효하지 않은 카테고리입니다.");
+            return "error_page";
         }
 
         model.addAttribute("category", category.toUpperCase());
+
         return "total_movie";
+    }
+
+    // 카테고리 파싱 메서드
+    private Status parseCategory(String category) {
+        return switch (category.toUpperCase()) {
+            case "RECOMMEND" -> Status.RECOMMEND;
+            case "PREV" -> Status.PREV;
+            default -> null;
+        };
+    }
+
+    // 페이지 조회 로직
+    private MoviePageDTO getMoviePage(Status status, int page, int size) {
+        return (status != null)
+                ? movieService.getMoviesByStatus(status, page, size)
+                : movieService.getPagedMovies(page, size);
+    }
+
+    // 페이징 모델 설정
+    private void setupPaginationModel(Model model, MoviePageDTO moviePage, int page) {
+        int totalPages = moviePage.getTotalPages();
+        int startPage = Math.max(1, (page / 10) * 10 + 1);
+        int endPage = Math.min(startPage + 9, totalPages);
+
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("page", page);
+        model.addAttribute("pageNumbers", IntStream.rangeClosed(startPage, endPage)
+                .boxed().collect(Collectors.toList()));
     }
 
 }

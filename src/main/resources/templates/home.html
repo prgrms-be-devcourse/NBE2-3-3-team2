@@ -17,35 +17,6 @@
 
 <div class="container mt-5">
 
-    <!--    &lt;!&ndash; 추천 영화 섹션 &ndash;&gt;-->
-    <!--    <div class="position-relative mb-5">-->
-    <!--        &lt;!&ndash; 제목 &ndash;&gt;-->
-    <!--        <div class="d-flex justify-content-between align-items-center mb-3">-->
-    <!--            <h1>추천 영화</h1>-->
-    <!--        </div>-->
-    <!--        &lt;!&ndash; 캐러셀 버튼 &ndash;&gt;-->
-    <!--        <button id="prev-btn-feature" class="carousel-btn">&lt;</button>-->
-
-    <!--        &lt;!&ndash; 추천 영화 카드 &ndash;&gt;-->
-    <!--        <div class="position-relative" id="featured-movie-container">-->
-    <!--            <div class="card w-100"-->
-    <!--                 th:each="movie : ${movies}"-->
-    <!--                 th:if="${movie.status.name() == 'RECOMMEND'}">-->
-    <!--                <div class="position-relative">-->
-    <!--                    &lt;!&ndash; 스틸 이미지 &ndash;&gt;-->
-    <!--                    <img th:src="@{${movie.stillImageUrl}}" class="card-img-top" alt="스틸 이미지">-->
-    <!--                    &lt;!&ndash; 버튼 배치 &ndash;&gt;-->
-    <!--                    <div class="position-absolute bottom-0 start-0 p-3">-->
-    <!--                        <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn btn-primary me-2">영화 상세 정보</a>-->
-    <!--                        <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success">예매하기</a>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-
-    <!--        <button id="next-btn-feature" class="carousel-btn">&gt;</button>-->
-    <!--    </div>-->
-
     <div class="position-relative mb-5">
         <button th:if="${isLoggedIn == null or !isLoggedIn}" id="invisible-button" class="btn btn-outline-primary">hidden</button>
         <!-- 제목 -->
@@ -59,7 +30,7 @@
         <div class="position-relative overflow-hidden" id="featured-movie-wrapper">
             <div id="featured-movie-container" class="d-flex">
                 <div class="card w-100"
-                     th:each="movie : ${movies}"
+                     th:each="movie : ${recommendMovies}"
                      th:if="${movie.status.name() == 'RECOMMEND'}">
                     <div class="position-relative">
                         <!-- 스틸 이미지 -->
@@ -89,53 +60,6 @@
         <button id="next-btn-feature" class="carousel-btn">&gt;</button>
     </div>
 
-    <!--    &lt;!&ndash; 박스오피스 섹션 &ndash;&gt;-->
-    <!--    <div>-->
-    <!--        <div class="d-flex justify-content-between align-items-center">-->
-    <!--            <h1>박스오피스</h1>-->
-    <!--            <a th:href="@{/movie/total_movie}" class="btn btn-link">더 많은 영화보기 +</a>-->
-    <!--        </div>-->
-    <!--        &lt;!&ndash; 캐러셀 &ndash;&gt;-->
-    <!--        <div class="position-relative">-->
-    <!--            <button id="prev-btn-show" class="carousel-btn">&lt;</button>-->
-    <!--&lt;!&ndash;            <div class="row mx-0" id="show-movie-container">&ndash;&gt;-->
-    <!--&lt;!&ndash;                &lt;!&ndash; 영화 카드 반복 (Status.SHOW) &ndash;&gt;&ndash;&gt;-->
-    <!--&lt;!&ndash;                <div class="col-md-3 mb-4"&ndash;&gt;-->
-    <!--&lt;!&ndash;                     th:each="movie : ${movies}"&ndash;&gt;-->
-    <!--&lt;!&ndash;                     th:if="${movie.status.name() == 'SHOW'}">&ndash;&gt;-->
-    <!--&lt;!&ndash;                    <div class="card h-100">&ndash;&gt;-->
-    <!--&lt;!&ndash;                        <a th:href="@{/movie/{id}(id=${movie.id})}">&ndash;&gt;-->
-    <!--&lt;!&ndash;                            <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">&ndash;&gt;-->
-    <!--&lt;!&ndash;                        </a>&ndash;&gt;-->
-    <!--&lt;!&ndash;                        <div class="card-body text-center">&ndash;&gt;-->
-    <!--&lt;!&ndash;                            <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>&ndash;&gt;-->
-    <!--&lt;!&ndash;                            <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>&ndash;&gt;-->
-    <!--&lt;!&ndash;                        </div>&ndash;&gt;-->
-    <!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-    <!--&lt;!&ndash;                </div>&ndash;&gt;-->
-    <!--&lt;!&ndash;            </div>&ndash;&gt;-->
-    <!--            <div id="show-movie-container" class="carousel-container">-->
-    <!--                <div class="carousel-wrapper">-->
-    <!--                    &lt;!&ndash; 영화 카드 반복 (Status.SHOW) &ndash;&gt;-->
-    <!--                    <div class="col-md-3 mb-4"-->
-    <!--                         th:each="movie : ${movies}"-->
-    <!--                         th:if="${movie.status.name() == 'SHOW'}">-->
-    <!--                        <div class="card h-100">-->
-    <!--                            <a th:href="@{/movie/{id}(id=${movie.id})}">-->
-    <!--                                <img th:src="@{${movie.posterImageUrl}}" class="card-img-top" alt="포스터 이미지">-->
-    <!--                            </a>-->
-    <!--                            <div class="card-body text-center">-->
-    <!--                                <h5 class="card-title" th:text="${movie.movieName}">영화 제목</h5>-->
-    <!--                                <a th:href="@{/reservation(movieId=${movie.id})}" class="btn btn-success btn-sm">예매하기</a>-->
-    <!--                            </div>-->
-    <!--                        </div>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            <button id="next-btn-show" class="carousel-btn">&gt;</button>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <!-- 박스오피스 섹션 -->
     <div>
         <div class="d-flex justify-content-between align-items-center">
@@ -150,7 +74,7 @@
                 <div class="carousel-wrapper">
                     <!-- 영화 카드 반복 (Status.SHOW) -->
                     <div class="col-md-3 mb-4"
-                         th:each="movie : ${movies}"
+                         th:each="movie : ${boxOfficeMovies}"
                          th:if="${movie.status.name() == 'SHOW' || movie.status.name() == 'RECOMMEND'}">
                         <div class="card h-100 position-relative">
                             <!-- 등급 아이콘 -->
@@ -194,7 +118,7 @@
                 <div class="carousel-wrapper">
                     <!-- 영화 카드 반복 (Status.PREV) -->
                     <div class="col-md-3 mb-4"
-                         th:each="movie : ${movies}"
+                         th:each="movie : ${upcomingMovies}"
                          th:if="${movie.status.name() == 'PREV'}">
                         <div class="card h-100 position-relative">
                             <!-- 등급 아이콘 -->
