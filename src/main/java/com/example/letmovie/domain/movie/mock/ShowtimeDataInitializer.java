@@ -470,6 +470,7 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
         }
     }
 
+    // 랜덤 영화 제목
     private String generateRandomMovieName(Random random) {
         String[] adjectives = {"멋진", "사라진", "위대한", "숨겨진", "신비로운"};
         String[] nouns = {"모험", "전사", "왕국", "비밀", "시간", "사건"};
