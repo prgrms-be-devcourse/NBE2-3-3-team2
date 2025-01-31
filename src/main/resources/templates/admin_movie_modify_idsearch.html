@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>관리자 - 상영중인 영화</title>
+    <title>관리자 - 영화 수정</title>
     <style>
         body {
             display: flex;
@@ -71,17 +71,28 @@
 
 <!-- Main content -->
 <main>
-    <h1>상영중인 영화</h1>
+    <h1>영화 수정</h1>
 
-    <!-- 저장된 Movie 테이블의 데이터 표시 -->
-    <h3>현재 상영중인 영화 리스트 입니다.</h3>
+    <!-- 검색 폼 -->
+    <h3>수정할 영화 ID를 입력하세요.</h3>
+    <form th:action="@{/admin/movie/modify/search}" method="get">
+        <label for="movieId" style="font-weight: bold;">영화 ID:</label>
+        <input type="number" id="movieId" name="movieId" required>
+        <button type="submit">조회</button>
+    </form>
 
-    <!--페이징-->
-    <a th:if="${currentPage > 1}" th:href="@{/admin/movie(page=${currentPage - 1})}"><button>이전</button></a>
-    <span th:text="'현재 페이지: ' + ${currentPage} + ' / ' + ${totalPages}"></span>
-    <a th:if="${currentPage < totalPages}" th:href="@{/admin/movie(page=${currentPage + 1})}"><button>다음</button></a><br /><br />
+    <!-- 검색 폼 -->
+    <h3>검색할 영화 이름를 입력하세요.</h3>
+    <form th:action="@{/admin/movie/modify/idsearch}" method="get">
+        <label for="movieNm" style="font-weight: bold;">영화 이름:</label>
+        <input type="text" id="movieNm" name="movieNm" required>
+        <button type="submit">조회</button>
+    </form>
 
+    <!-- 검색 결과 -->
+    <h2>검색 결과</h2>
     <table border="1" cellspacing="0">
+        <thead>
         <tr>
             <th>ID</th>
             <th>영화 코드</th>
@@ -99,6 +110,8 @@
             <th>누적 관객수</th>
             <th>상태</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="movie : ${movies}">
             <td th:text="${movie.id}"></td>
             <td th:text="${movie.movieCode}"></td>
@@ -125,6 +138,7 @@
             <td th:text="${movie.audiAcc}"></td>
             <td th:text="${movie.status}"></td>
         </tr>
+        </tbody>
     </table>
 
 </main>

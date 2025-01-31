@@ -3,6 +3,9 @@ package com.example.letmovie.domain.admin.controller;
 import com.example.letmovie.domain.admin.service.AdminMovieServiceImpl;
 import com.example.letmovie.domain.movie.entity.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +22,27 @@ public class AdminMovieController {
 
 
     // /admin/movie : 영화목록
-    @GetMapping("/movie")
+    /*@GetMapping("/movie")
     public String movie(Model model) {
         List<Movie> movies = adminService.findAllMovies();
-        /*for(Movie movie : movies) {
-            System.out.println(movie);
-        }*/
+        //for(Movie movie : movies) {
+        //    System.out.println(movie);
+        //}
         model.addAttribute("movies", movies);
+        return "admin_movie";
+    }*/
+    @GetMapping("/movie")
+    public String movie(
+            @RequestParam(defaultValue = "1") int page, // 현재 페이지 (0부터 시작)
+            @RequestParam(defaultValue = "10") int size, // 페이지 크기
+            Model model) {
+        Pageable pageable = PageRequest.of(page-1, size);
+        Page<Movie> movies = adminService.findAllMovieswithPage(pageable);
+
+        model.addAttribute("movies", movies.getContent()); // 현재 페이지의 영화 목록
+        model.addAttribute("currentPage", page); // 현재 페이지 번호
+        model.addAttribute("totalPages", movies.getTotalPages()); // 총 페이지 수
+
         return "admin_movie";
     }
 
@@ -72,6 +89,22 @@ public class AdminMovieController {
     @GetMapping("/movie/modify")
     public String modifyMovie(Model model) {
         return "admin_movie_modify";
+    }
+
+    // /admin/movie/modify/idsearch : 영화 수정 첫화면
+    @GetMapping("/movie/modify/idsearch")
+    public String modifyMovieIdSearch(@RequestParam("movieNm") String movieNm, Model model) {
+        try {
+            List<Movie> movies = adminService.findMovieByName(movieNm);
+            if (movies != null) {
+                model.addAttribute("movies", movies);
+            } else {
+                model.addAttribute("error", "해당 이름에 해당하는 영화가 없습니다.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
+        }
+        return "admin_movie_modify_idsearch";
     }
 
     // /admin/movie/modify/search : 영화 수정 검색 이후 화면
