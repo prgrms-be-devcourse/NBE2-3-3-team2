@@ -13,12 +13,12 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(
-        name = "movie",
-        indexes = {
-                @Index(name = "idx_movie_name", columnList = "movieName"), // movieName 컬럼에 대한 인덱스
-        }
-)
+//@Table(
+//        name = "movie",
+//        indexes = {
+//                @Index(name = "idx_movie_name", columnList = "movieName"), // movieName 컬럼에 대한 인덱스
+//        }
+//)
 //@Table(
 //        name = "movie",
 //        indexes = {

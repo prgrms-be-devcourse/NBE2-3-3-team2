@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Random;
 
 @Component
 @Profile("!test")
@@ -308,32 +309,15 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 "20240901", "코미디", "제작사 4",
                 Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
 
+        Random random = new Random();
+
         // 영화 검색 성능 측청을 위한 데이터
-        for (int i = 0; i < 4000; i++) {
+        for (int i = 0; i < 100000; i++) {
+            String movieName = generateRandomMovieName(random);
             movieJpaRepository.save(new Movie(null,
-                    "이처럼 사소한 것들", "M0001", "감독 1", "15세이상관람가", "120",
+                    movieName, "M0001", "감독 1", "15세이상관람가", "120",
                     "20240510", "액션", "제작사 1",
                     Status.SHOW, "https://www.themoviedb.org/t/p/w1280/iIdBv0pMqZ9XKYOQeK42N1LZIeN.jpg", "still1.jpg", "줄거리 1", "100,000", "12340"));
-            movieJpaRepository.save(new Movie(null,
-                    "헤러틱", "M0004", "감독 4", "15세이상관람가", "112",
-                    "20240901", "코미디", "제작사 4",
-                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/5HJqjCTcaE1TFwnNh3Dn21be2es.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
-            movieJpaRepository.save(new Movie(null,
-                    "레드원", "M0003", "감독 3", "12세이상관람가", "124",
-                    "20240710", "SF", "제작사 3",
-                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/4zNUNhVpSqFggxqvdSXDRzy1QwE.jpg", "still1.jpg", "줄거리 3", "200,000", "12340"));
-            movieJpaRepository.save(new Movie(null,
-                    "슈퍼맨", "M0004", "감독 4", "15세이상관람가", "112",
-                    "20240901", "코미디", "제작사 4",
-                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/ykqOm6QiL2ergUSmPk2VseSTSzp.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
-            movieJpaRepository.save(new Movie(null,
-                    "무파사: 라이온 킹", "M0004", "감독 4", "전체관람가", "112",
-                    "20240901", "코미디", "제작사 4",
-                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/1VUExee8iFohFTwYVi4IOArYyaM.jpg", "still1.jpg", "줄거리 4", "300,000", "12340"));
-            movieJpaRepository.save(new Movie(null,
-                    "베놈", "M0002", "감독 2", "19세이상관람가", "130",
-                    "20240620", "드라마", "제작사 2",
-                    Status.SHOW, "https://www.themoviedb.org/t/p/w1280/rajTvnpDKRupZPpKJRxeJMKrIs6.jpg", "still2.jpg", "줄거리 2", "150,000", "12340"));
         }
 
 
@@ -484,5 +468,11 @@ public class ShowtimeDataInitializer implements CommandLineRunner {
                 seatRepository.save(seat);
             }
         }
+    }
+
+    private String generateRandomMovieName(Random random) {
+        String[] adjectives = {"멋진", "사라진", "위대한", "숨겨진", "신비로운"};
+        String[] nouns = {"모험", "전사", "왕국", "비밀", "시간", "사건"};
+        return adjectives[random.nextInt(adjectives.length)] + " " + nouns[random.nextInt(nouns.length)];
     }
 }

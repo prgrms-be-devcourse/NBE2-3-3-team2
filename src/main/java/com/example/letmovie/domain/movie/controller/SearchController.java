@@ -31,7 +31,7 @@ public class SearchController {
 //                })
 //                .toList();
 
-        long startTime = System.currentTimeMillis(); // 시작 시간
+        //long startTime = System.currentTimeMillis(); // 시작 시간
 
         List<Map<String, Object>> list = movieService.searchMoviesByName(query).stream()
                 .map(movie -> {
@@ -42,9 +42,9 @@ public class SearchController {
                 })
                 .toList();
 
-        long endTime = System.currentTimeMillis(); // 종료 시간
+        //long endTime = System.currentTimeMillis(); // 종료 시간
 
-        log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
+        //log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
 
         return list;
     }
