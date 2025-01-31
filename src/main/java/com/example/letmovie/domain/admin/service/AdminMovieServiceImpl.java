@@ -5,6 +5,8 @@ import com.example.letmovie.domain.movie.entity.Movie;
 import com.example.letmovie.domain.movie.entity.Theater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
@@ -143,6 +145,15 @@ public class AdminMovieServiceImpl {
     public List<Movie> findAllMovies(){
         List<Movie> movies = adminMovieJpaRepository.findAllMovies();
 
+        return movies;
+    }
+
+    public Page<Movie> findAllMovieswithPage(Pageable pageable) {
+        return adminMovieJpaRepository.findAllMovieswithPage(pageable);
+    }
+
+    public List<Movie> findMovieByName(String movieNm) {
+        List<Movie> movies = adminMovieJpaRepository.findMovieByName(movieNm);
         return movies;
     }
 
