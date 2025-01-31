@@ -13,6 +13,7 @@ import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
+import com.example.letmovie.domain.reservation.facade.OptimisticLockReservationFacade;
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
@@ -37,6 +38,7 @@ public class ReservationController {
 
     private final ShowtimeService showtimeService;
     private final ReservationService reservationService;
+    private final OptimisticLockReservationFacade optimisticLockReservationFacade;
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -134,7 +136,7 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reserve-seats")
-    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO){
+    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO) throws InterruptedException {
         List<String> seats = requestDTO.getSeats(); // "seats" 키에 저장된 값 가져오기
         Long showtimeId = requestDTO.getShowtimeId();
 
@@ -149,7 +151,8 @@ public class ReservationController {
         Member member = SecurityUtil.getCurrentMember()
                 .orElseThrow(MemberNotFoundException::new);
 
-        ReservationResponseDTO responseDTO = reservationService.reservation(seats, member.getId(), showtimeId);
+        ReservationResponseDTO responseDTO = optimisticLockReservationFacade.reservation(seats, member.getId(), showtimeId);
+
 
         log.info("MemberName = {}" , responseDTO.getMemberName());
         log.info("ReservationId = {}" , responseDTO.getReservationId());

@@ -49,10 +49,9 @@ public class ShowtimeServiceTest {
 
     @AfterEach
     void clean(){
-        showtimeRepository.deleteAll(); // screen과 연결된 showtime 먼저 삭제
-        screenRepository.deleteAll();  // theater와 연결된 screen 삭제
-        theaterRepository.deleteAll(); // theater 삭제
-        movieJpaRepository.deleteAll(); // movie 삭제
+        showtimeRepository.deleteAll();
+        theaterRepository.deleteAll();
+        movieJpaRepository.deleteAll();
     }
 
     @Test

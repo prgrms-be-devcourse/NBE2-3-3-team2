@@ -12,6 +12,7 @@ import com.example.letmovie.domain.reservation.entity.Reservation;
 import com.example.letmovie.domain.reservation.entity.ReservationSeat;
 import com.example.letmovie.domain.reservation.entity.ReservationStatus;
 import com.example.letmovie.domain.reservation.entity.Seat;
+import com.example.letmovie.domain.reservation.facade.OptimisticLockReservationFacade;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import com.example.letmovie.domain.reservation.repository.SeatRepository;
 import com.example.letmovie.domain.reservation.repository.ShowtimeRepository;

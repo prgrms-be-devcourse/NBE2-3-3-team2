@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * 낙관적 락 테스트를 위한 서비스 코드
- */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
