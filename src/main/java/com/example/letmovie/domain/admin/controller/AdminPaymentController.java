@@ -18,17 +18,16 @@ import java.util.List;
 public class AdminPaymentController {
     @Autowired
     private AdminPaymentServiceImpl adminService;
-    // 회원 결제 관리 메인페이지
+
+    // /admin/payment : 회원 결제 관리 메인페이지
     @GetMapping("/payment")
     public String payment() {
-        return "admin_payment";
+        return "admin/payment/admin_payment";
     }
 
-    // 회원 닉네임 검색
+    // /admin/payment/membersearch : 회원 닉네임 검색
     @GetMapping("/payment/membersearch")
     public String paymentMemberSearch(@RequestParam("inputnickname") String nickname, Model model) {
-        /*List<Member> members = adminService.findMemberByName(nickname);
-        model.addAttribute("members", members);*/
         try {
             List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
             if(members != null) {
@@ -39,14 +38,14 @@ public class AdminPaymentController {
         } catch (Exception e) {
             model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
         }
-        return "admin_payment_membersearch";
+        return "admin/payment/admin_payment_membersearch";
     }
 
-    // 회원 결제내역 조회
+    // /admin/payment/1 : 회원 결제내역 조회
     @GetMapping("/payment/{memberId}")
     public String viewMemberPayments(@PathVariable("memberId") Long memberId, Model model) {
         List<PaymentHistory> paymentHistories = adminService.findPaymentHistoryByMemberId(memberId);
         model.addAttribute("paymentHistories", paymentHistories);
-        return "admin_payment_memberpaymenthistory";
+        return "admin/payment/admin_payment_memberpaymenthistory";
     }
 }

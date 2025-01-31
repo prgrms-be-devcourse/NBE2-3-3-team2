@@ -18,7 +18,8 @@ import java.util.Map;
 public class AdminShowtimeController {
     @Autowired
     private AdminShowtimeServiceImpl adminService;
-    // 상영시간대
+
+    // /admin/showtime : 상영시간대
     @GetMapping("/showtime")
     public String showtime(Model model) {
         model.addAttribute("showtimes", adminService.getAllShowtimes());
@@ -31,16 +32,18 @@ public class AdminShowtimeController {
         Map<Long,String> movieNamesMap = adminService.getAllMovieNamesById();
         model.addAttribute("movieNames", movieNamesMap);
 
-        return "admin_showtime";
+        return "admin/showtime/admin_showtime";
     }
 
+    // /admin/showtime/add : 상영시간대 추가 화면
     @GetMapping("/showtime/add")
     public String addShowtimeForm(Model model) {
         model.addAttribute("screens", adminService.getAllScreens());
         model.addAttribute("movies", adminService.findAllMovies());
-        return "admin_showtime_add";
+        return "admin/showtime/admin_showtime_add";
     }
 
+    // /admin/showtime/add : 상영시간대 추가 처리
     @PostMapping("/showtime/add")
     public String addShowtime(@RequestParam Long screenId,
                               @RequestParam Long movieId,
@@ -49,7 +52,6 @@ public class AdminShowtimeController {
                               RedirectAttributes redirectAttributes) {
 
         // 남은 좌석 수 계산
-        //int remainingSeats = adminService.countAvailableSeatsByScreenId(screenId);
         int totalSeats = adminService.countAvailableSeatsByScreenId(screenId); // 스크린 ID로부터 총 좌석 수 계산
         int remainingSeats = totalSeats; // 남은 좌석 수 초기값
 
@@ -59,6 +61,7 @@ public class AdminShowtimeController {
         return "redirect:/admin/showtime";
     }
 
+    // /admin/showtime/delete/1 : 상영시간대 삭제 처리
     @GetMapping("/showtime/delete/{id}")
     @Transactional
     public String deleteShowtime(@PathVariable Long id, RedirectAttributes redirectAttributes) {
