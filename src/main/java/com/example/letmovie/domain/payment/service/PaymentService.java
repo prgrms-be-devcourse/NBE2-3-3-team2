@@ -113,7 +113,7 @@ public class PaymentService {
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<PaymentResponse.Get> getMemberPayment(Long memberId) {
         List<Payment> payments = paymentRepository.findByMemberId(memberId);
         return payments.stream()

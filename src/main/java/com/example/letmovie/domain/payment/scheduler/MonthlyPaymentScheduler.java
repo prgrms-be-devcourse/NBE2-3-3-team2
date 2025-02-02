@@ -24,8 +24,6 @@ public class MonthlyPaymentScheduler {
     @Scheduled(cron = "0 30 23 * * *", zone = "Asia/Seoul")
     public void runMonthlyPaymentJob() {
         try {
-            log.info("하루 정산 시작 = {} ", LocalDateTime.now());
-
             JobParameters jobParameters = new JobParametersBuilder()
                     .addString("datetime", LocalDateTime.now().toString())
                     .addString("date", LocalDateTime.now().toString())
@@ -33,7 +31,6 @@ public class MonthlyPaymentScheduler {
             JobExecution jobExecution = jobLauncher.run(
                     jobRegistry.getJob("MonthlyPaymentJob"), jobParameters
             );
-            log.info("하루 정산 종료 = {} ", jobExecution.getStatus());
         } catch (Exception e) {
             log.error("하루 정산 실패", e);
         }
