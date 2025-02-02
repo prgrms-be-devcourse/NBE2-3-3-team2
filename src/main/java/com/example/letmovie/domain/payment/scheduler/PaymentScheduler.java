@@ -6,7 +6,6 @@ import com.example.letmovie.domain.payment.entity.PaymentStatus;
 import com.example.letmovie.domain.payment.repository.PaymentHistoryRepository;
 import com.example.letmovie.domain.payment.repository.PaymentRepository;
 import com.example.letmovie.domain.reservation.entity.Reservation;
-import com.example.letmovie.domain.reservation.entity.ReservationStatus;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +40,7 @@ public class PaymentScheduler {
             try {
                 handleExpiredPayment(payment);
             } catch (Exception e) {
-                log.error("결제에 대한 예약 아이디 조회 실패 {}",
-                        payment.getReservation().getId(), e);
+                log.error("결제에 대한 예약 아이디 조회 실패 {}", payment.getReservation().getId(), e);
             }
         }
     }

@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Service
 public class AdminMovieServiceImpl {
-    @Value("${movie.api.key}")
+    @Value("${MOVIE_API_KEY}")
     private String API_KEY;
     //영화 목록 (영화 이름을 검색해 영화 코드를 가져옴 movieNm -> movieCd)
     private static final String MOVIE_LIST_URL = "https://kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.xml";

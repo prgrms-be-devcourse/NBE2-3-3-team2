@@ -45,11 +45,10 @@ public class PaymentService {
     private String HOST;
     @Value("${kakao.pay.secret.key}")
     private String secretKey;
-    @Value("${kakao.pay.cid}")
-    private String cid;
 
-
+    @Transactional(readOnly = true)
     public PaymentResponse.Ready ready(PaymentRequest.Info request) {
+
         String movieName = initializePayment(request);
         HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
         Map<String, String> parameters = paymentParamProvider.createReadyParams(request,movieName);
@@ -73,6 +72,7 @@ public class PaymentService {
                 headers,
                 PaymentResponse.Success.class
         );
+
         initializePaymentAndPaymentHistory(reservationId, response);
         return response;
         } catch (Exception e){
@@ -88,8 +88,7 @@ public class PaymentService {
         PaymentHistory paymentHistory = paymentHistoryRepository
                 .findByPaymentAndPaymentStatus(beforePayment, PaymentStatus.PAYMENT_SUCCESS)
                 .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
-
-        try {
+        
             HttpHeaders headers = httpRequestUtil.createHeaders(secretKey);
             Map<String, String> parameters = paymentParamProvider.createCancelParams(paymentHistory);
 
@@ -110,13 +109,11 @@ public class PaymentService {
             paymentHistoryRepository.save(cancelHistory);
 
             return response;
-        } catch (Exception e) {
-            throw new PaymentException(ErrorCodes.PAYMENT_FAILED);
-        }
+        
     }
 
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<PaymentResponse.Get> getMemberPayment(Long memberId) {
         List<Payment> payments = paymentRepository.findByMemberId(memberId);
         return payments.stream()
