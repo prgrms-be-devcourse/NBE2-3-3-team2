@@ -18,9 +18,9 @@ public class AdminScreenServiceImpl {
     @Autowired
     private AdminScreenRepository adminScreenRepository;
 
-    // 상영관 목록조회
-    public List<Screen> findAllScreens() {
-        return adminScreenRepository.findAll();
+    // 상영관 목록조회(영화관별 정렬)
+    public List<Screen> findAllScreensSorted(){
+        return adminScreenRepository.findAllByOrderByTheaterIdAscScreenNameAsc();
     }
 
     // 극장 목록 조회

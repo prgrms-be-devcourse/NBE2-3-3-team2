@@ -2,13 +2,11 @@ package com.example.letmovie.domain.payment.controller;
 
 import com.example.letmovie.domain.payment.dto.request.PaymentRequest;
 import com.example.letmovie.domain.payment.dto.response.PaymentResponse;
-import com.example.letmovie.domain.payment.service.PaymentHistoryService;
 import com.example.letmovie.domain.payment.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +18,6 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final PaymentHistoryService paymentHistoryService;
 
     @PostMapping("/ready")
     @Operation(summary = "사용자 결제 준비 API 처리 ")
@@ -54,7 +51,4 @@ public class PaymentController {
         return ResponseEntity.ok()
                 .body(paymentService.getMemberPayment(memberId));
     }
-
-
-
 }

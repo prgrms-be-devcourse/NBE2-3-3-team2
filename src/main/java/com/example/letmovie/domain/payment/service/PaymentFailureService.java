@@ -27,7 +27,6 @@ public class PaymentFailureService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handlePaymentFailure(Long reservationId, Exception e) {
-        log.error("결제 실패 - reservationId: {}, error: {}", reservationId, e.getMessage());
             Payment payment = paymentRepository.findByReservationId(reservationId)
                     .orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
 
@@ -48,17 +47,12 @@ public class PaymentFailureService {
                     errorCode = String.valueOf(jsonNode.get("error_code").asInt());
                     errorMessage = jsonNode.get("error_message").asText();
 
-                    log.info("Parsed errorMessage={}", errorMessage);
-                    log.info("Parsed errorCode={}", errorCode);
                 } catch (JsonProcessingException ex) {
-                    log.error("Error parsing JSON response", ex);
                     errorMessage = e.getMessage();
                 }
             } else {
                 errorMessage = e.getMessage();
             }
-            log.info("errorMessage={}", errorMessage);
-            log.info("errorCode={}", errorCode);
 
             PaymentHistory failureHistory = PaymentHistory.toFailureHistory(
                     payment,

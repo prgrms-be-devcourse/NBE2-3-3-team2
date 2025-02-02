@@ -18,52 +18,51 @@ import java.util.Map;
 public class AdminShowtimeController {
     @Autowired
     private AdminShowtimeServiceImpl adminService;
-    // 상영시간대
+
+    // /admin/showtime : 상영시간대
     @GetMapping("/showtime")
     public String showtime(Model model) {
         model.addAttribute("showtimes", adminService.getAllShowtimes());
 
-        // 수정된 방식으로 screenNames 가져오기
-        Map<Long, String> screenNamesMap = adminService.getAllScreenNamesById(); // screenId 기반 맵 생성
-        model.addAttribute("screenNames", screenNamesMap); // ID로 접근하여 이름 가져오기
+        Map<Long, String> screenNamesMap = adminService.getAllScreenNamesById();
+        model.addAttribute("screenNames", screenNamesMap);
 
-        //model.addAttribute("movieNames", adminService.getAllMovieNames()); // MovieService에서 영화 이름 가져오기
         Map<Long,String> movieNamesMap = adminService.getAllMovieNamesById();
         model.addAttribute("movieNames", movieNamesMap);
 
-        return "admin_showtime";
+        return "admin/showtime/admin_showtime";
     }
 
+    // /admin/showtime/add : 상영시간대 추가 화면
     @GetMapping("/showtime/add")
     public String addShowtimeForm(Model model) {
         model.addAttribute("screens", adminService.getAllScreens());
         model.addAttribute("movies", adminService.findAllMovies());
-        return "admin_showtime_add";
+        return "admin/showtime/admin_showtime_add";
     }
 
+    // /admin/showtime/add : 상영시간대 추가 처리
     @PostMapping("/showtime/add")
     public String addShowtime(@RequestParam Long screenId,
                               @RequestParam Long movieId,
                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate showtimeDate,
                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime showtimeTime,
                               RedirectAttributes redirectAttributes) {
-
-        // 남은 좌석 수 계산
-        //int remainingSeats = adminService.countAvailableSeatsByScreenId(screenId);
-        int totalSeats = adminService.countAvailableSeatsByScreenId(screenId); // 스크린 ID로부터 총 좌석 수 계산
-        int remainingSeats = totalSeats; // 남은 좌석 수 초기값
+        int totalSeats = adminService.countAvailableSeatsByScreenId(screenId);
+        int remainingSeats = totalSeats;
 
         adminService.addShowtime(screenId, movieId, showtimeDate, showtimeTime, totalSeats, remainingSeats);
+        redirectAttributes.addFlashAttribute("message", "상영 일정이 성공적으로 추가되었습니다.");
 
-        redirectAttributes.addFlashAttribute("message", "Showtime added successfully!");
         return "redirect:/admin/showtime";
     }
 
+    // /admin/showtime/delete/1 : 상영시간대 삭제 처리
     @GetMapping("/showtime/delete/{id}")
     @Transactional
     public String deleteShowtime(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         adminService.deleteShowtime(id);
-        redirectAttributes.addFlashAttribute("message", "Showtime deleted successfully!");
+        redirectAttributes.addFlashAttribute("message", "상영 일정이 성공적으로 삭제되었습니다.");
         return "redirect:/admin/showtime";
     }
 }

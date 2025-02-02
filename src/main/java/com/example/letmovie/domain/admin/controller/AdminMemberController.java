@@ -19,15 +19,14 @@ public class AdminMemberController {
     // /admin/member : 회원정보
     @GetMapping("/member")
     public String member() {
-        return "admin_member";
+        return "admin/member/admin_member";
     }
 
     // /admin/member/search : 회원정보검색후
     @GetMapping("/member/search")
     public String memberSearch(@RequestParam("inputnickname") String nickname, Model model) {
-
         try {
-            List<Member> members = adminService.findMemberByName(nickname); // 닉네임으로 검색
+            List<Member> members = adminService.findMemberByName(nickname);
             if(members != null) {
                 model.addAttribute("members", members);
             } else {
@@ -36,14 +35,12 @@ public class AdminMemberController {
         } catch (Exception e) {
             model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
         }
-
-        return "admin_member_search";
+        return "admin/member/admin_member_search";
     }
 
     // /admin/member/modify : ID로 특정 회원 조회
     @GetMapping("/member/modify")
     public String modifyMemberById(@RequestParam("id") Long memberId, Model model) {
-        System.out.println("modifyMemberById called with memberId: " + memberId);
         try {
             Member member = adminService.findMemberById(memberId);
             if (member != null) {
@@ -54,7 +51,7 @@ public class AdminMemberController {
         } catch (Exception e) {
             model.addAttribute("error", "오류가 발생했습니다. 다시 시도해주세요.");
         }
-        return "admin_member_modify";
+        return "admin/member/admin_member_modify";
     }
 
     // /admin/member/modify/ok : 회원 수정 처리
