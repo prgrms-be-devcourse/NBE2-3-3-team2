@@ -53,7 +53,6 @@ public class ReservationService {
         Reservation reservation = Reservation.builder()
                 .showTime(showtime)
                 .member(member)
-                .reservationSeats(new ArrayList<>())
                 .status(ReservationStatus.PENDING)
                 .reservationDate(LocalDateTime.now())
                 .totalSeats(seatList.size())
@@ -95,14 +94,12 @@ public class ReservationService {
     public void reservationCancel(Long reservationId) {
             Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(ReservationNotFound::new);
             Payment payment = paymentRepository.findByReservationId(reservationId).orElseThrow(() -> new PaymentException(ErrorCodes.PAYMENT_NOT_FOUND));
-            log.info("예매취소시작");
-            log.info("예매취소시작2");
             PaymentResponse.Cancel cancelResult = paymentService.cancel(payment.getId());
+
         // 결제 취소가 성공하면 예매 취소 진행
         if (cancelResult.status().equals("CANCEL_PAYMENT")) {
             reservation.cancelReservation();
         }
-        log.info("예매취소시작3");
 
     }
 }

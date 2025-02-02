@@ -15,7 +15,6 @@ import static com.example.letmovie.global.exception.ErrorCodes.RESERVATION_CANCE
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Reservation {
@@ -38,8 +37,6 @@ public class Reservation {
     @Enumerated(EnumType.STRING) //enum
     private ReservationStatus status;
 
-    @NotNull
-    @Builder.Default
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL) //양방향 매핑
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
@@ -58,8 +55,8 @@ public class Reservation {
     public void addReservationSeat(ReservationSeat reservationSeat){
         reservationSeats.add(reservationSeat);
         reservationSeat.setReservation(this);
-
     }
+
     public void updateTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
@@ -100,5 +97,15 @@ public class Reservation {
 
     public void setStatus(@NotNull ReservationStatus reservationStatus) {
         this.status = reservationStatus;
+    }
+
+    @Builder
+    public Reservation(Showtime showTime, Member member, ReservationStatus status, LocalDateTime reservationDate, int totalSeats, int totalPrice) {
+        this.showTime = showTime;
+        this.member = member;
+        this.status = status;
+        this.reservationDate = reservationDate;
+        this.totalSeats = totalSeats;
+        this.totalPrice = totalPrice;
     }
 }

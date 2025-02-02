@@ -15,8 +15,6 @@ import java.util.Optional;
 
 public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
 
-    List<Showtime> findByShowtimeDate(LocalDate showtimeDate);
-
     @Query("SELECT DISTINCT s.movie.movieName FROM Showtime s WHERE s.showtimeDate = :showtimeDate")
     List<String> findDistinctMovieNamesByDate(@Param("showtimeDate") LocalDate showtimeDate);
 
@@ -27,21 +25,6 @@ public interface ShowtimeRepository  extends JpaRepository<Showtime, Long> {
     List<Theater> findTheatersByMovieNameAndShowtimeDate(
             @Param("movieName") String movieName,
             @Param("showtimeDate") LocalDate showtimeDate);
-
-    @Query("SELECT s FROM Showtime s " +
-            "JOIN FETCH s.screen sc " +
-            "JOIN FETCH sc.theater t " +
-            "WHERE t.theaterName = :theaterName " +
-            "AND s.movie.movieName = :movieName " +
-            "AND s.showtimeDate = :showtimeDate " +
-//            "AND s.showtimeTime > :currentTime " + // 현재 시간 이후 필터링 - 수정필요
-            "ORDER BY s.showtimeTime ASC") // 상영 시작 시간으로 정렬
-    List<Showtime> findShowtimesByMovieAndDateAndTheater(
-            @Param("theaterName") String theaterName,
-            @Param("movieName") String movieName,
-            @Param("showtimeDate") LocalDate showtimeDate,
-            @Param("currentTime") LocalTime currentTime
-    );
 
     /**
      * 비관적 락 테스트 - 쓰기

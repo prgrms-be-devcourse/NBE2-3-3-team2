@@ -13,7 +13,7 @@ public interface AdminMovieJpaRepository extends JpaRepository<Movie, Long> {
     @Query(value = "select m from Movie m")
     List<Movie> findAllMovies();
 
-    @Query(value = "select m from Movie m where m.movieName like %:movieName%")
+    @Query(value = "select m from Movie m where m.movieName like :movieName%")
     List<Movie> findMovieByName(@Param("movieName") String movieName);
 
     /*@Query(value = "select m from Movie m where m.movieName like %:movieName%")

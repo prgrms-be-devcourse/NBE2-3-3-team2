@@ -26,7 +26,6 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Setter
     @Column(nullable = false, length = 64)
     private String password;
 
@@ -50,19 +49,19 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Payment> payments = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 
-    public void setGrade(Grade grade) {
-        this.grade = grade;
+    public void changeGrade(Grade newGrade) {
+        this.grade = newGrade;
     }
 
-    public void setMemberStatus(MemberStatus memberStatus) {
-        this.memberStatus = memberStatus;
+    public void changeStatus(MemberStatus newStatus) {
+        this.memberStatus = newStatus;
     }
 }

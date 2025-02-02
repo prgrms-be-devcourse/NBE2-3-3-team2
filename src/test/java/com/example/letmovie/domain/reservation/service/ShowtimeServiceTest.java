@@ -46,13 +46,16 @@ public class ShowtimeServiceTest {
     @Autowired
     private TheaterRepository theaterRepository;
 
+    @Autowired
+    private MovieJpaRepository movieRepository;
+
 
     @AfterEach
     void clean(){
-        showtimeRepository.deleteAll(); // screen과 연결된 showtime 먼저 삭제
-        screenRepository.deleteAll();  // theater와 연결된 screen 삭제
-        theaterRepository.deleteAll(); // theater 삭제
-        movieJpaRepository.deleteAll(); // movie 삭제
+        showtimeRepository.deleteAll();
+        screenRepository.deleteAll();
+        theaterRepository.deleteAll();
+        movieRepository.deleteAll();
     }
 
     @Test
@@ -161,8 +164,8 @@ public class ShowtimeServiceTest {
         assertEquals(1, showtimeRepository.count());
         assertEquals("제주 cgv", dto.get(0).getTheaterName());
         assertEquals("1관", dto.get(0).getScreenName());
-        assertEquals(200, Integer.parseInt(dto.get(0).getScreenTotalSeat()));
-        assertEquals(200, Integer.parseInt(dto.get(0).getScreenRemainSeat()));
+        assertEquals(200, dto.get(0).getScreenTotalSeat());
+        assertEquals(200, dto.get(0).getScreenRemainSeat());
         assertEquals("12:00", dto.get(0).getShowtime());
     }
 }

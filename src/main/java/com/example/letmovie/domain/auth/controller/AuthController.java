@@ -3,18 +3,22 @@ package com.example.letmovie.domain.auth.controller;
 import com.example.letmovie.domain.auth.repository.TokenBlacklistRepository;
 import com.example.letmovie.domain.auth.security.JwtTokenProvider;
 import com.example.letmovie.domain.auth.service.AuthService;
+
+import com.example.letmovie.domain.auth.service.CookieService;
 import com.example.letmovie.domain.member.dto.request.LoginRequestDTO;
 import com.example.letmovie.domain.member.dto.response.LoginResponseDTO;
 import com.example.letmovie.domain.member.entity.Member;
+
 import com.example.letmovie.domain.member.repository.MemberRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +33,7 @@ public class AuthController {
     private final TokenBlacklistRepository tokenBlacklistRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthService authService;
-
-    // TODO 배포 시, setSecure() true 처리 후 배포
+    private final CookieService cookieService;
 
     @GetMapping("/login")
     public String loginPage(Model model) {
@@ -45,26 +48,14 @@ public class AuthController {
     }
 
     @PostMapping({"/login", "/admin-login"})
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request, HttpServletResponse response, Model model) {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request, HttpServletResponse response) {
 
         try {
             LoginResponseDTO loginResponse = authService.login(request);
 
             // 쿠키 설정
-            Cookie accessTokenCookie = new Cookie("accessToken", loginResponse.getAccessToken());
-            accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(false); // 보안상 쿠키가 HTTPS에서만 전송되도록 보장해야 하나 테스트 환경이므로 해당 속성 false 처리
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 15); // 15분
-
-            Cookie refreshTokenCookie = new Cookie("refreshToken", loginResponse.getRefreshToken());
-            refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(false); // 보안상 쿠키가 HTTPS에서만 전송되도록 보장해야 하나 테스트 환경이므로 해당 속성 false 처리
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
-
-            response.addCookie(accessTokenCookie);
-            response.addCookie(refreshTokenCookie);
+            cookieService.setAccessTokenCookie(response, loginResponse.getAccessToken());
+            cookieService.setRefreshTokenCookie(response, loginResponse.getRefreshToken());
             return ResponseEntity.status(HttpStatus.CREATED).body("로그인 성공");
         } catch (IllegalArgumentException e) {
             // 잘못된 정보로 로그인 시
@@ -101,14 +92,8 @@ public class AuthController {
             // 새로운 Access Token 생성
             String newAccessToken = jwtTokenProvider.createAccessToken(member.getEmail());
 
-            // 새 Access Token을 HTTP-Only 쿠키로 설정
-            Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
-            accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(false);
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(60 * 15); // 15분
-
-            response.addCookie(accessTokenCookie);
+            // 새 Access Token 쿠키 설정
+            cookieService.setAccessTokenCookie(response, newAccessToken);
 
             return ResponseEntity.ok("Access Token 재발급 성공");
         } catch (Exception e) {
@@ -131,23 +116,9 @@ public class AuthController {
             // SecurityContext 정리
             SecurityContextHolder.clearContext();
 
-            // Access Token 삭제
-            Cookie accessTokenCookie = new Cookie("accessToken", null);
-            accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(false); // 보안상 쿠키가 HTTPS에서만 전송되도록 보장해야 하나 테스트 환경이므로 해당 속성 false 처리
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(0); // 즉시 만료
-
-            // Refresh Token 삭제
-            Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-            refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(false); // 보안상 쿠키가 HTTPS에서만 전송되도록 보장해야 하나 테스트 환경이므로 해당 속성 false 처리
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(0); // 즉시 만료
-
-            // 쿠키 설정
-            response.addCookie(accessTokenCookie);
-            response.addCookie(refreshTokenCookie);
+            // Access Token 쿠키, Refresh Token 쿠키 삭제
+            cookieService.clearCookie(response, "accessToken");
+            cookieService.clearCookie(response, "refreshToken");
 
             // 리다이렉트 응답 (홈페이지로 가게 설정)
             return ResponseEntity.status(HttpStatus.FOUND)

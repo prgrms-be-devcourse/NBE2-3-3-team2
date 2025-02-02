@@ -13,6 +13,7 @@ import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
+import com.example.letmovie.domain.reservation.facade.OptimisticLockReservationFacade;
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
@@ -37,6 +38,7 @@ public class ReservationController {
 
     private final ShowtimeService showtimeService;
     private final ReservationService reservationService;
+    private final OptimisticLockReservationFacade optimisticLockReservationFacade;
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -77,16 +79,6 @@ public class ReservationController {
                 showTimeRequestDTO.getTheaterName());
     }
 
-    @ResponseBody
-    @PostMapping("/api/seats/selection")
-    public String saveSeat(@RequestBody Map<String, String> payload, Model model) {
-//        String date = payload.get("date");
-//        String movieName = payload.get("movie");
-//        String theaterName = payload.get("theater");
-//        String screenName = payload.get("screen");
-        //이 부분에 예매중으로 등록 해야 함. 좌석 선택부터 갈 수 있도록
-        return "ex)예매중";
-    }
 
     /**
      *  좌석 선택 페이지
@@ -98,31 +90,13 @@ public class ReservationController {
 
         Screen screen = showtime.getScreen(); //스크린 가져오기
         List<Seat> seats = showtime.getScreen().getSeats(); //Seat 리스트 가져오기.
+
         List<Seat> sortedSeats = seats.stream() //가져온 좌석들 정렬하기
                 .sorted(Comparator.comparingInt(Seat::getSeatLow)
                         .thenComparingInt(Seat::getSeatCol))
                 .collect(Collectors.toList());
 
-        //최대 행 계산
-        int maxRow = sortedSeats.stream()
-                .mapToInt(Seat::getSeatLow) // seatLow 값 돌면서 추출
-                .max() // 가장 큰 값 찾기
-                .orElse(0);
-
-        // rows를 알파벳 리스트로 변환 ["A", "B", "C", ...]
-        List<String> rowLabels  = IntStream.rangeClosed(0, maxRow - 1)
-                .mapToObj(i -> String.valueOf((char) ('A' + i))) // 0부터 시작하는 숫자를 A, B, C로 변환
-                .collect(Collectors.toList());
-
-        // Map<String, List<Seat>> 구조로 변환
-        Map<String, List<Seat>> seatMap = rowLabels .stream() //rowLabels(A, B, C, ...) 리스트를 스트림 형태로 순회합니다.
-                .collect(Collectors.toMap(
-                        row -> row, //키는 각 행 이름(A, B, C..
-                        row -> seats.stream()
-                                .filter(seat -> seat.getSeatLow() == row.charAt(0) - 'A' + 1)  ////예: seatLow = 1인 좌석은 row = "A"와 매칭됩니다.
-                                .collect(Collectors.toList())
-                ));
-
+        Map<String, List<Seat>> seatMap = showtimeService.convertSeatsToRowMap(sortedSeats);
 
         model.addAttribute("seats", sortedSeats);
         model.addAttribute("screen", screen);
@@ -134,27 +108,14 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reserve-seats")
-    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO){
+    public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO) throws InterruptedException {
         List<String> seats = requestDTO.getSeats(); // "seats" 키에 저장된 값 가져오기
         Long showtimeId = requestDTO.getShowtimeId();
-
-        log.info("reserve-seats: {}", seats);
-        log.info("showtimeId: {}", showtimeId);
-
-        for (String seat : seats) {
-            String[] split = seat.split("-");
-            log.info("seat: {}, {}", split[0], split[1]);
-        }
 
         Member member = SecurityUtil.getCurrentMember()
                 .orElseThrow(MemberNotFoundException::new);
 
-        ReservationResponseDTO responseDTO = reservationService.reservation(seats, member.getId(), showtimeId);
-
-        log.info("MemberName = {}" , responseDTO.getMemberName());
-        log.info("ReservationId = {}" , responseDTO.getReservationId());
-        log.info("TotalPrice = {}" , responseDTO.getTotalPrice());
-        log.info("MemberId = {}" , responseDTO.getMemberId());
+        ReservationResponseDTO responseDTO = optimisticLockReservationFacade.reservation(seats, member.getId(), showtimeId);
 
         return ResponseEntity.ok(responseDTO);
     }

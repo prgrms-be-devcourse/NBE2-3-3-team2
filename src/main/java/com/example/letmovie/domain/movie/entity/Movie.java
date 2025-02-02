@@ -9,6 +9,12 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @Entity
+@Table(
+        name = "movie",
+        indexes = {
+                @Index(name = "idx_movie_title", columnList = "movieName")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

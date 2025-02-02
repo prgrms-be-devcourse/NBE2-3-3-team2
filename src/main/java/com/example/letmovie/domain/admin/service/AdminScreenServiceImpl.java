@@ -3,7 +3,7 @@ package com.example.letmovie.domain.admin.service;
 import com.example.letmovie.domain.admin.repository.AdminScreenRepository;
 import com.example.letmovie.domain.admin.repository.AdminTheaterRepository;
 import com.example.letmovie.domain.movie.entity.Theater;
-import com.example.letmovie.domain.reservation.dto.ScreenDTO;
+import com.example.letmovie.domain.reservation.dto.request.ScreenDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +18,9 @@ public class AdminScreenServiceImpl {
     @Autowired
     private AdminScreenRepository adminScreenRepository;
 
-    // 상영관 목록조회
-    public List<Screen> findAllScreens() {
-        return adminScreenRepository.findAll();
+    // 상영관 목록조회(영화관별 정렬)
+    public List<Screen> findAllScreensSorted(){
+        return adminScreenRepository.findAllByOrderByTheaterIdAscScreenNameAsc();
     }
 
     // 극장 목록 조회
