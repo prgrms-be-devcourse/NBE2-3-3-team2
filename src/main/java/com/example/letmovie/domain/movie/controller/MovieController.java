@@ -28,22 +28,6 @@ public class MovieController {
     private final MovieServiceImpl movieService;
     private final ReviewServiceImpl reviewService;
 
-//    // home page
-//    @GetMapping({"/", "/private"})
-//    public String homePage(Model model) {
-//
-//        long startTime = System.currentTimeMillis(); // 시작 시간
-//
-//        List<Movie> movies = movieService.getAllMovies();
-//        model.addAttribute("movies", movies);
-//
-//        long endTime = System.currentTimeMillis(); // 종료 시간
-//
-//        log.info("전체 영화 로딩 - time : {} ms", (endTime - startTime));
-//
-//        return "home";
-//    }
-
     // 전체 영화를 뿌리던 기존 방식에서 영화의 상태 별로 개수 제한을 두어 뿌리는 식으로 변경
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {

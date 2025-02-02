@@ -45,22 +45,6 @@ public class MovieServiceImpl {
         return movieJpaRepository.findById(movieId).orElse(null);
     }
 
-//    // 검색 기능
-//    @Cacheable(value = "movies", key = "#query") // Redis 캐싱 추가
-//    public List<Movie> searchMoviesByName(String query) {
-//
-//        //long startTime = System.currentTimeMillis(); // 시작 시간
-//
-////        List<Movie> movies = movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
-////        List<Movie> movies = movieJpaRepository.findByMovieNameStartingWithIgnoreCase(query);
-//        // full Text 인덱스
-//        List<Movie> movies = movieJpaRepository.searchMoviesByNameFullText(query);
-//        //long endTime = System.currentTimeMillis(); // 종료 시간
-//
-//        //log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
-//        return movies;
-//    }
-
     /**
      * hashCode()를 사용한 이유는 캐시 키의 길이를 줄이고 효율적으로 관리하기 위함.
      * 긴 검색어 문자열을 그대로 키로 사용하면 메모리 사용량이 늘어나고, 특수 문자나 공백으로 인한 문제가 발생할 수 있음.
