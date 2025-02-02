@@ -47,10 +47,10 @@
 <div th:replace="~{fragments/admin_sidebar :: sidebar}"></div>
 
 <main>
-  <h1>Add Showtime</h1>
+  <h1>상영시간대 추가</h1>
 
   <form action="/admin/showtime/add" method="post">
-    <label for="screenId">Screen:</label>
+    <label for="screenId" style="font-weight: bold;">상영관:</label>
     <select id="screenId" name="screenId" required>
       <!--<option th:each="screen : ${screens}" th:value="${screen.id}" th:text="${screen.screenName} + '(' + ${showtime.screen.id} + ')'"></option>-->
       <option th:each="screen : ${screens}"
@@ -58,19 +58,23 @@
               th:text="${screen.screenName + ' (' + screen.id + ')'}">
       </option>
     </select>
-
-    <label for="movieId">Movie:</label>
+    <br />
+    <br />
+    <label for="movieId" style="font-weight: bold;">영화:</label>
     <select id="movieId" name="movieId" required>
       <option th:each="movie : ${movies}" th:value="${movie.id}" th:text="${movie.movieName}"></option>
     </select>
-
-    <label for="showtimeDate">Date:</label>
+    <br />
+    <br />
+    <label for="showtimeDate" style="font-weight: bold;">날짜:</label>
     <input type="date" id="showtimeDate" name="showtimeDate" required>
-
-    <label for="showtimeTime">Time:</label>
+    <br />
+    <br />
+    <label for="showtimeTime" style="font-weight: bold;">시간:</label>
     <input type="time" id="showtimeTime" name="showtimeTime" required>
-
-    <button type="submit" class="btn btn-primary">Add Showtime</button>
+    <br />
+    <br />
+    <button type="submit" class="btn btn-primary">추가</button>
   </form>
 </main>
 

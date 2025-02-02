@@ -19,7 +19,6 @@ public enum ErrorCodes {
 
     // Reservation
     SHOWTIME_NOT_FOUND(HttpStatus.NOT_FOUND, "상영 정보를 찾을 수 없습니다."),
-    RESERVATION_ERROR(HttpStatus.BAD_REQUEST, "예약 처리 중 오류가 발생했습니다"),
     SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "좌석을 찾을 수 없습니다."),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약 정보를 찾을 수 없습니다."),
     RESERVATION_CANCELLATION_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "상영 완료된 영화는 취소가 불가능합니다."),

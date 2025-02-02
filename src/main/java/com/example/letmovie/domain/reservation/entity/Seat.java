@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Seat {
@@ -24,9 +23,7 @@ public class Seat {
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
-    @NotNull
-    @Builder.Default
-    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL) //casecade
+    @OneToMany(mappedBy = "seat")
     private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
     @NotNull
@@ -39,15 +36,11 @@ public class Seat {
     @NotNull
     private int seatCol;
 
-    @NotNull
     private boolean isAble;
 
     @NotNull
     private int price;
 
-    /**
-     * 낙관적 락 테스트
-     */
     @Version
     private int version;
 
@@ -60,7 +53,7 @@ public class Seat {
         screen.getSeats().add(this);
     }
 
-    public void setAble(@NotNull boolean able) {
+    public void setAble(boolean able) {
         isAble = able;
     }
 
@@ -69,6 +62,16 @@ public class Seat {
     }
 
     public void setPrice(@NotNull int price) {
+        this.price = price;
+    }
+
+    @Builder
+    public Seat(Screen screen, SeatType seatType, int seatLow, int seatCol, int price) {
+        this.screen = screen;
+        this.seatType = seatType;
+        this.seatLow = seatLow;
+        this.seatCol = seatCol;
+        this.isAble = true;
         this.price = price;
     }
 }
