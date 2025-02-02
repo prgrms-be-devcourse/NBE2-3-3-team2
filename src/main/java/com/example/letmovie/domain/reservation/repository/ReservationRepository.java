@@ -1,7 +1,6 @@
 package com.example.letmovie.domain.reservation.repository;
 
 import com.example.letmovie.domain.member.dto.response.ReservationDetailsDTO;
-import com.example.letmovie.domain.member.dto.response.SeatDTO;
 import com.example.letmovie.domain.reservation.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,22 +11,17 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("SELECT new com.example.letmovie.domain.member.dto.response.ReservationDetailsDTO( " +
             "r.id, r.status, mv.movieName, mv.posterImageUrl, t.theaterName, sc.screenName, " +
-            "r.totalSeats, p.paidAt, s.showtimeDate, s.showtimeTime) " +
+            "r.totalSeats, p.paidAt, s.showtimeDate, s.showtimeTime, " +
+            "st.id, st.seatLow, st.seatCol) " +
             "FROM Reservation r " +
             "JOIN r.showTime s " +
             "JOIN s.movie mv " +
             "JOIN s.screen sc " +
             "JOIN sc.theater t " +
             "JOIN Payment p ON p.reservation.id = r.id " +
-            "WHERE r.member.id = :memberId " +
-            "ORDER BY s.showtimeDate, s.showtimeTime DESC")
-    List<ReservationDetailsDTO> findReservationsByMemberId(@Param("memberId") Long memberId);
-
-    @Query("SELECT new com.example.letmovie.domain.member.dto.response.SeatDTO( " +
-            "st.id, st.seatLow, st.seatCol) " +
-            "FROM Reservation r " +
-            "JOIN r.reservationSeats rs " +
+            "JOIN ReservationSeat rs ON rs.reservation.id = r.id " +
             "JOIN rs.seat st " +
-            "WHERE r.id = :reservationId")
-    List<SeatDTO> findSeatsByReservationId(@Param("reservationId") Long reservationId);
+            "WHERE r.member.id = :memberId " +
+            "ORDER BY s.showtimeDate DESC, s.showtimeTime DESC")
+    List<ReservationDetailsDTO> findReservationsWithSeats(@Param("memberId") Long memberId);
 }
