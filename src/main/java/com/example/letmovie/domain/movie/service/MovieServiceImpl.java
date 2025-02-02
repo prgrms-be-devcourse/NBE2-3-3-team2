@@ -115,7 +115,8 @@ public class MovieServiceImpl {
     }
 
     // 상태별 페이징 처리
-    @Cacheable(value = "movies_by_status", key = "#status.name() + '-' + #page + '-' + #size")
+//    @Cacheable(value = "movies_by_status", key = "#status.name() + '-' + #page + '-' + #size")
+    @Cacheable(value = "movies_by_status_limited", key = "{#status + '-' + #limit}")
     public MoviePageDTO getMoviesByStatus(Status status, int page, int size) {
         Page<Movie> moviePage = movieJpaRepository.findByStatus(status, PageRequest.of(page - 1, size));
         return convertToDTO(moviePage);
