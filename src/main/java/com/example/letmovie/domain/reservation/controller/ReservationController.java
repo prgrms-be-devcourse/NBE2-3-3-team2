@@ -17,7 +17,7 @@ import com.example.letmovie.domain.reservation.facade.OptimisticLockReservationF
 import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
-import com.example.letmovie.global.exception.exceptionClass.reservation.ShowtimeNotFound;
+import com.example.letmovie.global.exception.exceptionClass.reservation.ShowtimeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -86,7 +85,7 @@ public class ReservationController {
     @GetMapping("/seatSelection")
     public String seatSelection(@RequestParam("showtimeId") Long showtimeId, Model model) {
         Showtime showtime = showtimeService.findById(Long.valueOf(showtimeId))
-                .orElseThrow(ShowtimeNotFound::new);
+                .orElseThrow(ShowtimeNotFoundException::new);
 
         Screen screen = showtime.getScreen(); //스크린 가져오기
         List<Seat> seats = showtime.getScreen().getSeats(); //Seat 리스트 가져오기.

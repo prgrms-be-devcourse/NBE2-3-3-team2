@@ -2,7 +2,7 @@ package com.example.letmovie.domain.reservation.entity;
 
 import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.movie.entity.Showtime;
-import com.example.letmovie.global.exception.exceptionClass.reservation.ReservationCancellation;
+import com.example.letmovie.global.exception.exceptionClass.reservation.ReservationCancelException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -10,8 +10,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.letmovie.global.exception.ErrorCodes.RESERVATION_CANCELLATION_NOT_ALLOWED;
 
 @Entity
 @Getter
@@ -85,7 +83,7 @@ public class Reservation {
      */
     public void cancelReservation() {
         if(status.equals(ReservationStatus.VIEWED)){
-            throw new ReservationCancellation();
+            throw new ReservationCancelException();
         }
 
         this.status = ReservationStatus.CANCELLED; //예매 상태 변경
