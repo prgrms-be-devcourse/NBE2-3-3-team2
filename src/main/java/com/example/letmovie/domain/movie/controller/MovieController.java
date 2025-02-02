@@ -31,7 +31,6 @@ public class MovieController {
     // 전체 영화를 뿌리던 기존 방식에서 영화의 상태 별로 개수 제한을 두어 뿌리는 식으로 변경
     @GetMapping({"/", "/private"})
     public String homePage(Model model) {
-        long startTime = System.currentTimeMillis();
 
         // 영화 데이터를 Status별로 개수를 제한하여 가져옴
         List<Movie> recommendMovies = movieService.getMoviesByStatusWithLimit(Status.RECOMMEND, 20);
@@ -41,9 +40,6 @@ public class MovieController {
         model.addAttribute("recommendMovies", recommendMovies);
         model.addAttribute("boxOfficeMovies", boxOfficeMovies);
         model.addAttribute("upcomingMovies", upcomingMovies);
-
-        long endTime = System.currentTimeMillis();
-        log.info("홈 페이지 영화 로딩 - time: {} ms", (endTime - startTime));
 
         return "home";
     }
@@ -68,8 +64,6 @@ public class MovieController {
             @RequestParam(defaultValue = "20") int size,
             Model model) {
 
-        long startTime = System.currentTimeMillis();
-
         try { // 예외 처리 추가
             if (query != null && !query.isBlank()) { // isBlank()로 빈 문자열 체크
                 // 검색 로직
@@ -77,8 +71,6 @@ public class MovieController {
                 model.addAttribute("movies", movies);
                 model.addAttribute("query", query);
 
-                log.info("영화 검색(전체 영화) - 검색어: '{}', 소요 시간: {} ms",
-                        query, System.currentTimeMillis() - startTime);
             } else {
                 // 카테고리 처리
                 Status status = parseCategory(category); // 카테고리 파싱 분리
@@ -86,9 +78,6 @@ public class MovieController {
 
                 // 모델 설정
                 setupPaginationModel(model, moviePage, page);
-
-                log.info("영화 목록 조회 - 카테고리: {}, 페이지: {}, 소요 시간: {} ms",
-                        category, page, System.currentTimeMillis() - startTime);
             }
         } catch (IllegalArgumentException e) {
             log.error("잘못된 카테고리 입력: {}", category);

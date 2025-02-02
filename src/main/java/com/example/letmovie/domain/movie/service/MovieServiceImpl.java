@@ -55,8 +55,6 @@ public class MovieServiceImpl {
     @Cacheable(value = "movies", key = "#query.hashCode() + '-' + #root.methodName")
     public List<Movie> searchMoviesByName(String query) {
 
-        long startTime = System.currentTimeMillis(); // 시작 시간
-
         if (query == null || query.isBlank()) {
             log.warn("빈 검색어 입력");
             return Collections.emptyList();
@@ -65,10 +63,6 @@ public class MovieServiceImpl {
         //List<Movie> movies = movieJpaRepository.findByMovieNameContainingIgnoreCase(query);
 
         List<Movie> movies = movieJpaRepository.searchMoviesByNameFullText(preprocessQuery(query));
-
-        long endTime = System.currentTimeMillis(); // 종료 시간
-
-        log.info("영화 검색(연관 검색) - 검색어: {}, time : {} ms", query, (endTime - startTime));
 
         return movies;
     }
