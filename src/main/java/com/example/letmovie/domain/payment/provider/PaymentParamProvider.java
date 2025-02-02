@@ -42,10 +42,6 @@ public class PaymentParamProvider {
     }
 
     public Map<String, String> createCancelParams(PaymentHistory paymentHistory) {
-        log.info("PaymentHistory 정보 - id: {}, tid: {}, amount: {}",
-                paymentHistory.getId(),
-                paymentHistory.getTid(),
-                paymentHistory.getAmount());
         Map<String, String> params = new HashMap<>();
         params.put("cid", paymentHistory.getCid());
         params.put("tid", paymentHistory.getTid());
