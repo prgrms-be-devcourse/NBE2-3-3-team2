@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ReservationController {
+public class ReservationController implements ReservationControllerDocs{
 
     private final ShowtimeService showtimeService;
     private final ReservationService reservationService;
@@ -44,19 +44,14 @@ public class ReservationController {
         return "reservation/reservationHome";
     }
 
-    /**
-     * 날짜 선택 시 영화 리스트 찾기. (쿼리 1번)
-     */
     @ResponseBody
     @PostMapping("/api/dates")
     public MovieNamesResponseDTO selectDate(@RequestBody DateRequestDTO selectDateDTO) {
         String selectedDate = selectDateDTO.getDate(); //selectedDate = ex)2024-12-18
+        log.info("selectDate:{}", selectedDate);
         return showtimeService.findMovieNameByDate(selectedDate);
     }
 
-    /**
-     * 날짜,영화 선택 시 극장 리스트 찾기. (쿼리 2번)
-     */
     @ResponseBody
     @PostMapping("/api/movies")
     public List<TheaterResponseDTO> selectTheater(@RequestBody TheaterRequestDTO theaterRequestDTO) {
@@ -66,9 +61,6 @@ public class ReservationController {
         );
     }
 
-    /**
-     * 날짜,영화, 극장 선택 시 ShowTime 리스트 찾기(상영관, 상영시간, 총좌석, 예약가능 좌석). (쿼리 x)
-     */
     @ResponseBody
     @PostMapping("/api/showtimes")
     public List<ShowTimeResponseDTO> selectShowTimes(@RequestBody ShowTimeRequestDTO showTimeRequestDTO) {
@@ -122,10 +114,11 @@ public class ReservationController {
     /**
      *  결제 취소 test - ok
      */
-    @ResponseBody
-    @GetMapping("/cancel/{cancelId}")
-    public String cancel(@PathVariable("cancelId") Long cancelId) {
-        reservationService.reservationCancel(cancelId);
-        return "cancel";
-    }
+//    @ResponseBody
+//    @GetMapping("/cancel/{cancelId}")
+//    public String cancel(@PathVariable("cancelId") Long cancelId) {
+//        reservationService.reservationCancel(cancelId);
+//        return "cancel";
+//    }
+
 }
