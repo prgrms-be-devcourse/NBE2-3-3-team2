@@ -9,8 +9,6 @@ import com.example.letmovie.domain.reservation.dto.response.ReservationResponseD
 import com.example.letmovie.domain.reservation.dto.response.ShowTimeResponseDTO;
 import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;

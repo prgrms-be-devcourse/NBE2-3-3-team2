@@ -32,7 +32,7 @@ public class Reservation {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Enumerated(EnumType.STRING) //enum
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL) //양방향 매핑
@@ -42,10 +42,10 @@ public class Reservation {
     private LocalDateTime reservationDate;
 
     @NotNull
-    private int totalSeats; // 총 좌석 수
+    private int totalSeats;
 
     @NotNull
-    private int totalPrice; // 총 금액
+    private int totalPrice;
 
     /**
      *  연관관계 메서드 - 양방향 설정
@@ -86,10 +86,10 @@ public class Reservation {
             throw new ReservationCancelException();
         }
 
-        this.status = ReservationStatus.CANCELLED; //예매 상태 변경
+        this.status = ReservationStatus.CANCELLED;
 
         for (ReservationSeat reservationSeat : reservationSeats) {
-            reservationSeat.cancel(this.getShowTime()); //예매좌석->좌석에서 가능여부 true, 상영관 총 좌석 수 증가.
+            reservationSeat.cancel(this.getShowTime()); // 예매좌석->좌석에서 가능여부 true, 상영관 총 좌석 수 증가.
         }
     }
 
