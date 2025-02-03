@@ -5,6 +5,7 @@ import com.example.letmovie.domain.member.dto.response.ReservationDetailsDTO;
 import com.example.letmovie.domain.member.dto.response.SeatDTO;
 import com.example.letmovie.domain.member.entity.Member;
 import com.example.letmovie.domain.member.repository.MemberRepository;
+import com.example.letmovie.domain.reservation.entity.Reservation;
 import com.example.letmovie.domain.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,21 +34,28 @@ public class MyPageService {
     // 예매 목록 조회
     @Transactional(readOnly = true)
     public List<ReservationDetailsDTO> getReservationsWithSeats(Long memberId) {
-        List<ReservationDetailsDTO> reservations = reservationRepository.findReservationsWithSeats(memberId);
-        Map<Long, ReservationDetailsDTO> reservationMap = new HashMap<>();
+        List<Reservation> reservations = reservationRepository.findReservationsWithSeats(memberId);
 
-        for (ReservationDetailsDTO reservation : reservations) {
-            if (!reservationMap.containsKey(reservation.getReservationId())) {
-                reservationMap.put(reservation.getReservationId(), reservation);
-            } else {
-                reservationMap.get(reservation.getReservationId())
-                        .addSeat(new SeatDTO( // SeatRow를 문자로 넣기 위해 새로 생성함
-                                reservation.getSeats().get(0).getId(),
-                                reservation.getSeats().get(0).getSeatLow(),
-                                reservation.getSeats().get(0).getSeatCol()));
-            }
-        }
-        return new ArrayList<>(reservationMap.values());
+        return reservations.stream().map(reservation ->
+                ReservationDetailsDTO.builder()
+                        .reservationId(reservation.getId())
+                        .reservationStatus(reservation.getStatus())
+                        .reservationStatusDisplayName(reservation.getStatus().getDisplayName())
+                        .movieName(reservation.getShowTime().getMovie().getMovieName())
+                        .posterUrl(reservation.getShowTime().getMovie().getPosterImageUrl())
+                        .theaterName(reservation.getShowTime().getScreen().getTheater().getTheaterName())
+                        .screenName(reservation.getShowTime().getScreen().getScreenName())
+                        .totalSeats(reservation.getTotalSeats())
+                        .showtimeDate(reservation.getShowTime().getShowtimeDate())
+                        .showtimeTime(reservation.getShowTime().getShowtimeTime())
+                        .seats(reservation.getReservationSeats().stream()
+                                .map(reservationSeat -> new SeatDTO(
+                                        reservationSeat.getSeat().getId(),
+                                        reservationSeat.getSeat().getSeatLow(),
+                                        reservationSeat.getSeat().getSeatCol()))
+                                .collect(Collectors.toList()))
+                        .build()
+        ).collect(Collectors.toList());
     }
 
     // 비밀번호 변경 및 저장
