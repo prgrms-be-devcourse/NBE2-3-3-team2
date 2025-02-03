@@ -1,77 +1,63 @@
-package com.example.letmovie.domain.auth.util;
+@file:JvmName("SecurityUtil")
 
-import com.example.letmovie.domain.member.entity.Member;
-import com.example.letmovie.domain.member.repository.MemberRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+package com.example.letmovie.domain.auth.util
 
-import java.util.Optional;
+import com.example.letmovie.domain.member.entity.Member
+import com.example.letmovie.domain.member.repository.MemberRepository
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
+import java.util.Optional
 
-public class SecurityUtil {
+private lateinit var memberRepository: MemberRepository
 
-    private static MemberRepository memberRepository;
+fun setMemberRepository(repository: MemberRepository) {
+    memberRepository = repository
+}
 
-    // setter method
-    public static void setMemberRepository(MemberRepository memberRepository) {
-        SecurityUtil.memberRepository = memberRepository;
+/**
+ * 현재 인증된 멤버 정보를 가져옴
+ */
+fun getCurrentMember(): Optional<Member> {
+    val email = getCurrentMemberEmail() ?: return Optional.empty()
+    return Optional.ofNullable(memberRepository.findByEmail(email).orElse(null))
+}
+
+/**
+ * 현재 인증된 사용자의 이메일을 가져옴
+ */
+fun getCurrentMemberEmail(): String? {
+    val authentication = SecurityContextHolder.getContext().authentication
+    if (authentication == null || !authentication.isAuthenticated || authentication.principal == "anonymousUser") {
+        return null
     }
 
-    /**
-     *  현재 인증된 멤버 정보를 가져옴
-     */
-    public static Optional<Member> getCurrentMember() {
-
-        String email = getCurrentMemberEmail();
-
-        return memberRepository.findByEmail(email);
+    return when (val principal = authentication.principal) {
+        is UserDetails -> principal.username
+        is String -> principal
+        else -> null
     }
+}
 
-    /**
-     *  현재 인증된 사용자의 이메일을 가져옴
-     */
-    public static String getCurrentMemberEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return null;
-        }
+/**
+ * 현재 인증된 사용자의 역할을 확인 (ROLE_USER, ROLE_ADMIN 등)
+ */
+fun hasRole(role: String): Boolean {
+    val authentication = SecurityContextHolder.getContext().authentication
 
-        Object principal = authentication.getPrincipal();
+    return authentication?.authorities?.any { it.authority == role } ?: false
+}
 
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else if (principal instanceof String) {
-            return (String) principal;
-        }
+/**
+ * 현재 인증 정보를 가져옴
+ */
+fun getAuthentication(): Authentication? {
+    return SecurityContextHolder.getContext().authentication
+}
 
-        return null;
-    }
-
-    /**
-     *  현재 인증된 사용자의 역할을 가져옴 (ROLE_USER, ROLE_ADMIN)
-     */
-    public static boolean hasRole(String role) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return false;
-        }
-
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(role));
-    }
-
-    /**
-     *  현재 인증 정보를 가져옴
-     */
-    public static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
-
-    /**
-     *  인증 정보 설정 (테스트 용)
-     */
-    public static void setAuthentication(Authentication authentication) {
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+/**
+ * 인증 정보 설정 (테스트 용)
+ */
+fun setAuthentication(authentication: Authentication) {
+    SecurityContextHolder.getContext().authentication = authentication
 }
