@@ -1,17 +1,14 @@
-package com.example.letmovie.domain.movie.dto;
+package com.example.letmovie.domain.movie.dto
 
-import com.example.letmovie.domain.movie.entity.Movie;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.util.List;
+import com.example.letmovie.domain.movie.entity.Movie
+import lombok.AllArgsConstructor
+import lombok.Getter
 
 @Getter
 @AllArgsConstructor
-public class MoviePageDTO {
-    private List<Movie> content;
-    private int currentPage;
-    private int totalPages;
-
-    public MoviePageDTO() {}
-}
+// MoviePageDTO.kt
+data class MoviePageDTO(
+    val content: List<Movie>,
+    val currentPage: Int,
+    val totalPages: Int
+)
