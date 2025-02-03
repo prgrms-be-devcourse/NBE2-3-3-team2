@@ -1,19 +1,11 @@
-package com.example.letmovie.domain.reservation.dto.request;
+package com.example.letmovie.domain.reservation.dto.request
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ScreenDTO {
-    private Long id;
-    private String screenName;
+data class ScreenDTO(
+    val id: Long? = null,
+    val screenName: String? = null,
 
-    @NotNull(message = "Theater ID는 필수입니다.")
-    private Long theaterId;
-}
+    @field:NotNull(message = "Theater ID는 필수입니다.")
+    val theaterId: Long?
+)
