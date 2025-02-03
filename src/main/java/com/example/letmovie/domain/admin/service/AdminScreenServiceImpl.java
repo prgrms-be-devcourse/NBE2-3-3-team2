@@ -49,10 +49,6 @@ public class AdminScreenServiceImpl {
 
     // 상영관 수정
     public void updateScreen(ScreenDTO screenDTO) {
-        if (screenDTO.getId() == null) {
-            throw new IllegalArgumentException("Screen ID는 필수입니다.");
-        }
-
         Screen existingScreen = adminScreenRepository.findById(screenDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("상영관을 찾을 수 없습니다. ID: " + screenDTO.getId()));
 
