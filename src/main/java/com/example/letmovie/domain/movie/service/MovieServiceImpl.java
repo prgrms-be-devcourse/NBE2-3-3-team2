@@ -45,9 +45,8 @@ public class MovieServiceImpl {
 
     @Cacheable(value = "movies_by_status_limited", key = "{#status + '-' + #limit}")
     public List<Movie> getMoviesByStatusWithLimit(Status status, int limit) {
-        log.info("--------------------------------------------------status0= {}", status);
+
         if (status == null) {
-            log.info("--------------------------------------------------status1= {}", status);
             return Collections.emptyList();
         }
         Pageable pageable = PageRequest.of(0, limit);
