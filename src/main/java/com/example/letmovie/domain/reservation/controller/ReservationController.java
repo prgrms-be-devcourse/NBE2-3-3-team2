@@ -14,7 +14,6 @@ import com.example.letmovie.domain.reservation.dto.response.TheaterResponseDTO;
 import com.example.letmovie.domain.reservation.entity.Screen;
 import com.example.letmovie.domain.reservation.entity.Seat;
 import com.example.letmovie.domain.reservation.facade.OptimisticLockReservationFacade;
-import com.example.letmovie.domain.reservation.service.ReservationService;
 import com.example.letmovie.domain.reservation.service.ShowtimeService;
 import com.example.letmovie.global.exception.exceptionClass.auth.MemberNotFoundException;
 import com.example.letmovie.global.exception.exceptionClass.reservation.ShowtimeNotFoundException;
@@ -36,7 +35,6 @@ import java.util.stream.Collectors;
 public class ReservationController implements ReservationControllerDocs{
 
     private final ShowtimeService showtimeService;
-    private final ReservationService reservationService;
     private final OptimisticLockReservationFacade optimisticLockReservationFacade;
 
     @GetMapping("/reservation")
@@ -47,7 +45,7 @@ public class ReservationController implements ReservationControllerDocs{
     @ResponseBody
     @PostMapping("/api/dates")
     public MovieNamesResponseDTO selectDate(@RequestBody DateRequestDTO selectDateDTO) {
-        String selectedDate = selectDateDTO.getDate(); //selectedDate = ex)2024-12-18
+        String selectedDate = selectDateDTO.getDate();
         log.info("selectDate:{}", selectedDate);
         return showtimeService.findMovieNameByDate(selectedDate);
     }
@@ -70,17 +68,13 @@ public class ReservationController implements ReservationControllerDocs{
                 showTimeRequestDTO.getTheaterName());
     }
 
-
-    /**
-     *  좌석 선택 페이지
-     */
     @GetMapping("/seatSelection")
     public String seatSelection(@RequestParam("showtimeId") Long showtimeId, Model model) {
         Showtime showtime = showtimeService.findById(Long.valueOf(showtimeId))
                 .orElseThrow(ShowtimeNotFoundException::new);
 
-        Screen screen = showtime.getScreen(); //스크린 가져오기
-        List<Seat> seats = showtime.getScreen().getSeats(); //Seat 리스트 가져오기.
+        Screen screen = showtime.getScreen();
+        List<Seat> seats = showtime.getScreen().getSeats();
 
         List<Seat> sortedSeats = seats.stream() //가져온 좌석들 정렬하기
                 .sorted(Comparator.comparingInt(Seat::getSeatLow)
@@ -100,7 +94,7 @@ public class ReservationController implements ReservationControllerDocs{
     @ResponseBody
     @PostMapping("/reserve-seats")
     public ResponseEntity<ReservationResponseDTO> reserveSeats(@RequestBody ReserveSeatsRequestDTO requestDTO) throws InterruptedException {
-        List<String> seats = requestDTO.getSeats(); // "seats" 키에 저장된 값 가져오기
+        List<String> seats = requestDTO.getSeats();
         Long showtimeId = requestDTO.getShowtimeId();
 
         Member member = SecurityUtil.getCurrentMember()
@@ -112,7 +106,7 @@ public class ReservationController implements ReservationControllerDocs{
     }
 
     /**
-     *  결제 취소 test - ok
+     *  결제 취소 test
      */
 //    @ResponseBody
 //    @GetMapping("/cancel/{cancelId}")
