@@ -90,7 +90,7 @@ public class ReservationTimeServiceTest {
     void test1_withResponseTime() throws InterruptedException {
 
         //given
-        int threadCount = 5000;
+        int threadCount = 10000;
         ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
         CountDownLatch latch = new CountDownLatch(threadCount);
 
